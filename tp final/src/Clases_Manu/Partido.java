@@ -1,3 +1,5 @@
+package Clases_Manu;
+
 import java.time.LocalDate;
 
 public class Partido {

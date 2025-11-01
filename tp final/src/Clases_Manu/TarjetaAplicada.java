@@ -1,3 +1,5 @@
+package Clases_Manu;
+
 import java.time.LocalDate;
 
 public class TarjetaAplicada {
@@ -13,7 +15,7 @@ public class TarjetaAplicada {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TarjetaAplicada{");
+        final StringBuffer sb = new StringBuffer("Clases_Manu.TarjetaAplicada{");
         sb.append("tipoTarjeta=").append(tipoTarjeta);
         sb.append(", jugador=").append(jugador);
         sb.append(", minuto=").append(minuto);
