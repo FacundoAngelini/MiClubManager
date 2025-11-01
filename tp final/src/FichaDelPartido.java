@@ -4,14 +4,44 @@ import java.util.List;
 public class FichaDelPartido {
     private int golesLocal;
     private int golesVisitante;
-    private String resumen;
-    private List<String> sanciones;
+    private final List<Gol> goles;
+    private final List<TarjetaAplicada> tarjetas;
+    private final List<Jugador> lesionados;
 
-    public FichaDelPartido(int golesLocal, int golesVisitante, String resumen, List sanciones) {
+
+    public FichaDelPartido(int golesLocal, int golesVisitante) {
         this.golesLocal = golesLocal;
         this.golesVisitante = golesVisitante;
-        this.resumen = resumen;
-        this.sanciones = new ArrayList<>();
+        this.goles = new ArrayList<>();
+        this.tarjetas = new ArrayList<>();
+        this.lesionados = new ArrayList<>();
     }
-  //EL STRING RESUMEN LLEVA: LESIONADOS
+
+    public int getGolesLocal() {
+        return golesLocal;
+    }
+
+    public void setGolesLocal(int golesLocal) {
+        this.golesLocal = golesLocal;
+    }
+
+    public int getGolesVisitante() {
+        return golesVisitante;
+    }
+
+    public void setGolesVisitante(int golesVisitante) {
+        this.golesVisitante = golesVisitante;
+    }
+
+    public List<Gol> getGoles() {
+        return goles;
+    }
+
+    public List<TarjetaAplicada> getTarjetas() {
+        return tarjetas;
+    }
+
+    public List<Jugador> getLesionados() {
+        return lesionados;
+    }
 }
