@@ -1,3 +1,5 @@
+package Clases_Manu;
+
 public class Estadio {
     private String nombre;
     private int capacidad;
