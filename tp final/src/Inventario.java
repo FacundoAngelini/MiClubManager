@@ -1,64 +1,48 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Inventario {
-    private HashMap<String, Integer> items;
+public class Inventario<T extends Producto> {
+    private ArrayList<T> items;
     public Inventario() {
-        items = new HashMap<>();
+        items = new ArrayList<T>();
     }
 
-    public void addItem(String item, int cantidad) throws AccionImposible {
-        try{
-            if(cantidad<=0)
-            {
-                throw new AccionImposible("La cantidad debe ser mayor a 0");
-
+    public void addItem(T item) throws AccionImposible
+    {
+            if(item == null){
+                throw new AccionImposible("No se puede agregar un item vacio");
             }
-            items.put(item, cantidad);
+            if(item.getCantidad()<=0)
+            {
+                throw new AccionImposible("No se puede agregar un item con cantidad 0");
+            }
+            items.add(item);
             System.out.println("Se agrego correctamente");
-
-        }
-        catch (AccionImposible ex)
-        {
-            System.out.println("No se pudo agregar");
-        }
     }
 
-    public void removerItems (String nombre, int cantidad) throws AccionImposible
+    public void removerItems (T item) throws AccionImposible
     {
-        try {
-            if (!items.containsKey(nombre))
-            {
-                throw new AccionImposible("La cantidad debe ser mayor a 0");
-            }
-            int StockActual = items.get(nombre);
-            if (StockActual >= cantidad) // en caso de que la cantidad ingresada sea mayor que el StockActual, se elimina por completo ese item
-            {
-                items.remove(nombre);
-            } else
-            {
-                items.put(nombre, StockActual - cantidad); // en caso de que haya mas stock que la cantidad ingresada, se hace la resta para para actualizar el stock
-            }
-        } catch (AccionImposible ex)
-        {
-            System.out.println("No se pudo agregar");
+        if(item == null || !items.contains(item)){
+            throw new AccionImposible("Producto no encontrado");
         }
-
+        items.remove(item);
+        System.out.println("Se removio el item");
     }
 
-    public int consultarStock(String nombre) throws AccionImposible
+    public int consultarStock(T item) throws AccionImposible
     {
-        try{
-            if(!items.containsKey(nombre))
-            {
-                throw new AccionImposible("No se encuentra ningun item con ese elemento");
-            }
+        if(item == null || !items.contains(item)){
+            throw new AccionImposible("Producto no encontrado");
+        }
 
+        int cantidad =0;
+
+        for(T item1 : items){
+            if(item1.equals(item)){
+                cantidad++;
+            }
         }
-        catch (AccionImposible ex)
-        {
-            System.out.println("No se pudo buscar");
-        }
-        return items.get(nombre);
+        return cantidad;
     }
 
     public void mostrarInventario()
@@ -69,10 +53,9 @@ public class Inventario {
         }
         else
         {
-           for(String nombre : items.keySet())
+           for(T item : items)
            {
-               int cantidad = items.get(nombre);
-               System.out.println("Item: " +nombre + "  Cantidad: " + cantidad);
+               System.out.println(item.muestraDatos());
            }
         }
     }
