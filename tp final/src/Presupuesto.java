@@ -52,17 +52,17 @@ public class Presupuesto {
         egreso += perdida;
     }
 
+
     public double calcularResultados()
     {
         return ingreso - egreso;
     }
 
-    public void mostrarResumen()
-    {
+    public void mostrarResumen() {
         System.out.println("----- Presupuesto del club ------");
-        System.out.println("Total de ingresos: "+ingreso);
-        System.out.println("Total de egresos: "+egreso);
-        double resultado = calcularResultados();
-        }
+        System.out.println("Total de ingresos: " + ingreso);
+        System.out.println("Total de egresos: " + egreso);
+          double resultado = calcularResultados();
 
-}
+
+    }
