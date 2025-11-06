@@ -1,5 +1,3 @@
-package Clases_Manu;
-
 import java.util.ArrayList;
 import java.util.List;
 

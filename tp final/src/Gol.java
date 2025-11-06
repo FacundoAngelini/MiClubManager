@@ -1,5 +1,3 @@
-package Clases_Manu;
-
 import java.time.LocalDate;
 
 public class Gol {
@@ -15,7 +13,7 @@ public class Gol {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Clases_Manu.Gol{");
+        final StringBuffer sb = new StringBuffer("Gol{");
         sb.append("jugador=").append(jugador);
         sb.append(", fueGolLocal=").append(fueGolLocal);
         sb.append(", minuto=").append(minuto);
