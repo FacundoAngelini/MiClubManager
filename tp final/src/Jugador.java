@@ -2,6 +2,7 @@ public class Jugador extends Persona {
     private EstadisticaJugador estadisticaJugador;
     private Posicion posicion;
     private Contrato contrato;
+    private double valorJugador;
 
     public Jugador(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, EstadisticaJugador estadisticaJugador, Posicion posicion, Contrato contrato) {
         super(dni, nombre, apellido, fechaNacimeiento, nacionalidad);
@@ -32,6 +33,14 @@ public class Jugador extends Persona {
 
     public void setContrato(Contrato contrato) {
         this.contrato = contrato;
+    }
+
+    public double getValorJugador() {
+        return valorJugador;
+    }
+
+    public void setValorJugador(double valorJugador) {
+        this.valorJugador = valorJugador;
     }
 
     @Override
