@@ -63,6 +63,13 @@ public class Presupuesto {
         System.out.println("Total de ingresos: " + ingreso);
         System.out.println("Total de egresos: " + egreso);
           double resultado = calcularResultados();
+          if(resultado<0)
+          {
+              System.out.println("El balance es negativo :$ "+resultado);
+          }
+          else {
+              System.out.println("El balance es positivo :$ "+resultado);
+          }
 
 
     }
