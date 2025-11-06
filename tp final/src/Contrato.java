@@ -6,14 +6,12 @@ public class Contrato {
     private int mesesDuracion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
-    private Persona persona;
     private boolean contratoActivo;
 
-    public Contrato(int idContrato, double salario, LocalDate fechaFin, Persona persona, boolean contratoActivo, LocalDate fechaInicio, int mesesDuracion) {
+    public Contrato(int idContrato, double salario, LocalDate fechaFin, boolean contratoActivo, LocalDate fechaInicio, int mesesDuracion) {
         this.idContrato = idContrato;
         this.salario = salario;
         this.fechaFin = fechaFin;
-        this.persona = persona;
         this.contratoActivo = contratoActivo;
         this.fechaInicio = fechaInicio;
         this.mesesDuracion = mesesDuracion;
@@ -29,6 +27,7 @@ public class Contrato {
         return true;
 
     }
+
 
     public double obtenerSalario()
     {
