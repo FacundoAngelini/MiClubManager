@@ -27,7 +27,7 @@ public class Presupuesto {
         egreso += perdida;
     }
 
-    public void agregarGananciaEstadio(double ganancia)
+    public void agregarGananciaPartido(double ganancia)
     {
         ingreso += ganancia;
     }

@@ -6,17 +6,21 @@ public class Partido {
     private Estadio estadio;
     private FichaDelPartido fichaDelPartido;
     private ValorEntradas valorEntrada;
+    private int EntradasDadasSocio;
 
-    public Partido(LocalDate fecha, Estadio estadio, FichaDelPartido fichaDelPartido, ValorEntradas valorEntrada, int entradasVendidas) {
+    public Partido(LocalDate fecha, int entradasVendidas, Estadio estadio, FichaDelPartido fichaDelPartido, ValorEntradas valorEntrada, int entradasDadasSocio) {
         this.fecha = fecha;
+        this.entradasVendidas = entradasVendidas;
         this.estadio = estadio;
         this.fichaDelPartido = fichaDelPartido;
         this.valorEntrada = valorEntrada;
-        this.entradasVendidas = entradasVendidas;
+        EntradasDadasSocio = entradasDadasSocio;
     }
 
+    public double obtenerGanancia()
+    {
+        return (valorEntrada.getPrecio() * (entradasVendidas - EntradasDadasSocio));
+    }
 
-
-    //METODO PARA GETRECAUDACION
     //METODO PARA VER SI EL SOCIO PUEDE COMPRAR LA ENTRADA(IF SOCIOACTIVO=TRUE)
 }
