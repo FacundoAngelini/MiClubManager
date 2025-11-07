@@ -14,13 +14,12 @@ public class Pelota extends Producto{
         this.modelo = modelo;
     }
 
-    @Override
     protected String muestraDatos() {
         return "Pelota{" +
                 "modelo='" + modelo + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", marca='" + marca + '\'' +
                 ", cantidad=" + cantidad +
-                '}' ;
+                '}';
     }
 }
