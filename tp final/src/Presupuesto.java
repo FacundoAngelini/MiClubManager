@@ -7,49 +7,29 @@ public class Presupuesto {
         this.egreso = egreso;
     }
 
-    public void agregarGananciaCamisetas(double ganancia)
+    public void agregarBeneificos(double beneificos) throws IngresoInvalido
     {
-        ingreso += ganancia;
-    }
-
-    public void  agregarEgresoCamisetas(double perdida)
-    {
-        egreso += perdida;
-    }
-
-    public void agregarGananciaSocios(double ganancia)
-    {
-        ingreso += ganancia;
-    }
-
-    public void agregarEgresoEstadio (double perdida)
-    {
-        egreso += perdida;
-    }
-
-    public void agregarGananciaPartido(double ganancia)
-    {
-        ingreso += ganancia;
-    }
-
-    public void agregarEgresosJugadores(double perdida) // mas adelante se vera si es solo de compras o tmb sueldo, luego flta hacer el de dt
-    {
-        egreso += perdida;
-    }
-
-    public void agregarGananciaJugadores(double ganancia)
-    {
-        ingreso += ganancia;
-    }
-
-    public void agregarBeneificos(double beneificos)
-    {
+        if(beneificos < 0)
+        {
+            throw new IngresoInvalido("No se puede agregar un numero negativo al ingreso");
+        }
         ingreso += beneificos;
     }
 
-    public void agregarPerdidas(double perdida)
+    public void agregarPerdidas(double perdida) throws IngresoInvalido
     {
+        if(perdida < 0)
+        {
+            throw new IngresoInvalido("El numero ingresado de la perdida debe ser positivo");
+        }
         egreso += perdida;
+    }
+
+    public void reiniciarPresupuesto()
+    {
+        egreso = 0;
+        ingreso = 0;
+        System.out.println("El presupuesto esta de nuevo en 0");
     }
 
 

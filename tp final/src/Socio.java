@@ -46,6 +46,21 @@ public class Socio extends Persona {
         this.tiposocio = tiposocio;
     }
 
+   public void cambiarAactivo() throws AccionImposible{
+        if(tiposocio == Tiposocio.ACTIVO){
+            throw new  AccionImposible("El socio ya esta activo");
+        }
+        tiposocio = Tiposocio.ACTIVO;
+   }
+
+   public void cambiarAvitalicio() throws AccionImposible
+   {
+       if(this.tiposocio == Tiposocio.VITALICIO){
+           throw new AccionImposible("El socio ya es vitalicio");
+       }
+       this.tiposocio= Tiposocio.VITALICIO;
+   }
+
 
     @Override
     public void obtenerDatos() {
