@@ -1,3 +1,4 @@
 public enum TipoTarjeta {
-    AMARILLA,ROJA
+    AMARILLA,ROJA;
 }
+

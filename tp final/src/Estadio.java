@@ -12,21 +12,46 @@ public class Estadio {
     }
 
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Estadio{");
+        sb.append("nombre='").append(nombre).append('\'');
+        sb.append(", capacidad=").append(capacidad);
+        sb.append(", ubicacion='").append(ubicacion).append('\'');
+        sb.append(", costoMantenimiento=").append(costoMantenimiento);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public String getNombre() {
         return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public int getCapacidad() {
         return capacidad;
     }
 
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
     public String getUbicacion() {
         return ubicacion;
     }
 
-    public double CostoMantenimiento() {
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public double getCostoMantenimiento() {
         return costoMantenimiento;
     }
 
-
+    public void setCostoMantenimiento(double costoMantenimiento) {
+        this.costoMantenimiento = costoMantenimiento;
+    }
 }

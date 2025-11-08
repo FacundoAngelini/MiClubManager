@@ -1,11 +1,9 @@
-import java.time.LocalDate;
-
 public class Gol {
     private Jugador jugador;
     private boolean fueGolLocal;
-    private LocalDate minuto;
+    private int minuto;
 
-    public Gol(Jugador jugador, boolean fueGolLocal, LocalDate minuto) {
+    public Gol(Jugador jugador, boolean fueGolLocal, int minuto) {
         this.jugador = jugador;
         this.fueGolLocal = fueGolLocal;
         this.minuto = minuto;
@@ -37,11 +35,11 @@ public class Gol {
         this.fueGolLocal = fueGolLocal;
     }
 
-    public LocalDate getMinuto() {
+    public int getMinuto() {
         return minuto;
     }
 
-    public void setMinuto(LocalDate minuto) {
+    public void setMinuto(int minuto) {
         this.minuto = minuto;
     }
 }
