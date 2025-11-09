@@ -4,14 +4,14 @@ public abstract class Persona {
     private String dni;
     private String nombre;
     private String apellido;
-    private String fechaNacimeiento;
+    private String fechaNacimiento;
     private String nacionalidad;
 
-    public Persona(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad) {
+    public Persona(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.fechaNacimeiento = fechaNacimeiento;
+        this.fechaNacimiento = fechaNacimiento;
         this.nacionalidad = nacionalidad;
     }
 
@@ -39,12 +39,12 @@ public abstract class Persona {
         this.apellido = apellido;
     }
 
-    public String getFechaNacimeiento() {
-        return fechaNacimeiento;
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setFechaNacimeiento(String fechaNacimeiento) {
-        this.fechaNacimeiento = fechaNacimeiento;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getNacionalidad() {
@@ -73,7 +73,7 @@ public abstract class Persona {
                 "dni='" + dni + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
-                ", fechaNacimeiento='" + fechaNacimeiento + '\'' +
+                ", fechaNacimeiento='" + fechaNacimiento + '\'' +
                 ", nacionalidad='" + nacionalidad + '\'' +
                 '}';
     }

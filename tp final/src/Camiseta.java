@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 public class Camiseta extends Producto {
     private String sponsor;
     private int camisetasVendidas;
@@ -38,6 +40,17 @@ public class Camiseta extends Producto {
                 ", marca='" + marca + '\'' +
                 ", cantidad=" + cantidad +
                 '}';
+    }
+
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("tipo", "Camiseta");
+        obj.put("nombre", nombre);
+        obj.put("marca", marca);
+        obj.put("cantidad", cantidad);
+        obj.put("sponsor", sponsor);
+        obj.put("camisetasVendidas", camisetasVendidas);
+        return obj;
     }
 
 }

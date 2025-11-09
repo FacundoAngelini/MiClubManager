@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class FichaDelPartido {
     private int golesLocal;
     private int golesVisitante;
-    private final ArrayList<Gol> goles;
-    private final ArrayList<TarjetaAplicada> tarjetas;
-    private final ArrayList<Jugador> lesionados;
+    private final List<Gol> goles;
+    private final List<TarjetaAplicada> tarjetas;
+    private final List<Jugador> lesionados;
 
 
     public FichaDelPartido(int golesLocal, int golesVisitante) {
@@ -32,15 +33,15 @@ public class FichaDelPartido {
         this.golesVisitante = golesVisitante;
     }
 
-    public ArrayList<Gol> getGoles() {
+    public List<Gol> getGoles() {
         return goles;
     }
 
-    public ArrayList<TarjetaAplicada> getTarjetas() {
+    public List<TarjetaAplicada> getTarjetas() {
         return tarjetas;
     }
 
-    public ArrayList<Jugador> getLesionados() {
+    public List<Jugador> getLesionados() {
         return lesionados;
     }
 }

@@ -1,12 +1,11 @@
-import
 import java.time.LocalDate;
 
 public class TarjetaAplicada {
     private TipoTarjeta tipoTarjeta;
     private Jugador jugador;
-    private String minuto;
+    private LocalDate minuto;
 
-    public TarjetaAplicada(TipoTarjeta tipoTarjeta, Jugador jugador, String minuto) {
+    public TarjetaAplicada(TipoTarjeta tipoTarjeta, Jugador jugador, LocalDate minuto) {
         this.tipoTarjeta = tipoTarjeta;
         this.jugador = jugador;
         this.minuto = minuto;
@@ -14,11 +13,12 @@ public class TarjetaAplicada {
 
     @Override
     public String toString() {
-        return "TarjetaAplicada{" +
-                "tipoTarjeta=" + tipoTarjeta +
-                ", jugador=" + jugador +
-                ", minuto='" + minuto + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("TarjetaAplicada{");
+        sb.append("tipoTarjeta=").append(tipoTarjeta);
+        sb.append(", jugador=").append(jugador);
+        sb.append(", minuto=").append(minuto);
+        sb.append('}');
+        return sb.toString();
     }
 
     public TipoTarjeta getTipoTarjeta() {
@@ -37,11 +37,11 @@ public class TarjetaAplicada {
         this.jugador = jugador;
     }
 
-    public String getMinuto() {
+    public LocalDate getMinuto() {
         return minuto;
     }
 
-    public void setMinuto(String minuto) {
+    public void setMinuto(LocalDate minuto) {
         this.minuto = minuto;
     }
 }

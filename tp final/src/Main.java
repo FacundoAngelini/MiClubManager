@@ -8,6 +8,5 @@ public class Main {
         Sistema miSistema=new Sistema();
 }
 
-inventario.addiem()
 
 }

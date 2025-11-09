@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 public class Pelota extends Producto{
     private String modelo;
 
@@ -21,5 +23,15 @@ public class Pelota extends Producto{
                 ", marca='" + marca + '\'' +
                 ", cantidad=" + cantidad +
                 '}';
+    }
+
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("tipo", "Pelota");
+        obj.put("nombre", nombre);
+        obj.put("marca", marca);
+        obj.put("cantidad", cantidad);
+        obj.put("modelo", modelo);
+        return obj;
     }
 }
