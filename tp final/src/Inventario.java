@@ -10,13 +10,13 @@ public class Inventario<T extends Producto> implements MetodosComunes<T>{
 
 
     @Override
-    public void agregarElemento(T item) throws AccionImposible{
+    public void agregarElemento(T item) throws IngresoInvalido{
         if(item == null){
-            throw new AccionImposible("No se puede agregar un item vacio");
+            throw new IngresoInvalido("No se puede agregar un item vacio");
         }
         if(item.getCantidad()<=0)
         {
-            throw new AccionImposible("No se puede agregar un item con cantidad 0");
+            throw new IngresoInvalido("No se puede agregar un item con cantidad 0");
         }
         items.add(item);
         System.out.println("Se agrego correctamente");

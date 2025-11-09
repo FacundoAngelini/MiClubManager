@@ -38,6 +38,16 @@ public class Presupuesto {
         return ingreso - egreso;
     }
 
+    public double getIngreso() {
+        return ingreso;
+    }
+
+
+    public double getEgreso() {
+        return egreso;
+    }
+
+
     public void mostrarResumen() {
         System.out.println("----- Presupuesto del club ------");
         System.out.println("Total de ingresos: " + ingreso);
@@ -50,4 +60,4 @@ public class Presupuesto {
         }
     }
 
-    }
+}
