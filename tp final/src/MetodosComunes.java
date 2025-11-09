@@ -6,5 +6,5 @@ public interface MetodosComunes<T> {
     void modificarElemento(T elemento) throws AccionImposible;
     boolean existe(T elemento);
     ArrayList<T>listar();
-    void guardarJSON(String ruta);
+    void guardarJSON();
 }

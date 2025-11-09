@@ -1,5 +1,4 @@
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -77,13 +76,11 @@ public class Inventario<T extends Producto> implements MetodosComunes<T>{
     }
 
     @Override
-    public void guardarJSON(String archivo) {
+    public void guardarJSON() {
         JSONArray array = new JSONArray();
-
-        for(T item : items){
+        for (T item : items) {
             array.put(item.toJSON());
         }
-        JSONUtiles.uploadJSON(array, archivo);
-        System.out.println("Inventario guardado");
+        JSONUtiles.uploadJSON(array, "inventario");
     }
 }
