@@ -7,8 +7,8 @@ import java.util.HashMap;
 public class GestionSocio implements MetodosComunes<Socio> {
     private HashMap<Integer, Socio> socios;
 
-    public GestionSocio(HashMap<Integer, Socio> socios) {
-        socios = new HashMap<>();
+    public GestionSocio() {
+        this.socios = new HashMap<>();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GestionSocio implements MetodosComunes<Socio> {
             obj.put("dni", s.getDni());
             obj.put("nombre", s.getNombre());
             obj.put("apellido", s.getApellido());
-            obj.put("fechaNacimiento", s.getFechaNacimeiento());
+            obj.put("fechaNacimiento", s.getFechaNacimiento());
             obj.put("nacionalidad", s.getNacionalidad());
             obj.put("numeroSocio", s.getNumeroSocio());
             obj.put("fechaAlta", s.getFechaAlta());

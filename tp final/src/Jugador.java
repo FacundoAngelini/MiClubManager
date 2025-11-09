@@ -85,7 +85,7 @@ public class Jugador extends Persona {
                 "dni='" + getDni() + '\'' +
                 ", nombre='" + getNombre() + '\'' +
                 ", apellido='" + getApellido()+ '\'' +
-                ", fechaNacimeiento='" + getFechaNacimeiento() + '\'' +
+                ", fechaNacimeiento='" + getFechaNacimiento() + '\'' +
                 ", nacionalidad='" + getNacionalidad() + '\'' +
                 "Jugador{" +
                 "estadisticaJugador=" + estadisticaJugador +

@@ -142,7 +142,7 @@ public class GestionPlantel implements MetodosComunes<Persona> {
             obj.put("dni", j.getDni());
             obj.put("nombre", j.getNombre());
             obj.put("apellido", j.getApellido());
-            obj.put("fechaNacimiento", j.getFechaNacimeiento());
+            obj.put("fechaNacimiento", j.getFechaNacimiento());
             obj.put("nacionalidad", j.getNacionalidad());
             obj.put("numeroCamiseta", j.getNumeroCamiseta());
             obj.put("salario", j.getContrato().obtenerSalario());
@@ -157,7 +157,7 @@ public class GestionPlantel implements MetodosComunes<Persona> {
                 objC.put("dni", ct.getDni());
                 objC.put("nombre", ct.getNombre());
                 objC.put("apellido", ct.getApellido());
-                objC.put("fechaNacimiento", ct.getFechaNacimeiento());
+                objC.put("fechaNacimiento", ct.getFechaNacimiento());
                 objC.put("nacionalidad", ct.getNacionalidad());
                 objC.put("puesto", ct.getPuesto().toString());
                 objC.put("salario", ct.getContrato().obtenerSalario());

@@ -4,11 +4,10 @@ public class Socio extends Persona {
     private String fechaAlta;
     private boolean cuotaAlDia;
 
-    public Socio(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, int numeroSocio, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) {
-        super(dni, nombre, apellido, fechaNacimeiento, nacionalidad);
+    public Socio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroSocio, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) {
+        super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
         this.numeroSocio = numeroSocio;
-        this.cuotaAlDia = true;
-        this.fechaAlta = fechaAlta;  // seria la fecha en cuando se hace socio
+        this.tiposocio = (tiposocio != null) ? tiposocio : Tiposocio.ACTIVO;        this.fechaAlta = fechaAlta;  // seria la fecha en cuando se hace socio
         this.tiposocio = tiposocio;
     }
 
@@ -41,6 +40,9 @@ public class Socio extends Persona {
     }
 
     public void setTiposocio(Tiposocio tiposocio) {
+        if(tiposocio == null) {
+            throw new IllegalArgumentException("Tiposocio no puede ser null");
+        }
         this.tiposocio = tiposocio;
     }
 

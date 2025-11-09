@@ -1,4 +1,7 @@
-import java.time.LocalDate;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Objects;
 
 public class Partido {
     private String fecha;
@@ -73,6 +76,55 @@ public class Partido {
         this.entradasVendidas = entradasVendidas;
     }
 
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("fecha", fecha);
+        obj.put("entradasVendidas", entradasVendidas);
+        obj.put("entradasDadasSocio", EntradasDadasSocio);
+        obj.put("estadio", estadio.getNombre());
+        obj.put("valorEntrada", valorEntrada.getPrecio());
+
+
+        FichaDelPartido ficha = this.fichaDelPartido;
+        JSONObject objFicha = new JSONObject();
+        objFicha.put("golesLocal", ficha.getGolesLocal());
+        objFicha.put("golesVisitante", ficha.getGolesVisitante());
+
+        JSONArray arrayGoles = new JSONArray();
+        for (Gol gol : ficha.getGoles()) {
+            JSONObject objGol = new JSONObject();
+            objGol.put("jugador", gol.getJugador().getNombre() + " " + gol.getJugador().getApellido());
+            objGol.put("fueGolLocal", gol.isFueGolLocal());
+            objGol.put("minuto", gol.getMinuto());
+            arrayGoles.put(objGol);
+        }
+        objFicha.put("goles", arrayGoles);
+
+        JSONArray arrayTarjetas = new JSONArray();
+        for (TarjetaAplicada tarjeta : ficha.getTarjetas()) {
+            JSONObject objTarjeta = new JSONObject();
+            objTarjeta.put("jugador", tarjeta.getJugador().getNombre() + " " + tarjeta.getJugador().getApellido());
+            objTarjeta.put("tipoTarjeta", tarjeta.getTipoTarjeta().toString());
+            objTarjeta.put("minuto", tarjeta.getMinuto());
+            arrayTarjetas.put(objTarjeta);
+        }
+        objFicha.put("tarjetas", arrayTarjetas);
+
+        JSONArray arrayLesionados = new JSONArray();
+        for (Jugador lesionado : ficha.getLesionados()) {
+            JSONObject objLesionado = new JSONObject();
+            objLesionado.put("nombre", lesionado.getNombre() + " " + lesionado.getApellido());
+            objLesionado.put("numeroCamiseta", lesionado.getNumeroCamiseta());
+            arrayLesionados.put(objLesionado);
+        }
+        objFicha.put("lesionados", arrayLesionados);
+
+        obj.put("fichaDelPartido", objFicha);
+
+        return obj;
+    }
+
+
     @Override
     public String toString() {
         return "Partido{" +
@@ -83,5 +135,17 @@ public class Partido {
                 ", valorEntrada=" + valorEntrada +
                 ", EntradasDadasSocio=" + EntradasDadasSocio +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Partido partido = (Partido) o;
+        return Objects.equals(fecha, partido.fecha) && Objects.equals(estadio, partido.estadio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fecha, estadio);
     }
 }

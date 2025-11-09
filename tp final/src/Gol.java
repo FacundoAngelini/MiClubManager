@@ -3,9 +3,9 @@ import java.time.LocalDate;
 public class Gol {
     private Jugador jugador;
     private boolean fueGolLocal;
-    private LocalDate minuto;
+    private String minuto;
 
-    public Gol(Jugador jugador, boolean fueGolLocal, LocalDate minuto) {
+    public Gol(Jugador jugador, boolean fueGolLocal, String minuto) {
         this.jugador = jugador;
         this.fueGolLocal = fueGolLocal;
         this.minuto = minuto;
@@ -13,12 +13,11 @@ public class Gol {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Gol{");
-        sb.append("jugador=").append(jugador);
-        sb.append(", fueGolLocal=").append(fueGolLocal);
-        sb.append(", minuto=").append(minuto);
-        sb.append('}');
-        return sb.toString();
+        return "Gol{" +
+                "jugador=" + jugador +
+                ", fueGolLocal=" + fueGolLocal +
+                ", minuto='" + minuto + '\'' +
+                '}';
     }
 
     public Jugador getJugador() {
@@ -37,11 +36,11 @@ public class Gol {
         this.fueGolLocal = fueGolLocal;
     }
 
-    public LocalDate getMinuto() {
+    public String getMinuto() {
         return minuto;
     }
 
-    public void setMinuto(LocalDate minuto) {
+    public void setMinuto(String minuto) {
         this.minuto = minuto;
     }
 }
