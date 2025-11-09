@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 public abstract class Producto{
     protected String nombre;
     protected String marca;
@@ -34,4 +36,5 @@ public abstract class Producto{
     }
 
     protected abstract String muestraDatos();
+    public abstract JSONObject toJSON();
 }

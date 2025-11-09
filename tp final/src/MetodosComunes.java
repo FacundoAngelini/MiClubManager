@@ -1,4 +1,10 @@
+import java.util.ArrayList;
+
 public interface MetodosComunes<T> {
-    void agregarElemento (T elemento);
-    void eliminarElemento (T elemento);
+    void agregarElemento(T elemento) throws AccionImposible;
+    void eliminarElemento(T elemento) throws AccionImposible;
+    void modificarElemento(T elemento) throws AccionImposible;
+    boolean existe(T elemento);
+    ArrayList<T>listar();
+    void guardarJSON(String ruta);
 }
