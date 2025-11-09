@@ -1,14 +1,12 @@
-import java.time.LocalDate;
-
 public class Contrato {
     private int idContrato;
     private double salario;
     private int mesesDuracion;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
+    private String fechaInicio;
+    private String fechaFin;
     private boolean contratoActivo;
 
-    public Contrato(int idContrato, double salario, LocalDate fechaFin, boolean contratoActivo, LocalDate fechaInicio, int mesesDuracion) {
+    public Contrato(int idContrato, double salario, String fechaFin, boolean contratoActivo, String fechaInicio, int mesesDuracion) {
         this.idContrato = idContrato;
         this.salario = salario;
         this.fechaFin = fechaFin;
@@ -17,17 +15,10 @@ public class Contrato {
         this.mesesDuracion = mesesDuracion;
     }
 
-    public boolean estaVigente()
-    {
-        LocalDate hoy = LocalDate.now();
-        if(!hoy.isAfter(fechaFin) &&  hoy.isBefore(fechaInicio))
-        {
-            return false;
-        }
-        return true;
-
+    public boolean estaVigente() {
+        String hoy = java.time.LocalDate.now().toString();
+        return hoy.compareTo(fechaInicio) >= 0 && hoy.compareTo(fechaFin) <= 0;
     }
-
 
     public double obtenerSalario()
     {
