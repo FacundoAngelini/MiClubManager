@@ -29,6 +29,13 @@ public class Estadio {
     }
 
 
-
-
+    @Override
+    public String toString() {
+        return "Estadio{" +
+                "nombre='" + nombre + '\'' +
+                ", capacidad=" + capacidad +
+                ", ubicacion='" + ubicacion + '\'' +
+                ", costoMantenimiento=" + costoMantenimiento +
+                '}';
+    }
 }
