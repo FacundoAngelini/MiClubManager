@@ -1,12 +1,10 @@
-import java.time.LocalDate;
-
 public class Socio extends Persona {
     private int numeroSocio;
     private Tiposocio tiposocio;
-    private LocalDate fechaAlta;
+    private String fechaAlta;
     private boolean cuotaAlDia;
 
-    public Socio(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, int numeroSocio, boolean cuotaAlDia, LocalDate fechaAlta, Tiposocio tiposocio) {
+    public Socio(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, int numeroSocio, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) {
         super(dni, nombre, apellido, fechaNacimeiento, nacionalidad);
         this.numeroSocio = numeroSocio;
         this.cuotaAlDia = true;
@@ -30,11 +28,11 @@ public class Socio extends Persona {
         this.cuotaAlDia = cuotaAlDia;
     }
 
-    public LocalDate getFechaAlta() {
+    public String getFechaAlta() {
         return fechaAlta;
     }
 
-    public void setFechaAlta(LocalDate fechaAlta) {
+    public void setFechaAlta(String fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
 
