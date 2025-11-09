@@ -1,7 +1,7 @@
 public enum ValorEntradas {
-    POPULAR(100),
-    PLATEA(150),
-    PALCO(200);
+    POPULAR(12000),
+    PLATEA(15000),
+    PALCO(20000);
     private final double precio;
     ValorEntradas(int precio) {
         this.precio = precio;
