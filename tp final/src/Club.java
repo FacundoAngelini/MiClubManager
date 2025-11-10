@@ -1,13 +1,61 @@
-import java.util.HashMap;
-
 public class Club {
-    //INYECTORES
-    /*HashMap<Integer, Socio> mapaSocios=new HashMap<>();
+    private GestionJugadores gestionJugadores;
+    private GestionCuerpoTecnico gestionCuerpoTecnico;
+    private GestionSocio gestionSocios;
+    private GestorPartido gestorPartidos;
+    private Inventario<Producto> inventario;
+    private GestionEstadio gestionEstadios;
+    private GestionPresupuesto gestionPresupuesto;
 
-    GestorPartido gestorPartido=new GestorPartido();
-    Inventario inventario=new Inventario();
-    GestionPresupuesto gestionPresupuesto=new GestionPresupuesto();
-    GestionSocio gestionSocio=new GestionSocio(mapaSocios);
-    GestionJugadores gestionJugadores=new GestionJugadores();
-    GestionCuerpoTecnico gestionCuerpoTecnico=new GestionCuerpoTecnico();*/
+    public Club(double saldoInicial) {
+
+        this.gestionPresupuesto = new GestionPresupuesto(saldoInicial);
+
+        this.gestionJugadores = new GestionJugadores(gestionPresupuesto);
+        this.gestionCuerpoTecnico = new GestionCuerpoTecnico();
+        this.gestionSocios = new GestionSocio();
+        this.gestorPartidos = new GestorPartido();
+        this.inventario = new Inventario<>();
+        this.gestionEstadios = new GestionEstadio(gestionPresupuesto);
+    }
+
+    // Getters para acceder a las gestiones
+    public GestionJugadores getGestionJugadores() {
+        return gestionJugadores;
+    }
+
+    public GestionCuerpoTecnico getGestionCuerpoTecnico() {
+        return gestionCuerpoTecnico;
+    }
+
+    public GestionSocio getGestionSocios() {
+        return gestionSocios;
+    }
+
+    public GestorPartido getGestorPartidos() {
+        return gestorPartidos;
+    }
+
+    public Inventario<Producto> getInventario() {
+        return inventario;
+    }
+
+    public GestionEstadio getGestionEstadios() {
+        return gestionEstadios;
+    }
+
+    public GestionPresupuesto getGestionPresupuesto() {
+        return gestionPresupuesto;
+    }
+
+    // Métodos opcionales de conveniencia
+    public void guardarDatosJSON() {
+        gestionJugadores.guardarJSON();
+        gestionCuerpoTecnico.guardarJSON();
+        gestionSocios.guardarJSON();
+        gestorPartidos.guardarJSON();
+        inventario.guardarJSON();
+        gestionEstadios.guardarJSON();
+        // presupuesto no necesita JSON, asumo
+    }
 }

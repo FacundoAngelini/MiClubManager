@@ -3,8 +3,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GestionPresupuesto {
-    private final Presupuesto presupuesto;
-    private final ArrayList<Transaccion> listaTransacciones;
+    private  Presupuesto presupuesto;
+    private  ArrayList<Transaccion> listaTransacciones;
+
+    public GestionPresupuesto(double saldoInicial) {
+        this.presupuesto = new Presupuesto(saldoInicial);
+    }
 
     public GestionPresupuesto(Presupuesto presupuestoCentral) {
         this.presupuesto = presupuestoCentral;

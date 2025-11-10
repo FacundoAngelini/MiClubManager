@@ -4,7 +4,7 @@ public class GestionEstadio {
     private Estadio estadio;
     private GestionPresupuesto  presupuestoCentral;
 
-    public GestionEstadio(Estadio estadio, GestionPresupuesto presupuestoCentral) {
+    public GestionEstadio(GestionPresupuesto presupuestoCentral) {
         this.estadio = estadio;
         this.presupuestoCentral = presupuestoCentral;
     }

@@ -1,86 +1,71 @@
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Inventario<T extends Producto> implements MetodosComunes<T>{
-    private ArrayList<T> items;
+public class Inventario<T extends Producto> implements MetodosComunes<T, String>{
+    private HashMap<String, T> items;
+
     public Inventario() {
-        items = new ArrayList<T>();
+        items = new HashMap<>();
     }
 
-
-    @Override
-    public void agregarElemento(T item) throws IngresoInvalido{
-        if(item == null){
-            throw new IngresoInvalido("No se puede agregar un item vacio");
+    public void agregarElemento(T item) throws IngresoInvalido {
+        if(item == null) {
+            throw new IngresoInvalido("No se puede agregar un item nulo");
         }
-        if(item.getCantidad()<=0)
-        {
-            throw new IngresoInvalido("No se puede agregar un item con cantidad 0");
+        if(item.getCantidad() <= 0) {
+            throw new IngresoInvalido("Cantidad debe ser mayor que 0");
         }
-        items.add(item);
-        System.out.println("Se agrego correctamente");
+        items.put(item.getNombre(), item);
     }
 
-    @Override
-    public void eliminarElemento(T item)throws AccionImposible {
-        if(item == null || !items.contains(item)){
+    public void eliminarElemento(String id) throws AccionImposible {
+        if(!items.containsKey(id)) {
             throw new AccionImposible("Producto no encontrado");
         }
-        items.remove(item);
-        System.out.println("Se removio el item");
+        items.remove(id);
     }
-
-    @Override
-    public void modificarElemento(T item) throws AccionImposible {
-        if(item == null || !items.contains(item)) throw new AccionImposible("Producto no encontrado");
-        for(int i = 0; i < items.size(); i++){
-            if(items.get(i).equals(item)){
-                items.set(i, item);
-                System.out.println("Producto modificado correctamente");
-                return;
-            }
+    public T devuelveElemento(String key) throws AccionImposible {
+        if(!items.containsKey(key)) {
+            throw new AccionImposible("Producto no encontrado");
         }
+        return items.get(key);
     }
 
-    @Override
-    public boolean existe(T item) {
-        return items.contains(item);
+    public boolean existe(String id) {
+        return items.containsKey(id);
     }
 
-    @Override
     public ArrayList<T> listar() {
-        return items;
+        return new ArrayList<>(items.values());
     }
 
-    public int consultarStock(T item) throws AccionImposible {
-        if(item == null || !items.contains(item)) throw new AccionImposible("Producto no encontrado");
-
-        int cantidad = 0;
-        for(T i : items){
-            if(i.equals(item)){
-                cantidad += i.getCantidad();
-            }
+    public int consultarStock(String id) throws AccionImposible {
+        if(!items.containsKey(id)) {
+            throw new AccionImposible("Producto no encontrado");
         }
-        return cantidad;
+        return items.get(id).getCantidad();
     }
+
 
     public void mostrarInventario() {
         if(items.isEmpty()) {
-            System.out.println("El inventario está vacío");
-        } else {
-            for(T item : items){
-                System.out.println(item.muestraDatos());
-            }
+            System.out.println("Inventario vacío");
+            return;
+        }
+        for(T item : items.values()){
+            System.out.println(item.muestraDatos());
         }
     }
 
     @Override
     public void guardarJSON() {
         JSONArray array = new JSONArray();
-        for (T item : items) {
+        for (T item : items.values()) {
             array.put(item.toJSON());
         }
         JSONUtiles.uploadJSON(array, "inventario");
     }
+
 }

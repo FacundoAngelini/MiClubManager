@@ -9,6 +9,10 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
 
     private HashMap<String, CuerpoTecnico> cuerpoTecnico = new HashMap<>();
 
+    public GestionCuerpoTecnico() {
+        this.cuerpoTecnico = cuerpoTecnico;
+    }
+
     public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp)
             throws AccionImposible, ElementoDuplicadoEx {
 

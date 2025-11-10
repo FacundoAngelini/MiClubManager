@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-//METODOS A AGREGAR: MOSTRAR LESIONES, GOLES, TARJETAS
 
 public class GestionJugadores implements MetodosComunes<Jugador, String> {
     private HashMap<String, Jugador> jugadores = new HashMap<>();
