@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class GestionSocio implements MetodosComunes<Socio> {
     private HashMap<Integer, Socio> socios;
 
-    public GestionSocio() {
+    public GestionSocio(HashMap<Integer, Socio> socios) {
         this.socios = new HashMap<>();
     }
 
@@ -15,6 +15,9 @@ public class GestionSocio implements MetodosComunes<Socio> {
     public void agregarElemento(Socio elemento) throws IngresoInvalido {
         if (socios.containsKey(elemento.getNumeroSocio())) {
             throw new IngresoInvalido("El socio ya existe");
+        }
+        if (socios.containsValue(elemento.getDni())) {
+            throw new IngresoInvalido("Ya existe un socio con este dni");
         }
         socios.put(elemento.getNumeroSocio(), elemento);
     }

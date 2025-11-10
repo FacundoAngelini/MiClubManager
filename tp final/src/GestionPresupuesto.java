@@ -3,7 +3,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class GestionPresupuesto implements MetodosComunes <Presupuesto>{
+public class GestionPresupuesto implements MetodosComunes <Presupuesto, Integer>{
     private Presupuesto presupuesto;
 
     public GestionPresupuesto() {
@@ -16,7 +16,7 @@ public class GestionPresupuesto implements MetodosComunes <Presupuesto>{
     }
 
     @Override
-    public void eliminarElemento(Presupuesto elemento) throws AccionImposible {
+    public void eliminarElemento(int id) throws AccionImposible {
         throw new AccionImposible("No se puede eliminar un nuevo presupuesto");
     }
 
