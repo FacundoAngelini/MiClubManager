@@ -1,7 +1,7 @@
 public class Estadio {
-    private final String nombre;
+    private String nombre;
     private int capacidad;
-    private final String ubicacion;
+    private String ubicacion;
     private double costoMantenimiento;
 
     public Estadio(String nombre, int capacidad, String ubicacion, double costoMantenimiento) {
@@ -29,6 +29,14 @@ public class Estadio {
 
     public double getCostoMantenimiento() {
         return costoMantenimiento;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public void setCostoMantenimiento(double costoMantenimiento) {

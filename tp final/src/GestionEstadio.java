@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 public class GestionEstadio {
     private Estadio estadio;
     private GestionPresupuesto  presupuestoCentral;
@@ -7,13 +9,50 @@ public class GestionEstadio {
         this.presupuestoCentral = presupuestoCentral;
     }
 
-    public void pagarMantenimiento(String fecha) throws FondoInsuficienteEx{
+    public void agregarEstadio(String nombre, int capacidad, String ubicacion, double costoMantenimiento) {
+        this.estadio = new Estadio(nombre, capacidad, ubicacion, costoMantenimiento);
+    }
+
+    public void pagarMantenimiento(String fecha) throws FondoInsuficienteEx, AccionImposible{
+        if(estadio == null){
+            throw new AccionImposible("No hay un estadio creado");
+        }
         double monto= estadio.getCostoMantenimiento();
         this.presupuestoCentral.agregar_fondos(monto,"Costo de mantenimiento del estadio.",fecha);
     }
-    public void modificar_capacidad(int nuevaCapacidad){
-        this.estadio.setCapacidad(nuevaCapacidad);
+
+    public void modificar_capacidad(int nuevaCapacidad) throws AccionImposible{
+        if(estadio == null){
+            throw new AccionImposible("No hay un estadio creado");
+        }
+         estadio.setCapacidad(nuevaCapacidad);
     }
-    public void actualizar_costo_mantenimiento(int nuevoCosto){
-      this.estadio.setCostoMantenimiento(nuevoCosto);
-    }}
+    public void actualizar_costo_mantenimiento(int nuevoCosto) throws AccionImposible{
+      if(estadio == null){
+          throw  new AccionImposible("No hay un estadio creado");
+      }
+      estadio.setCostoMantenimiento(nuevoCosto);
+    }
+
+    public void cambiarNombre(String nuevoNombre) throws AccionImposible {
+        if(estadio == null){
+            throw new AccionImposible("No hay estadio creado.");
+        }
+        estadio.setNombre(nuevoNombre);
+    }
+
+    public void guardarJSON() {
+        if(estadio == null) throw new IllegalStateException("No hay estadio creado.");
+        JSONObject obj = new JSONObject();
+        obj.put("nombre", estadio.getNombre());
+        obj.put("capacidad", estadio.getCapacidad());
+        obj.put("ubicacion", estadio.getUbicacion());
+        obj.put("costoMantenimiento", estadio.getCostoMantenimiento());
+        JSONUtiles.uploadJSON(obj, "Estadio");
+    }
+
+    public Estadio getEstadio() {
+        return estadio;
+    }
+
+}
