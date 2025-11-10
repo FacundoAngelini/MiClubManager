@@ -11,7 +11,7 @@ public class Club {
 
         this.gestionPresupuesto = new GestionPresupuesto(saldoInicial);
 
-        this.gestionJugadores = new GestionJugadores(gestionPresupuesto);
+        this.gestionJugadores = new GestionJugadores(gestionPresupuesto, gestorPartidos);
         this.gestionCuerpoTecnico = new GestionCuerpoTecnico();
         this.gestionSocios = new GestionSocio();
         this.gestorPartidos = new GestorPartido();
@@ -19,7 +19,6 @@ public class Club {
         this.gestionEstadios = new GestionEstadio(gestionPresupuesto);
     }
 
-    // Getters para acceder a las gestiones
     public GestionJugadores getGestionJugadores() {
         return gestionJugadores;
     }
@@ -48,7 +47,7 @@ public class Club {
         return gestionPresupuesto;
     }
 
-    // Métodos opcionales de conveniencia
+
     public void guardarDatosJSON() {
         gestionJugadores.guardarJSON();
         gestionCuerpoTecnico.guardarJSON();
@@ -56,6 +55,6 @@ public class Club {
         gestorPartidos.guardarJSON();
         inventario.guardarJSON();
         gestionEstadios.guardarJSON();
-        // presupuesto no necesita JSON, asumo
+        gestionPresupuesto.guardarJSON();
     }
 }

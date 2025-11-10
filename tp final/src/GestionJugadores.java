@@ -9,10 +9,12 @@ import java.util.HashMap;
 public class GestionJugadores implements MetodosComunes<Jugador, String> {
     private HashMap<String, Jugador> jugadores = new HashMap<>();
     private GestionPresupuesto gestorpresupuesto;
+    private GestorPartido gestorPartido;
 
-    public GestionJugadores(GestionPresupuesto gestorpresupuesto) {
+    public GestionJugadores(GestionPresupuesto gestorpresupuesto, GestorPartido gestorPartido ) {
         this.jugadores = jugadores;
         this.gestorpresupuesto = gestorpresupuesto;
+        this.gestorPartido = gestorPartido;
     }
 
     public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Posicion posicion) throws ElementoDuplicadoEx {
