@@ -13,6 +13,8 @@ public class GestionSocio implements MetodosComunes<Socio> {
 
     @Override
     public void agregarElemento(Socio elemento) throws IngresoInvalido {
+
+        boolean existeSocio = socios.values().stream().anyMatch( ds -> elemento.getDni().equals(ds.getDni()));
         if (socios.containsKey(elemento.getNumeroSocio())) {
             throw new IngresoInvalido("El socio ya existe");
         }
