@@ -4,28 +4,30 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GestionSocio implements MetodosComunes<Socio,String> {
+public class GestionSocio implements MetodosComunes<Socio, String> {
     private HashMap<Integer, Socio> socios;
+    private static int contadorsocios = 1;
 
-    public GestionSocio(HashMap<Integer, Socio> socios) {
-        this.socios = new HashMap<>();
+    public GestionSocio(HashMap<Integer, Socio> sociosCentrales) {
+        this.socios = sociosCentrales;
+    }
+
+    public void agregarSocio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) throws IngresoInvalido {
+        boolean existeSocio = socios.values().stream().anyMatch(socio -> dni.equals(socio.getDni()));
+        if(existeSocio){
+            throw new ElementoDuplicadoEx("El socio ya existe");
+        }
+        if(dni == null){
+            throw new IngresoInvalido("El dni no fue cargado");
+        }
+        Socio newSocio = new Socio(dni, nombre, apellido, fechaNacimiento, nacionalidad, cuotaAlDia, fechaAlta, tiposocio);
+        newSocio.setNumeroSocio(contadorsocios);
+        contadorsocios++;
+        socios.put(newSocio.getNumeroSocio(), newSocio);
     }
 
     @Override
-    public void agregarElemento(Socio elemento) throws IngresoInvalido {
-
-        boolean existeSocio = socios.values().stream().anyMatch( ds -> elemento.getDni().equals(ds.getDni()));
-        if (socios.containsKey(elemento.getNumeroSocio())) {
-            throw new IngresoInvalido("El socio ya existe");
-        }
-        if (socios.containsValue(elemento.getDni())) {
-            throw new IngresoInvalido("Ya existe un socio con este dni");
-        }
-        socios.put(elemento.getNumeroSocio(), elemento);
-    }
-
-    @Override
-    public void eliminarElemento(Socio elemento) throws AccionImposible {
+    public void eliminarElemento(int elemento) throws AccionImposible {
         if (!socios.containsKey(elemento.getNumeroSocio())) {
             throw new AccionImposible("El socio no se encuentra");
         }

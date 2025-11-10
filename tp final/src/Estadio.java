@@ -1,16 +1,15 @@
 public class Estadio {
-    private String nombre;
+    private final String nombre;
     private int capacidad;
-    private String ubicacion;
+    private final String ubicacion;
     private double costoMantenimiento;
 
-    public Estadio(String nombre, int capacidad, String ubicacion,  double costoMantenimiento) {
+    public Estadio(String nombre, int capacidad, String ubicacion, double costoMantenimiento) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.ubicacion = ubicacion;
         this.costoMantenimiento = costoMantenimiento;
     }
-
 
     public String getNombre() {
         return nombre;
@@ -20,13 +19,19 @@ public class Estadio {
         return capacidad;
     }
 
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
     public String getUbicacion() {
         return ubicacion;
     }
 
-    public double CostoMantenimiento() {
+    public double getCostoMantenimiento() {
         return costoMantenimiento;
     }
 
-
+    public void setCostoMantenimiento(double costoMantenimiento) {
+        this.costoMantenimiento = costoMantenimiento;
+    }
 }

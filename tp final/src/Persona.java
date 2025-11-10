@@ -77,6 +77,4 @@ public abstract class Persona {
                 ", nacionalidad='" + nacionalidad + '\'' +
                 '}';
     }
-
-    public abstract void obtenerDatos();
 }

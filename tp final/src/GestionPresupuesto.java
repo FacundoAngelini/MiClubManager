@@ -2,75 +2,28 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class GestionPresupuesto implements MetodosComunes <Presupuesto, Integer>{
+public class GestionPresupuesto {
     private Presupuesto presupuesto;
-
-    public GestionPresupuesto() {
-        this.presupuesto = new Presupuesto(0,0);
+    private List<Transaccion> listaTransacciones;
+    public GestionPresupuesto(Presupuesto presupuestoCentral) {
+        this.presupuesto = presupuestoCentral;
+        this.listaTransacciones = new ArrayList<>();
     }
-
-    @Override
-    public void agregarElemento(Presupuesto elemento) throws IngresoInvalido {
-        throw new IngresoInvalido("No se puede ingresar un nuevo presupuesto");
+    public void agregar_fondos(double dinero, String descripcion,String fecha){
+        this.presupuesto.añadir_monto(dinero);
+        Transaccion t=new Transaccion(descripcion,dinero,"INGRESO", fecha);
+        this.listaTransacciones.add(t);
     }
+    public void quitarFondos(double dinero, String descripcion,String fecha) throws FondoInsuficienteEx {
 
-    @Override
-    public void eliminarElemento(int id) throws AccionImposible {
-        throw new AccionImposible("No se puede eliminar un nuevo presupuesto");
+        this.presupuesto.quitar_fondos(dinero);
+        Transaccion t=new Transaccion(descripcion,dinero,"RETIRO", fecha);
+        this.listaTransacciones.add(t);
     }
-
-    @Override
-    public void modificarElemento(Presupuesto elemento) throws AccionImposible {
-        throw new AccionImposible("No se puede modificar directamente el presupuesto");
+    public double verSaldoActual(){
+        return this.presupuesto.getPresupuesto();
     }
-
-    @Override
-    public boolean existe(Presupuesto elemento) {
-        return elemento != null;
-    }
-
-    @Override
-    public ArrayList<Presupuesto> listar() {
-        ArrayList<Presupuesto> lista = new ArrayList<>();
-        lista.add(presupuesto);
-        return lista;
-    }
-
-    public  void guardarJSON() {
-        JSONObject obj = new JSONObject();
-        obj.put("ingreso", presupuesto.getIngreso());
-        obj.put("egreso", presupuesto.getEgreso());
-        obj.put("balance total", presupuesto.calcularResultados());
-
-        JSONUtiles.uploadJSON(obj, "presupuesto");
-    }
-
-    public void agregarIngreso(double monto)  {
-        try{
-            presupuesto.agregarBeneificos(monto);
-        } catch (IngresoInvalido e) {
-            System.out.println("Error al ingreso del presupuesto" +e.getMessage());
-        }
-    }
-
-    public void agregarEgreso(double monto)  {
-        try{
-            presupuesto.agregarPerdidas(monto);
-        } catch (IngresoInvalido e) {
-            System.out.println("Error al ingresar un egreso del presupuesto" +e.getMessage());
-        }
-    }
-
-    public void reiniciarPresupuesto(){
-        presupuesto.reiniciarPresupuesto();
-    }
-
-    public void mostrarBalance(){
-        presupuesto.mostrarResumen();
-    }
-
-
-
 }
 

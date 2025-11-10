@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, String> {
+    //CLASE SIN TRABAJAR A FONDO, PERO CON MENOS METODOS QUE GESTOR JUGADOR
     private HashMap<String, CuerpoTecnico> cuerpoTecnico = new HashMap<>();
 
     @Override

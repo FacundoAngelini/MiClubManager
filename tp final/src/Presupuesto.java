@@ -1,63 +1,35 @@
 public class Presupuesto {
-    private double ingreso;
-    private double egreso;
+    private double presupuesto;
 
-    public Presupuesto(double ingreso, double egreso) {
-        this.ingreso = ingreso;
-        this.egreso = egreso;
+    public Presupuesto(double presupuesto) {
+        this.presupuesto = presupuesto;
     }
 
-    public void agregarBeneificos(double beneificos) throws IngresoInvalido
+    public double getPresupuesto() {
+        return presupuesto;
+    }
+
+    public void setPresupuesto(double presupuesto) {
+        this.presupuesto = presupuesto;
+    }
+
+    public void añadir_monto(double monto){
+        this.presupuesto+=monto;
+    }
+
+    public void quitar_fondos(double monto)  throws FondoInsuficienteEx
     {
-        if(beneificos < 0)
-        {
-            throw new IngresoInvalido("No se puede agregar un numero negativo al ingreso");
+        if(this.presupuesto<monto){
+           throw new FondoInsuficienteEx("Presupuesto insuficiente");
         }
-        ingreso += beneificos;
+        this.presupuesto-=monto;
     }
-
-    public void agregarPerdidas(double perdida) throws IngresoInvalido
-    {
-        if(perdida < 0)
-        {
-            throw new IngresoInvalido("El numero ingresado de la perdida debe ser positivo");
-        }
-        egreso += perdida;
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Presupuesto{");
+        sb.append("presupuesto=").append(presupuesto);
+        sb.append('}');
+        return sb.toString();
     }
-
-    public void reiniciarPresupuesto()
-    {
-        egreso = 0;
-        ingreso = 0;
-        System.out.println("El presupuesto esta de nuevo en 0");
-    }
-
-
-    public double calcularResultados()
-    {
-        return ingreso - egreso;
-    }
-
-    public double getIngreso() {
-        return ingreso;
-    }
-
-
-    public double getEgreso() {
-        return egreso;
-    }
-
-
-    public void mostrarResumen() {
-        System.out.println("----- Presupuesto del club ------");
-        System.out.println("Total de ingresos: " + ingreso);
-        System.out.println("Total de egresos: " + egreso);
-        double resultado = calcularResultados();
-        if (resultado < 0) {
-            System.out.println("El balance es negativo :$ " + resultado);
-        } else {
-            System.out.println("El balance es positivo :$ " + resultado);
-        }
-    }
-
 }
+

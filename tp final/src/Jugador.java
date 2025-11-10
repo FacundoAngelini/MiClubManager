@@ -1,3 +1,5 @@
+import java.util.StringJoiner;
+
 public class Jugador extends Persona {
     private EstadisticaJugador estadisticaJugador;
     private Posicion posicion;
@@ -5,9 +7,9 @@ public class Jugador extends Persona {
     private double valorJugador;
     private int numeroCamiseta;
 
-    public Jugador(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, EstadisticaJugador estadisticaJugador, int numeroCamiseta, double valorJugador, Contrato contrato, Posicion posicion) {
+    public Jugador(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, int numeroCamiseta, Contrato contrato, Posicion posicion) {
         super(dni, nombre, apellido, fechaNacimeiento, nacionalidad);
-        this.estadisticaJugador = estadisticaJugador;
+        this.estadisticaJugador = new EstadisticaJugador();
         this.numeroCamiseta = numeroCamiseta;
         this.valorJugador = valorJugador;
         this.contrato = contrato;
@@ -46,31 +48,6 @@ public class Jugador extends Persona {
         this.valorJugador = valorJugador;
     }
 
-    public void actualizarEstadisticas(FichaDelPartido partido) {
-        for(Gol gol : partido.getGoles()) {
-            if(gol.getJugador().equals(this)) {
-                estadisticaJugador.agregarGoles(1);
-            }
-        }
-
-        for(TarjetaAplicada tarjeta : partido.getTarjetas()) {
-            if(tarjeta.getJugador().equals(this)) {
-                if(tarjeta.getTipoTarjeta() == TipoTarjeta.AMARILLA) {
-                    estadisticaJugador.agregarTarjetaAmarilla();
-                } else {
-                    estadisticaJugador.agregarTarjetaRoja();
-                }
-            }
-        }
-
-        for (Jugador lesionado : partido.getLesionados()) {
-            if (lesionado.equals(this)) {
-                estadisticaJugador.agregarLesion();
-                break;
-            }
-        }
-    }
-
     public int getNumeroCamiseta() {
         return numeroCamiseta;
     }
@@ -80,19 +57,16 @@ public class Jugador extends Persona {
     }
 
     @Override
-    public void obtenerDatos() {
-        System.out.println("Persona{" +
-                "dni='" + getDni() + '\'' +
-                ", nombre='" + getNombre() + '\'' +
-                ", apellido='" + getApellido()+ '\'' +
-                ", fechaNacimeiento='" + getFechaNacimiento() + '\'' +
-                ", nacionalidad='" + getNacionalidad() + '\'' +
-                "Jugador{" +
-                "estadisticaJugador=" + estadisticaJugador +
-                ", posicion=" + posicion +
-                ", contrato=" + contrato +
-                "valor jugador" +valorJugador +
-                "numero Camiseta" + numeroCamiseta+"}");
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Jugador{");
+        sb.append(super.toString());
+        sb.append(", ");
+        sb.append("estadisticaJugador=").append(estadisticaJugador);
+        sb.append(", posicion=").append(posicion);
+        sb.append(", contrato=").append(contrato);
+        sb.append(", valorJugador=").append(valorJugador);
+        sb.append(", numeroCamiseta=").append(numeroCamiseta);
+        sb.append('}');
+        return sb.toString();
     }
-
 }

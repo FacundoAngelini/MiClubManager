@@ -4,7 +4,7 @@ public class Socio extends Persona {
     private String fechaAlta;
     private boolean cuotaAlDia;
 
-    public Socio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroSocio, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) {
+    public Socio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) {
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
         this.numeroSocio = numeroSocio;
         this.tiposocio = (tiposocio != null) ? tiposocio : Tiposocio.ACTIVO;        this.fechaAlta = fechaAlta;  // seria la fecha en cuando se hace socio
