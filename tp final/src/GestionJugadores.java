@@ -10,33 +10,29 @@ import java.util.HashMap;
 public class GestionJugadores implements MetodosComunes<Jugador, String> {
     private HashMap<String, Jugador> jugadores = new HashMap<>();
     private GestionPresupuesto gestorpresupuesto;
-    private GestorPartido gestorPartidos;
 
-    public GestionJugadores(HashMap<String, Jugador> jugadores, GestionPresupuesto gestorpresupuesto, GestorPartido gestorPartidos) {
+    public GestionJugadores(GestionPresupuesto gestorpresupuesto) {
         this.jugadores = jugadores;
         this.gestorpresupuesto = gestorpresupuesto;
-        this.gestorPartidos = gestorPartidos;
     }
 
-    public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, EstadisticaJugador estadisticaJugador, int numeroCamiseta, double valorJugador, double salario, String fechaFin, String fechaInicio, int mesesDuracion, Posicion posicion) throws IngresoInvalido, ElementoDuplicadoEx {
-
+    public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Posicion posicion) throws ElementoDuplicadoEx {
         if (jugadores.containsKey(dni)) {
-            throw new ElementoDuplicadoEx("El numero de camiseta ya esta cargado");
+            throw new ElementoDuplicadoEx("El DNI ya está registrado.");
         }
-        boolean jugadorCargado = jugadores.values().stream().anyMatch(jugador->jugador.getNumeroCamiseta() == numeroCamiseta);
-        if (jugadorCargado) {
-            throw new ElementoDuplicadoEx("La camiseta esta ocupada");
+
+        boolean camisetaOcupada = jugadores.values().stream()
+                .anyMatch(j -> j.getNumeroCamiseta() == numeroCamiseta);
+
+        if (camisetaOcupada) {
+            throw new ElementoDuplicadoEx("El número de camiseta ya está ocupado.");
         }
-        Contrato newContrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
-        Jugador newJugador=new Jugador(dni,nombre,apellido,fechaNacimeiento,nacionalidad,numeroCamiseta,newContrato,posicion);
-        jugadores.put(dni, newJugador);
-    }
-    public void consultar_lesiones(String dni) throws ElementoInexistenteEx {
-        if(!jugadores.containsKey(dni)){
-            throw new ElementoInexistenteEx("El jugador no existe");
-        }
-        Jugador jugador = jugadores.get(dni);
-        jugador.getEstadisticaJugador().getLesiones();
+
+        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
+        Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, contrato, posicion);
+        jugador.setValorJugador(valorJugador);
+
+        jugadores.put(dni, jugador);
     }
 
     @Override
@@ -47,21 +43,17 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         jugadores.remove(dni);
     }
 
-
     @Override
     public Jugador devuelveElemento(String dni) throws AccionImposible {
-        if (!jugadores.containsKey(dni)) {
-            throw new ElementoInexistenteEx("El jugador no existe");
+        Jugador jugador = jugadores.get(dni);
+        if (jugador == null) {
+            throw new AccionImposible("Jugador no encontrado con DNI " + dni);
         }
-        return jugadores.get(dni);
+        return jugador;
     }
 
-    @Override
-    public boolean existe(String dni) throws ElementoInexistenteEx {
-        if (!jugadores.containsKey(dni)) {
-            return false;
-        }
-        return true;
+    public boolean existe(String dni) {
+        return jugadores.containsKey(dni);
     }
 
     public ArrayList<Jugador> listar() {
@@ -70,50 +62,53 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
     }
 
     public double calcularGastoSalarios() {
-        double total = 0;
-        for (Jugador j : jugadores.values()) {
-            total += j.getContrato().getSalario();
-        }
-        return total;
+        return jugadores.values().stream()
+                .mapToDouble(j -> j.getContrato().getSalario())
+                .sum();
     }
 
-    public void pagar_salarios(String fecha){
+    public void pagar_salarios(String fecha) throws FondoInsuficienteEx{
         double monto=calcularGastoSalarios();
         gestorpresupuesto.quitarFondos(monto,"Pago de salario de jugadores",fecha);
     }
 
-    public void comprar_jugador(double monto,Jugador jugador, String fecha) throws FondoInsuficienteEx{
+    public void comprar_jugador(double monto,Jugador jugador, String fecha) throws FondoInsuficienteEx, ElementoDuplicadoEx{
         if(gestorpresupuesto.verSaldoActual()<monto){
             throw new FondoInsuficienteEx("Saldo Insuficiente");
+        }
+        if (jugadores.containsKey(jugador.getDni())) {
+            throw new ElementoDuplicadoEx("El jugador ya existe.");
         }
         jugadores.put(jugador.getDni(), jugador);
         gestorpresupuesto.quitarFondos(monto,"COMPRA DE JUGADOR:" + jugador.getApellido(),fecha);
     }
 
-    public void vender_jugador(double monto,String dni, String fecha){
-        if(!jugadores.containsKey(dni)){
-            throw new ElementoInexistenteEx("El jugador no existe");
+    public void vender_jugador(double monto,String dni, String fecha) throws ElementoInexistenteEx{
+        Jugador jugador = jugadores.get(dni);
+        if (jugador == null) {
+            throw new ElementoInexistenteEx("El jugador no existe.");
         }
         gestorpresupuesto.agregar_fondos(monto,"VENTA DE JUGADOR",fecha);
         jugadores.remove(dni);
-
     }
+
     public void guardarJSON() {
-        JSONArray array = new JSONArray();
+            JSONArray array = new JSONArray();
 
-        for (Jugador j : jugadores.values()) {
-            JSONObject obj = new JSONObject();
-            obj.put("dni", j.getDni());
-            obj.put("nombre", j.getNombre());
-            obj.put("apellido", j.getApellido());
-            obj.put("fechaNacimiento", j.getFechaNacimiento());
-            obj.put("nacionalidad", j.getNacionalidad());
-            obj.put("numeroCamiseta", j.getNumeroCamiseta());
-            obj.put("salario", j.getContrato().getSalario());
-            obj.put("valor", j.getValorJugador());
-            obj.put("tipo", "jugador");
-            array.put(obj);
+            for (Jugador j : jugadores.values()) {
+                JSONObject obj = new JSONObject();
+                obj.put("dni", j.getDni());
+                obj.put("nombre", j.getNombre());
+                obj.put("apellido", j.getApellido());
+                obj.put("fechaNacimiento", j.getFechaNacimiento());
+                obj.put("nacionalidad", j.getNacionalidad());
+                obj.put("numeroCamiseta", j.getNumeroCamiseta());
+                obj.put("valorJugador", j.getValorJugador());
+                obj.put("salario", j.getContrato().getSalario());
+                obj.put("posicion", j.getPosicion().toString());
+                array.put(obj);
+            }
+
+            JSONUtiles.uploadJSON(array, "Plantel");
         }
-        JSONUtiles.uploadJSON(array, "Plantel");
-    }
 }

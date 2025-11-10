@@ -5,57 +5,78 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GestionSocio implements MetodosComunes<Socio, String> {
-    private HashMap<Integer, Socio> socios;
-    private static int contadorsocios = 1;
+    private final HashMap<Integer, Socio> socios;
 
-    public GestionSocio(HashMap<Integer, Socio> sociosCentrales) {
-        this.socios = sociosCentrales;
+    public GestionSocio() {
+        this.socios = new HashMap<>();
     }
 
-    public void agregarSocio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, boolean cuotaAlDia, String fechaAlta, Tiposocio tiposocio) throws IngresoInvalido {
-        boolean existeSocio = socios.values().stream().anyMatch(socio -> dni.equals(socio.getDni()));
-        if(existeSocio){
-            throw new ElementoDuplicadoEx("El socio ya existe");
+    public void agregarSocio(String dni, String nombre, String apellido,  String fechaNacimiento, String nacionalidad,  boolean cuotaAlDia, String fechaAlta, Tiposocio tipoSocio)  throws IngresoInvalido, ElementoDuplicadoEx {
+        if (dni == null || dni.isEmpty()) {
+            throw new IngresoInvalido("El DNI no fue cargado correctamente.");
         }
-        if(dni == null){
-            throw new IngresoInvalido("El dni no fue cargado");
+
+        boolean existeSocio = socios.values().stream()
+                .anyMatch(s -> dni.equals(s.getDni()));
+
+        if (existeSocio) {
+            throw new ElementoDuplicadoEx("El socio con DNI " + dni + " ya existe.");
         }
-        Socio newSocio = new Socio(dni, nombre, apellido, fechaNacimiento, nacionalidad, cuotaAlDia, fechaAlta, tiposocio);
-        newSocio.setNumeroSocio(contadorsocios);
-        contadorsocios++;
-        socios.put(newSocio.getNumeroSocio(), newSocio);
+
+        Socio nuevoSocio = new Socio(dni, nombre, apellido, fechaNacimiento,
+                nacionalidad, cuotaAlDia, fechaAlta, tipoSocio);
+
+        socios.put(nuevoSocio.getNumeroSocio(), nuevoSocio);
     }
 
-    @Override
-    public void eliminarElemento(int elemento) throws AccionImposible {
-        if (!socios.containsKey(elemento.getNumeroSocio())) {
-            throw new AccionImposible("El socio no se encuentra");
+
+    public void eliminarElemento(String dni) throws AccionImposible {
+        Socio socioAEliminar = socios.values().stream()
+                .filter(s -> s.getDni().equals(dni))
+                .findFirst()
+                .orElse(null);
+
+        if (socioAEliminar == null) {
+            throw new AccionImposible("El socio con DNI " + dni + " no se encuentra registrado.");
         }
-        if (socios.get(elemento.getNumeroSocio()) == null) {
-            throw new AccionImposible("El socio no existe");
-        }
-        socios.remove(elemento.getNumeroSocio());
+
+        socios.remove(socioAEliminar.getNumeroSocio());
     }
 
-    @Override
-    public void modificarElemento(Socio elemento) throws AccionImposible {
-        if (!socios.containsKey(elemento.getNumeroSocio())) {
-            throw new AccionImposible("El socio a modificar no se encntro");
+    public Socio devuelveElemento(String dni) throws AccionImposible {
+        return socios.values().stream()
+                .filter(s -> s.getDni().equals(dni))
+                .findFirst()
+                .orElseThrow(() -> new AccionImposible("No existe un socio con DNI " + dni));
+    }
+
+
+    public boolean existe(String dni) throws ElementoInexistenteEx {
+        boolean existe = socios.values().stream().anyMatch(s -> s.getDni().equals(dni));
+        if (!existe) {
+            throw new ElementoInexistenteEx("No se encontró un socio con el DNI: " + dni);
         }
-        socios.put(elemento.getNumeroSocio(), elemento);
+        return true;
     }
 
-    @Override
-    public boolean existe(Socio elemento) {
-        return socios.containsKey(elemento.getNumeroSocio());
-    }
-
-    @Override
     public ArrayList<Socio> listar() {
         return new ArrayList<>(socios.values());
     }
 
-    @Override
+    public void modificarElemento(Socio socioModificado) throws AccionImposible {
+        if (socioModificado == null) {
+            throw new AccionImposible("El socio a modificar no puede ser nulo.");
+        }
+
+        int numeroSocio = socioModificado.getNumeroSocio();
+        if (!socios.containsKey(numeroSocio)) {
+            throw new AccionImposible("No se encontró un socio con el número " + numeroSocio);
+        }
+
+        socios.put(numeroSocio, socioModificado);
+    }
+
+
     public void guardarJSON() {
         JSONArray array = new JSONArray();
 
@@ -69,10 +90,18 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
             obj.put("numeroSocio", s.getNumeroSocio());
             obj.put("fechaAlta", s.getFechaAlta());
             obj.put("cuotaAlDia", s.isCuotaAlDia());
-            obj.put("tipoSocio", s.getTiposocio().toString());
+            obj.put("tipoSocio", s.getTipoSocio().toString());
             array.put(obj);
         }
+
         JSONUtiles.uploadJSON(array, "socios");
     }
 
+
+    public double obtenerRecaudacionTotal() {
+        return socios.values().stream()
+                .mapToDouble(Socio::obtenerMontoRecaudado)
+                .sum();
+    }
 }
+

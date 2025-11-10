@@ -3,69 +3,131 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class GestorPartido implements MetodosComunes<Partido> {
-    private ArrayList<Partido> partidos;
+ public class GestorPartido implements MetodosComunes<Partido, String> {
+
+    private final ArrayList<Partido> partidos;
+
     public GestorPartido() {
         this.partidos = new ArrayList<>();
     }
 
-    @Override
-    public void agregarElemento(Partido elemento) throws IngresoInvalido {
-        if(partidos.contains(elemento)){
-            throw new IngresoInvalido("El partido ya existe");
+    public void agregarPartido(String fecha, int entradasVendidas, Estadio estadio,
+                               FichaDelPartido fichaDelPartido, ValorEntradas valorEntrada,
+                               int entradasDadasSocio)
+            throws IngresoInvalido, ElementoDuplicadoEx {
+
+        if (fecha == null || fecha.isEmpty()) {
+            throw new IngresoInvalido("La fecha del partido no puede estar vacía.");
         }
-        partidos.add(elemento);
-    }
 
-    @Override
-    public void eliminarElemento(Partido elemento) throws AccionImposible{
-        if(!partidos.contains(elemento)){
-            throw new AccionImposible("El partido no existe");
+        boolean existe = partidos.stream()
+                .anyMatch(p -> p.getFecha().equals(fecha));
+
+        if (existe) {
+            throw new ElementoDuplicadoEx("Ya existe un partido registrado para la fecha " + fecha);
         }
-        partidos.remove(elemento);
-    }
 
-    public void modificarElemento(Partido partido) throws AccionImposible {
-        int index = partidos.indexOf(partido);
-        if (index == -1) {
-            throw new AccionImposible("Partido no encontrado");
-        }
-        partidos.set(index, partido);
-    }
-
-    public boolean existe(Partido partido) {
-        return partidos.contains(partido);
+        Partido nuevoPartido = new Partido(fecha, entradasVendidas, estadio, fichaDelPartido, valorEntrada, entradasDadasSocio);
+        partidos.add(nuevoPartido);
     }
 
 
-    public ArrayList<Partido> listar() {
-        return partidos;
-    }
+     public void eliminarElemento(String fecha) throws AccionImposible {
+         Partido partidoAEliminar = partidos.stream()
+                 .filter(p -> p.getFecha().equals(fecha))
+                 .findFirst()
+                 .orElse(null);
 
-    public void guardarJSON() {
-        JSONArray array = new JSONArray();
-        for (Partido p : partidos) {
-            array.put(p.toJSON());
-        }
-        JSONUtiles.uploadJSON(array, "Partidos");
-    }
-    public Partido buscarPartidoPorFecha(String fecha) {
-        for (Partido p : partidos) {
-            if (p.getFecha().equals(fecha)) {
-                return p;
-            }
-        }
-        return null;
-    }
+         if (partidoAEliminar == null) {
+             throw new AccionImposible("No se encontró un partido con la fecha " + fecha);
+         }
 
+         partidos.remove(partidoAEliminar);
+     }
 
-    public double calcularRecaudacionTotal(Estadio estadioDelClub) {
-        double total = 0;
-        for (Partido p : partidos) {
-            total += p.obtenerGanancia(estadioDelClub);
-        }
-        return total;
-    }
+     public Partido devuelveElemento(String fecha) throws AccionImposible {
+         return partidos.stream()
+                 .filter(p -> p.getFecha().equals(fecha))
+                 .findFirst()
+                 .orElseThrow(() -> new AccionImposible("No existe un partido con la fecha " + fecha));
+     }
 
 
-}
+     public boolean existe(String fecha) throws ElementoInexistenteEx {
+         boolean existe = partidos.stream().anyMatch(p -> p.getFecha().equals(fecha));
+         if (!existe) {
+             throw new ElementoInexistenteEx("No se encontró un partido con la fecha " + fecha);
+         }
+         return true;
+     }
+
+
+     public ArrayList<Partido> listar() {
+         return new ArrayList<>(partidos);
+     }
+
+
+     public void guardarJSON() {
+         JSONArray array = new JSONArray();
+
+         for (Partido p : partidos) {
+             JSONObject obj = new JSONObject();
+             obj.put("fecha", p.getFecha());
+             obj.put("entradasVendidas", p.getEntradasVendidas());
+             obj.put("entradasDadasSocio", p.getEntradasDadasSocio());
+             obj.put("valorEntrada", (p.getValorEntrada() != null) ? p.getValorEntrada().getPrecio() : 0);
+             obj.put("estadio", (p.getEstadio() != null) ? p.getEstadio().getNombre() : "Sin estadio");
+
+             FichaDelPartido ficha = p.getFichaDelPartido();
+             if (ficha != null) {
+                 JSONObject fichaObj = new JSONObject();
+                 fichaObj.put("golesLocal", ficha.getGolesLocal());
+                 fichaObj.put("golesVisitante", ficha.getGolesVisitante());
+
+
+                 JSONArray golesArray = new JSONArray();
+                 for (Gol g : ficha.getGoles()) {
+                     JSONObject golObj = new JSONObject();
+                     golObj.put("minuto", g.getMinuto());
+                     golObj.put("jugador", g.getJugador().getNombre());
+                     golesArray.put(golObj);
+                 }
+                 fichaObj.put("goles", golesArray);
+
+                 JSONArray tarjetasArray = new JSONArray();
+                 for (TarjetaAplicada t : ficha.getTarjetas()) {
+                     JSONObject tarjetaObj = new JSONObject();
+                     tarjetaObj.put("jugador", t.getJugador().getNombre());
+                     tarjetaObj.put("tipo", t.getTipoTarjeta());
+                     tarjetasArray.put(tarjetaObj);
+                 }
+                 fichaObj.put("tarjetas", tarjetasArray);
+
+                 JSONArray lesionadosArray = new JSONArray();
+                 for (Jugador j : ficha.getLesionados()) {
+                     lesionadosArray.put(j.getNombre());
+                 }
+                 fichaObj.put("lesionados", lesionadosArray);
+
+                 obj.put("fichaDelPartido", fichaObj);
+             }
+
+             array.put(obj);
+         }
+
+         JSONUtiles.uploadJSON(array, "partidos");
+     }
+
+     public Partido buscarPorFecha(String fecha) {
+         return partidos.stream()
+                 .filter(p -> p.getFecha().equals(fecha))
+                 .findFirst()
+                 .orElse(null);
+     }
+
+     public double calcularRecaudacionTotal() {
+         return partidos.stream()
+                 .mapToDouble(Partido::obtenerGanancia)
+                 .sum();
+     }
+ }

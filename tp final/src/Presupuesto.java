@@ -13,7 +13,7 @@ public class Presupuesto {
         this.presupuesto = presupuesto;
     }
 
-    public void añadir_monto(double monto){
+    public void aniadir_monto(double monto){
         this.presupuesto+=monto;
     }
 

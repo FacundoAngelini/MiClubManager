@@ -1,5 +1,3 @@
-import java.util.StringJoiner;
-
 public class Jugador extends Persona {
     private EstadisticaJugador estadisticaJugador;
     private Posicion posicion;
@@ -58,15 +56,12 @@ public class Jugador extends Persona {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Jugador{");
-        sb.append(super.toString());
-        sb.append(", ");
-        sb.append("estadisticaJugador=").append(estadisticaJugador);
-        sb.append(", posicion=").append(posicion);
-        sb.append(", contrato=").append(contrato);
-        sb.append(", valorJugador=").append(valorJugador);
-        sb.append(", numeroCamiseta=").append(numeroCamiseta);
-        sb.append('}');
-        return sb.toString();
+        return "Jugador{" +
+                "estadisticaJugador=" + estadisticaJugador +
+                ", posicion=" + posicion +
+                ", contrato=" + contrato +
+                ", valorJugador=" + valorJugador +
+                ", numeroCamiseta=" + numeroCamiseta +
+                '}';
     }
 }

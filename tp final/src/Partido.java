@@ -1,14 +1,14 @@
-import java.time.LocalDate;
+import java.util.Objects;
 
 public class Partido {
-    private LocalDate fecha;
+    private String fecha;
     private int entradasVendidas;
     private Estadio estadio;
     private FichaDelPartido fichaDelPartido;
     private ValorEntradas valorEntrada;
     private int EntradasDadasSocio;
 
-    public Partido(LocalDate fecha, int entradasVendidas, Estadio estadio, FichaDelPartido fichaDelPartido, ValorEntradas valorEntrada, int entradasDadasSocio) {
+    public Partido(String fecha, int entradasVendidas, Estadio estadio, FichaDelPartido fichaDelPartido, ValorEntradas valorEntrada, int entradasDadasSocio) {
         this.fecha = fecha;
         this.entradasVendidas = entradasVendidas;
         this.estadio = estadio;
@@ -17,11 +17,11 @@ public class Partido {
         EntradasDadasSocio = entradasDadasSocio;
     }
 
-    public LocalDate getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -70,5 +70,15 @@ public class Partido {
         return (valorEntrada.getPrecio() * (entradasVendidas - EntradasDadasSocio));
     }
 
-    //METODO PARA VER SI EL SOCIO PUEDE COMPRAR LA ENTRADA(IF SOCIOACTIVO=TRUE)
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Partido partido = (Partido) o;
+        return Objects.equals(fecha, partido.fecha);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(fecha);
+    }
 }
