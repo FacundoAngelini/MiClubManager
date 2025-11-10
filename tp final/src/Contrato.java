@@ -65,14 +65,13 @@ public class Contrato {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Contrato{");
-        sb.append("dni='").append(dni).append('\'');
-        sb.append(", salario=").append(salario);
-        sb.append(", mesesDuracion=").append(mesesDuracion);
-        sb.append(", fechaInicio='").append(fechaInicio).append('\'');
-        sb.append(", fechaFin='").append(fechaFin).append('\'');
-        sb.append(", contratoActivo=").append(contratoActivo);
-        sb.append('}');
-        return sb.toString();
+        return "Contrato{" +
+                "dni='" + dni + '\'' +
+                ", salario=" + salario +
+                ", mesesDuracion=" + mesesDuracion +
+                ", fechaInicio='" + fechaInicio + '\'' +
+                ", fechaFin='" + fechaFin + '\'' +
+                ", contratoActivo=" + contratoActivo +
+                '}';
     }
 }

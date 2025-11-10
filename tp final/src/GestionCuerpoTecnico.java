@@ -6,18 +6,19 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, String> {
-    //CLASE SIN TRABAJAR A FONDO, PERO CON MENOS METODOS QUE GESTOR JUGADOR
+
     private HashMap<String, CuerpoTecnico> cuerpoTecnico = new HashMap<>();
 
-    @Override
-    public void agregarElemento(CuerpoTecnico elemento) throws IngresoInvalido, AccionImposible {
-        if (elemento == null) {
-            throw new AccionImposible("El elemento esta vacio");
+    public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp)
+            throws AccionImposible, ElementoDuplicadoEx {
+
+        if (cuerpoTecnico.containsKey(dni)) {
+            throw new ElementoDuplicadoEx("Ya existe un cuerpo técnico con ese DNI");
         }
-        if (cuerpoTecnico.containsKey(elemento.getDni())) {
-            throw new ElementoDuplicadoEx("DNI duplicado");
-        }
-        cuerpoTecnico.put(elemento.getDni(), elemento);
+
+        CuerpoTecnico nuevoCT = new CuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad, contrato, puesto, aniosExp);
+
+        cuerpoTecnico.put(dni, nuevoCT);
     }
 
     @Override
@@ -26,14 +27,6 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
             throw new ElementoInexistenteEx("El elemento no existe");
         }
         cuerpoTecnico.remove(id);
-    }
-
-    @Override
-    public void modificarElemento(CuerpoTecnico elemento) throws AccionImposible {
-        if (!cuerpoTecnico.containsKey(elemento.getDni())) {
-            throw new ElementoInexistenteEx("El elemento no existe");
-        }
-        cuerpoTecnico.put(elemento.getDni(), elemento);
     }
 
     @Override
@@ -61,7 +54,7 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
     public double calcularGastoSalarios() {
         double total = 0;
         for (CuerpoTecnico ct : cuerpoTecnico.values()) {
-            total += ct.getContrato().obtenerSalario();
+            total += ct.getContrato().getSalario();
         }
         return total;
     }
@@ -74,13 +67,29 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
             obj.put("DNI", ct.getDni());
             obj.put("nombre", ct.getNombre());
             obj.put("apellido", ct.getApellido());
-            obj.put("fecha de nacimiento", ct.getFechaNacimiento());
+            obj.put("fechaNacimiento", ct.getFechaNacimiento());
             obj.put("nacionalidad", ct.getNacionalidad());
             obj.put("contrato", ct.getContrato());
             obj.put("puesto", ct.getPuesto());
-            obj.put("años exp", ct.getAniosExp());
+            obj.put("aniosExp", ct.getAniosExp());
             arrayCT.put(obj);
         }
         JSONUtiles.uploadJSON(arrayCT, "cuerpoTecnico");
     }
+    public void modificarCuerpoTecnico(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp)  throws AccionImposible {
+        if (!cuerpoTecnico.containsKey(dni)) {
+            throw new ElementoInexistenteEx("El cuerpo técnico no existe");
+        }
+        CuerpoTecnico ctExistente = cuerpoTecnico.get(dni);
+        ctExistente.setNombre(nombre);
+        ctExistente.setApellido(apellido);
+        ctExistente.setFechaNacimiento(fechaNacimiento);
+        ctExistente.setNacionalidad(nacionalidad);
+        ctExistente.setContrato(contrato);
+        ctExistente.setPuesto(puesto);
+        ctExistente.setAniosExp(aniosExp);
+
+        cuerpoTecnico.put(dni, ctExistente);
+    }
+
 }

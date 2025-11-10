@@ -35,13 +35,17 @@ public class CuerpoTecnico extends Persona{
         this.aniosExp = aniosExp;
     }
 
-    @Override
-    public void obtenerDatos() {
-        System.out.println("CuerpoTecnico{" +
+    public String obtenerDatos() {
+        return "CuerpoTecnico{" +
                 "contrato=" + contrato +
                 ", puesto=" + puesto +
                 ", aniosExp=" + aniosExp +
-                "} " + super.toString());
+                "} " + super.toString();
+    }
+
+    @Override
+    public String toString() {
+        return obtenerDatos();
     }
 
 
