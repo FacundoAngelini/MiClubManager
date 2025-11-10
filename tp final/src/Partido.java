@@ -17,6 +17,54 @@ public class Partido {
         EntradasDadasSocio = entradasDadasSocio;
     }
 
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public int getEntradasVendidas() {
+        return entradasVendidas;
+    }
+
+    public void setEntradasVendidas(int entradasVendidas) {
+        this.entradasVendidas = entradasVendidas;
+    }
+
+    public Estadio getEstadio() {
+        return estadio;
+    }
+
+    public void setEstadio(Estadio estadio) {
+        this.estadio = estadio;
+    }
+
+    public FichaDelPartido getFichaDelPartido() {
+        return fichaDelPartido;
+    }
+
+    public void setFichaDelPartido(FichaDelPartido fichaDelPartido) {
+        this.fichaDelPartido = fichaDelPartido;
+    }
+
+    public ValorEntradas getValorEntrada() {
+        return valorEntrada;
+    }
+
+    public void setValorEntrada(ValorEntradas valorEntrada) {
+        this.valorEntrada = valorEntrada;
+    }
+
+    public int getEntradasDadasSocio() {
+        return EntradasDadasSocio;
+    }
+
+    public void setEntradasDadasSocio(int entradasDadasSocio) {
+        EntradasDadasSocio = entradasDadasSocio;
+    }
+
     public double obtenerGanancia()
     {
         return (valorEntrada.getPrecio() * (entradasVendidas - EntradasDadasSocio));

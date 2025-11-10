@@ -1,5 +1,8 @@
 public class Club {
-    private int id;
-    private String name;
 
+    GestorPartido gestorPartido=new GestorPartido();
+    Inventario inventario=new Inventario();
+    GestionPresupuesto gestionPresupuesto=new GestionPresupuesto();
+    GestionSocio gestionSocio=new GestionSocio();
+    GestionPlantel gestionPlantel=new GestionPlantel();
 }

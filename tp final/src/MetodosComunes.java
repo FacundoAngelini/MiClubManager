@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 
-public interface MetodosComunes<T> {
-    void agregarElemento(T elemento) throws IngresoInvalido;
-    void eliminarElemento(T elemento) throws AccionImposible;
+public interface MetodosComunes<T,K> {
+    void agregarElemento(T elemento) throws IngresoInvalido,AccionImposible;
+    void eliminarElemento(K id) throws AccionImposible;
     void modificarElemento(T elemento) throws AccionImposible;
-    boolean existe(T elemento);
+    T devuelveElemento(K key) throws AccionImposible;
+    boolean existe(K id) throws ElementoInexistenteEx;
     ArrayList<T>listar();
     void guardarJSON();
 }
