@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GestionSocio implements MetodosComunes<Socio> {
+public class GestionSocio implements MetodosComunes<Socio,String> {
     private HashMap<Integer, Socio> socios;
 
     public GestionSocio(HashMap<Integer, Socio> socios) {

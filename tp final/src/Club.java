@@ -4,5 +4,6 @@ public class Club {
     Inventario inventario=new Inventario();
     GestionPresupuesto gestionPresupuesto=new GestionPresupuesto();
     GestionSocio gestionSocio=new GestionSocio();
-    GestionPlantel gestionPlantel=new GestionPlantel();
+    GestionJugadores gestionJugadores=new GestionJugadores();
+    GestionCuerpoTecnico gestionCuerpoTecnico=new GestionCuerpoTecnico();
 }
