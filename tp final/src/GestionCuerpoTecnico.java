@@ -1,3 +1,5 @@
+import enums.Puesto;
+import exeptions.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

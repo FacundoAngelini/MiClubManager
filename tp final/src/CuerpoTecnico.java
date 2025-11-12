@@ -1,3 +1,4 @@
+import enums.Puesto;
 
 public class CuerpoTecnico extends Persona{
     private Contrato contrato;

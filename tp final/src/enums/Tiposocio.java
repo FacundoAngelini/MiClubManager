@@ -1,3 +1,5 @@
+package enums;
+
 public enum Tiposocio {
     ACTIVO(15000),
     JUVENIL(5000),

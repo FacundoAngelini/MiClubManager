@@ -1,3 +1,6 @@
+import exeptions.AccionImposible;
+import exeptions.FondoInsuficienteEx;
+import exeptions.IngresoInvalido;
 import org.json.JSONObject;
 
 public class GestionEstadio {
@@ -13,7 +16,7 @@ public class GestionEstadio {
         this.estadio = new Estadio(nombre, capacidad, ubicacion, costoMantenimiento);
     }
 
-    public void modificar_capacidad(int nuevaCapacidad) throws AccionImposible{
+    public void modificar_capacidad(int nuevaCapacidad) throws AccionImposible {
         if(estadio == null){
             throw new AccionImposible("No hay un estadio creado");
         }

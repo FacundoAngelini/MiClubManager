@@ -1,3 +1,4 @@
+import exeptions.AccionImposible;
 import org.json.JSONObject;
 
 public class Camiseta extends Producto {
@@ -14,7 +15,7 @@ public class Camiseta extends Producto {
         return sponsor;
     }
 
-    public void cambiarSponsor(String sponsor) throws AccionImposible{
+    public void cambiarSponsor(String sponsor) throws AccionImposible {
         if(this.sponsor.equals(sponsor)){
             throw new AccionImposible("El sponsor es el mismo");
         }

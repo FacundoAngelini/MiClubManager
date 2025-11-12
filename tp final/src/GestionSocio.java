@@ -1,3 +1,8 @@
+import enums.Tiposocio;
+import exeptions.AccionImposible;
+import exeptions.ElementoDuplicadoEx;
+import exeptions.ElementoInexistenteEx;
+import exeptions.IngresoInvalido;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

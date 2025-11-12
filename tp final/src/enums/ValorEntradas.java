@@ -1,3 +1,5 @@
+package enums;
+
 public enum ValorEntradas {
     POPULAR(12000),
     PLATEA(15000),

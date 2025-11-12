@@ -1,3 +1,5 @@
+import exeptions.FondoInsuficienteEx;
+
 public class Presupuesto {
     private double presupuesto;
 

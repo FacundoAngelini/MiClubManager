@@ -1,3 +1,5 @@
+import enums.Posicion;
+
 public class Jugador extends Persona {
     private EstadisticaJugador estadisticaJugador;
     private Posicion posicion;

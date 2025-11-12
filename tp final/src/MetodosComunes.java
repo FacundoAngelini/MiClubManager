@@ -1,3 +1,6 @@
+import exeptions.AccionImposible;
+import exeptions.ElementoInexistenteEx;
+
 import java.util.ArrayList;
 
 public interface MetodosComunes<T,K> {

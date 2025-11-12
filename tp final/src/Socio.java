@@ -1,3 +1,6 @@
+import enums.Tiposocio;
+import exeptions.AccionImposible;
+
 public class Socio extends Persona {
     private static int contador =1;
     private int numeroSocio;
