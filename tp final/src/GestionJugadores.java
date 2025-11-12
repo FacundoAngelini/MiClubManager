@@ -9,12 +9,10 @@ import java.util.HashMap;
 public class GestionJugadores implements MetodosComunes<Jugador, String> {
     private HashMap<String, Jugador> jugadores = new HashMap<>();
     private GestionPresupuesto gestorpresupuesto;
-    private GestorPartido gestorPartido;
 
     public GestionJugadores(GestionPresupuesto gestorpresupuesto, GestorPartido gestorPartido ) {
         this.jugadores = jugadores;
         this.gestorpresupuesto = gestorpresupuesto;
-        this.gestorPartido = gestorPartido;
     }
 
     public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Posicion posicion) throws ElementoDuplicadoEx {
@@ -22,8 +20,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new ElementoDuplicadoEx("El DNI ya está registrado.");
         }
 
-        boolean camisetaOcupada = jugadores.values().stream()
-                .anyMatch(j -> j.getNumeroCamiseta() == numeroCamiseta);
+        boolean camisetaOcupada = jugadores.values().stream().anyMatch(j -> j.getNumeroCamiseta() == numeroCamiseta);
 
         if (camisetaOcupada) {
             throw new ElementoDuplicadoEx("El número de camiseta ya está ocupado.");
@@ -35,6 +32,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
 
         jugadores.put(dni, jugador);
     }
+
 
     @Override
     public void eliminarElemento(String dni) throws AccionImposible {
@@ -51,6 +49,22 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new AccionImposible("Jugador no encontrado con DNI " + dni);
         }
         return jugador;
+    }
+
+    public void cambiarEstadoContrato(String dni, boolean nuevoEstado) throws ElementoInexistenteEx {
+        Jugador jugador = jugadores.get(dni);
+
+        if (jugador == null) {
+            throw new ElementoInexistenteEx("El jugador con DNI " + dni + " no existe.");
+        }
+
+        Contrato contrato = jugador.getContrato();
+        if (contrato == null) {
+            throw new ElementoInexistenteEx("El jugador no tiene contrato asignado.");
+        }
+
+        contrato.setContratoActivo(nuevoEstado);
+        jugadores.put(dni, jugador);
     }
 
     public boolean existe(String dni) {
@@ -94,22 +108,37 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
     }
 
     public void guardarJSON() {
-            JSONArray array = new JSONArray();
+        JSONArray array = new JSONArray();
 
-            for (Jugador j : jugadores.values()) {
-                JSONObject obj = new JSONObject();
-                obj.put("dni", j.getDni());
-                obj.put("nombre", j.getNombre());
-                obj.put("apellido", j.getApellido());
-                obj.put("fechaNacimiento", j.getFechaNacimiento());
-                obj.put("nacionalidad", j.getNacionalidad());
-                obj.put("numeroCamiseta", j.getNumeroCamiseta());
-                obj.put("valorJugador", j.getValorJugador());
-                obj.put("salario", j.getContrato().getSalario());
-                obj.put("posicion", j.getPosicion().toString());
-                array.put(obj);
+        for (Jugador j : jugadores.values()) {
+            JSONObject obj = new JSONObject();
+            obj.put("dni", j.getDni());
+            obj.put("nombre", j.getNombre());
+            obj.put("apellido", j.getApellido());
+            obj.put("fechaNacimiento", j.getFechaNacimiento());
+            obj.put("nacionalidad", j.getNacionalidad());
+            obj.put("numeroCamiseta", j.getNumeroCamiseta());
+            obj.put("valorJugador", j.getValorJugador());
+            obj.put("posicion", j.getPosicion().toString());
+
+            Contrato contrato = j.getContrato();
+            if (contrato != null) {
+                JSONObject contratoJSON = new JSONObject();
+                contratoJSON.put("dni", contrato.getDni());
+                contratoJSON.put("salario", contrato.getSalario());
+                contratoJSON.put("fechaInicio", contrato.getFechaInicio());
+                contratoJSON.put("fechaFin", contrato.getFechaFin());
+                contratoJSON.put("mesesDuracion", contrato.getMesesDuracion());
+                contratoJSON.put("contratoActivo", contrato.isContratoActivo());
+                obj.put("contrato", contratoJSON);
+            } else {
+                obj.put("contrato", JSONObject.NULL);
             }
 
-            JSONUtiles.uploadJSON(array, "Plantel");
+            array.put(obj);
         }
+
+        JSONUtiles.uploadJSON(array, "Plantel");
+    }
+
 }

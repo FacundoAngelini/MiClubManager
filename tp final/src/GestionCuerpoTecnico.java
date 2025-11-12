@@ -13,13 +13,12 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         this.cuerpoTecnico = cuerpoTecnico;
     }
 
-    public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp)
-            throws AccionImposible, ElementoDuplicadoEx {
-
+    public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Puesto puesto, int aniosExp) throws AccionImposible, ElementoDuplicadoEx {
         if (cuerpoTecnico.containsKey(dni)) {
             throw new ElementoDuplicadoEx("Ya existe un cuerpo técnico con ese DNI");
         }
 
+        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
         CuerpoTecnico nuevoCT = new CuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad, contrato, puesto, aniosExp);
 
         cuerpoTecnico.put(dni, nuevoCT);
@@ -63,9 +62,26 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         return total;
     }
 
+    public void cambiarEstadoContrato(String dni, boolean nuevoEstado) throws ElementoInexistenteEx {
+        CuerpoTecnico ct = cuerpoTecnico.get(dni);
+
+        if (ct == null) {
+            throw new ElementoInexistenteEx("No existe un miembro del cuerpo técnico con DNI: " + dni);
+        }
+
+        Contrato contrato = ct.getContrato();
+        if (contrato == null) {
+            throw new ElementoInexistenteEx("El cuerpo técnico no tiene contrato asignado.");
+        }
+
+        contrato.setContratoActivo(nuevoEstado);
+        cuerpoTecnico.put(dni, ct);
+    }
+
     @Override
     public void guardarJSON() {
         JSONArray arrayCT = new JSONArray();
+
         for (CuerpoTecnico ct : cuerpoTecnico.values()) {
             JSONObject obj = new JSONObject();
             obj.put("DNI", ct.getDni());
@@ -73,13 +89,28 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
             obj.put("apellido", ct.getApellido());
             obj.put("fechaNacimiento", ct.getFechaNacimiento());
             obj.put("nacionalidad", ct.getNacionalidad());
-            obj.put("contrato", ct.getContrato());
-            obj.put("puesto", ct.getPuesto());
+            obj.put("puesto", ct.getPuesto().toString());
             obj.put("aniosExp", ct.getAniosExp());
+
+            Contrato contrato = ct.getContrato();
+            if (contrato != null) {
+                JSONObject contratoJSON = new JSONObject();
+                contratoJSON.put("dni", contrato.getDni());
+                contratoJSON.put("salario", contrato.getSalario());
+                contratoJSON.put("fechaInicio", contrato.getFechaInicio());
+                contratoJSON.put("fechaFin", contrato.getFechaFin());
+                contratoJSON.put("mesesDuracion", contrato.getMesesDuracion());
+                contratoJSON.put("contratoActivo", contrato.isContratoActivo());
+                obj.put("contrato", contratoJSON);
+            } else {
+                obj.put("contrato", JSONObject.NULL);
+            }
+
             arrayCT.put(obj);
         }
         JSONUtiles.uploadJSON(arrayCT, "cuerpoTecnico");
     }
+
     public void modificarCuerpoTecnico(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp)  throws AccionImposible {
         if (!cuerpoTecnico.containsKey(dni)) {
             throw new ElementoInexistenteEx("El cuerpo técnico no existe");
