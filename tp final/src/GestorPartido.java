@@ -113,6 +113,27 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
         return "Derrota";
     }
 
+    public void registrarGol(String fechaPartido, Jugador jugador, boolean esLocal) {
+        Partido partido = buscarPorFecha(fechaPartido);
+        if (partido != null) {
+            partido.getFichaDelPartido().registrarGol(jugador, esLocal);
+        }
+    }
+
+    public void registrarTarjeta(String fechaPartido, Jugador jugador, String tipo) {
+        Partido partido = buscarPorFecha(fechaPartido);
+        if (partido != null) {
+            partido.getFichaDelPartido().registrarTarjeta(jugador, tipo);
+        }
+    }
+
+    public void registrarLesion(String fechaPartido, Jugador jugador) {
+        Partido partido = buscarPorFecha(fechaPartido);
+        if (partido != null) {
+            partido.getFichaDelPartido().registrarLesion(jugador);
+        }
+    }
+
     public Partido buscarPorFecha(String fecha) {
         return partidos.stream().filter(p -> p.getFecha().equals(fecha)).findFirst().orElse(null);
     }

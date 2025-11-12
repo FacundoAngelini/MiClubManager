@@ -39,6 +39,7 @@ public class GestionEstadio {
         try {
             this.presupuestoCentral.quitarFondos(monto, "Pago de mantenimiento del estadio", fecha);
         } catch (FondoInsuficienteEx e) {
+            System.out.println("Falta de dinero" +e.getMessage());
         }
     }
 
