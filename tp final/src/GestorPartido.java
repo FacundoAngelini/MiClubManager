@@ -10,32 +10,40 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
         this.partidos = new ArrayList<>();
     }
 
-    public void agregarPartido(String fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada) throws IngresoInvalido, ElementoDuplicadoEx {
+    public void agregarPartido(String fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada, GestionPresupuesto gestionPresupuesto) throws IngresoInvalido, ElementoDuplicadoEx {
         if (fecha == null || fecha.isEmpty()) {
             throw new IngresoInvalido("La fecha del partido no puede estar vacía.");
         }
-
-        boolean existe = partidos.stream()
-                .anyMatch(p -> p.getFecha().equals(fecha));
-
+        boolean existe = partidos.stream().anyMatch(p -> p.getFecha().equals(fecha));
         if (existe) {
             throw new ElementoDuplicadoEx("Ya existe un partido registrado en la fecha " + fecha);
         }
+        Partido nuevoPartido = new Partido(fecha, esLocal, rival, golesAFavor, golesEnContra,
+                esLocal ? entradasVendidas : 0, esLocal ? precioEntrada : 0);
 
-        Partido nuevoPartido = new Partido(fecha, esLocal, rival, golesAFavor, golesEnContra, esLocal ? entradasVendidas : 0, esLocal ? precioEntrada : 0);
         partidos.add(nuevoPartido);
+        if (esLocal) {
+            double recaudacion = nuevoPartido.calcularRecaudacion();
+            gestionPresupuesto.agregar_fondos(recaudacion, "Recaudación partido vs " + rival, fecha);
+        }
     }
+
 
     @Override
     public void eliminarElemento(String fecha) throws AccionImposible {
         Partido partidoAEliminar = partidos.stream()
-                .filter(p -> p.getFecha().equals(fecha)).findFirst().orElseThrow(() -> new AccionImposible("No se encontró un partido con la fecha " + fecha));
+                .filter(p -> p.getFecha().equals(fecha))
+                .findFirst()
+                .orElseThrow(() -> new AccionImposible("No se encontró un partido con la fecha " + fecha));
         partidos.remove(partidoAEliminar);
     }
 
     @Override
     public Partido devuelveElemento(String fecha) throws AccionImposible {
-        return partidos.stream().filter(p -> p.getFecha().equals(fecha)).findFirst().orElseThrow(() -> new AccionImposible("No existe un partido con la fecha " + fecha));
+        return partidos.stream()
+                .filter(p -> p.getFecha().equals(fecha))
+                .findFirst()
+                .orElseThrow(() -> new AccionImposible("No existe un partido con la fecha " + fecha));
     }
 
     @Override
@@ -53,7 +61,10 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
     }
 
     public double calcularRecaudacionTotal() {
-        return partidos.stream().filter(Partido::isEsLocal).mapToDouble(Partido::calcularRecaudacion).sum();
+        return partidos.stream()
+                .filter(Partido::isEsLocal)
+                .mapToDouble(Partido::calcularRecaudacion)
+                .sum();
     }
 
     @Override
@@ -71,6 +82,20 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
             obj.put("entradasVendidas", p.getEntradasVendidas());
             obj.put("precioEntrada", p.getPrecioEntrada());
             obj.put("recaudacion", p.calcularRecaudacion());
+
+            JSONObject fichaObj = new JSONObject();
+            FichaDelPartido ficha = p.getFichaDelPartido();
+
+            JSONObject golesObj = new JSONObject();
+            ficha.getGolesPorJugador().forEach((jug, cant) -> golesObj.put(jug.getNombre(), cant));
+            fichaObj.put("golesPorJugador", golesObj);
+
+            JSONObject tarjetasObj = new JSONObject();
+            ficha.getTarjetas().forEach((jug, tipo) -> tarjetasObj.put(jug.getNombre(), tipo));
+            fichaObj.put("tarjetas", tarjetasObj);
+
+            fichaObj.put("lesionados", ficha.getLesionados().stream().map(Jugador::getNombre).toArray());
+            obj.put("fichaDelPartido", fichaObj);
 
             array.put(obj);
         }
@@ -93,6 +118,6 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
         long empatados = partidos.stream().filter(Partido::empato).count();
         long perdidos = partidos.stream().filter(Partido::perdio).count();
 
-        return "resumen: " + ganados + " ganados, " + empatados + " empatados, " + perdidos + " perdidos";
+        return "Resumen: " + ganados + " ganados, " + empatados + " empatados, " + perdidos + " perdidos";
     }
 }

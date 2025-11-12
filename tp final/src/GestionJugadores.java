@@ -82,29 +82,31 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
                 .sum();
     }
 
-    public void pagar_salarios(String fecha) throws FondoInsuficienteEx{
-        double monto=calcularGastoSalarios();
-        gestorpresupuesto.quitarFondos(monto,"Pago de salario de jugadores",fecha);
+    public void pagar_salarios(String fecha) throws FondoInsuficienteEx, IngresoInvalido {
+        double monto = calcularGastoSalarios();
+        if (monto <= 0)
+            throw new IngresoInvalido("No hay salarios para pagar.");
+        if (gestorpresupuesto.verSaldoActual() < monto)
+            throw new FondoInsuficienteEx("Saldo insuficiente.");
+        gestorpresupuesto.quitarFondos(monto, "Pago de sueldos del plantel", fecha);
     }
 
-    public void comprar_jugador(double monto,Jugador jugador, String fecha) throws FondoInsuficienteEx, ElementoDuplicadoEx{
-        if(gestorpresupuesto.verSaldoActual()<monto){
-            throw new FondoInsuficienteEx("Saldo Insuficiente");
-        }
-        if (jugadores.containsKey(jugador.getDni())) {
-            throw new ElementoDuplicadoEx("El jugador ya existe.");
-        }
+    public void comprar_jugador(double monto, Jugador jugador, String fecha) throws FondoInsuficienteEx, ElementoDuplicadoEx, IngresoInvalido {
+        if (gestorpresupuesto.verSaldoActual() < monto)
+            throw new FondoInsuficienteEx("Saldo insuficiente para comprar al jugador.");
+        if (jugadores.containsKey(jugador.getDni()))
+            throw new ElementoDuplicadoEx("El jugador ya está en el club.");
+
         jugadores.put(jugador.getDni(), jugador);
-        gestorpresupuesto.quitarFondos(monto,"COMPRA DE JUGADOR:" + jugador.getApellido(),fecha);
+        gestorpresupuesto.quitarFondos(monto, "Compra de jugador: " + jugador.getApellido(), fecha);
     }
 
-    public void vender_jugador(double monto,String dni, String fecha) throws ElementoInexistenteEx{
+    public void vender_jugador(double monto, String dni, String fecha) throws ElementoInexistenteEx, IngresoInvalido {
         Jugador jugador = jugadores.get(dni);
-        if (jugador == null) {
-            throw new ElementoInexistenteEx("El jugador no existe.");
-        }
-        gestorpresupuesto.agregar_fondos(monto,"VENTA DE JUGADOR",fecha);
+        if (jugador == null)
+            throw new ElementoInexistenteEx("Jugador no encontrado.");
         jugadores.remove(dni);
+        gestorpresupuesto.agregar_fondos(monto, "Venta de jugador: " + jugador.getApellido(), fecha);
     }
 
     public void guardarJSON() {

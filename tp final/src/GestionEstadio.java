@@ -13,14 +13,6 @@ public class GestionEstadio {
         this.estadio = new Estadio(nombre, capacidad, ubicacion, costoMantenimiento);
     }
 
-    public void pagarMantenimiento(String fecha) throws FondoInsuficienteEx, AccionImposible{
-        if(estadio == null){
-            throw new AccionImposible("No hay un estadio creado");
-        }
-        double monto= estadio.getCostoMantenimiento();
-        this.presupuestoCentral.agregar_fondos(monto,"Costo de mantenimiento del estadio.",fecha);
-    }
-
     public void modificar_capacidad(int nuevaCapacidad) throws AccionImposible{
         if(estadio == null){
             throw new AccionImposible("No hay un estadio creado");
@@ -32,6 +24,19 @@ public class GestionEstadio {
           throw  new AccionImposible("No hay un estadio creado");
       }
       estadio.setCostoMantenimiento(nuevoCosto);
+    }
+
+    public void pagarMantenimiento(String fecha) throws AccionImposible, IngresoInvalido {
+        if(estadio == null){
+            throw new AccionImposible("No hay un estadio creado");
+        }
+
+        double monto = estadio.getCostoMantenimiento();
+
+        try {
+            this.presupuestoCentral.quitarFondos(monto, "Pago de mantenimiento del estadio", fecha);
+        } catch (FondoInsuficienteEx e) {
+        }
     }
 
     public void cambiarNombre(String nuevoNombre) throws AccionImposible {

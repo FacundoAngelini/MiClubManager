@@ -4,8 +4,6 @@ public class Transaccion {
     private final String tipo;
     private final String fecha;
 
-
-
     public Transaccion(String descripcion, double monto, String tipo, String fecha) {
         this.descripcion = descripcion;
         this.monto = monto;

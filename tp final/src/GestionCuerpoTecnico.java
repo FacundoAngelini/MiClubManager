@@ -8,9 +8,11 @@ import java.util.HashMap;
 public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, String> {
 
     private HashMap<String, CuerpoTecnico> cuerpoTecnico = new HashMap<>();
+    private GestionPresupuesto gestionPresupuesto;
 
     public GestionCuerpoTecnico() {
         this.cuerpoTecnico = cuerpoTecnico;
+        this.gestionPresupuesto = gestionPresupuesto;
     }
 
     public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Puesto puesto, int aniosExp) throws AccionImposible, ElementoDuplicadoEx {
@@ -60,6 +62,14 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
             total += ct.getContrato().getSalario();
         }
         return total;
+    }
+    public void aplicarGastoSalarios(String fecha) throws IngresoInvalido {
+        double gasto = calcularGastoSalarios();
+        try {
+            gestionPresupuesto.quitarFondos(gasto, "Pago de salarios del cuerpo técnico", fecha);
+        } catch (FondoInsuficienteEx e) {
+            gestionPresupuesto.getPresupuesto();
+        }
     }
 
     public void cambiarEstadoContrato(String dni, boolean nuevoEstado) throws ElementoInexistenteEx {

@@ -3,7 +3,6 @@ public class Main {
         double presupuesto_inicial =0;
         Club club = new Club(presupuesto_inicial);
         club.getGestionPresupuesto().agregar_fondos(500000, "Sponsor ropa", "1/2/2025");
-
     }
 
 }

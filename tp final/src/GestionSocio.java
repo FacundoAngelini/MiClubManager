@@ -6,9 +6,11 @@ import java.util.HashMap;
 
 public class GestionSocio implements MetodosComunes<Socio, String> {
     private final HashMap<Integer, Socio> socios;
+    private GestionPresupuesto gestionPresupuesto;
 
     public GestionSocio() {
         this.socios = new HashMap<>();
+        this.gestionPresupuesto = gestionPresupuesto;
     }
 
     public void agregarSocio(String dni, String nombre, String apellido,  String fechaNacimiento, String nacionalidad,  boolean cuotaAlDia, String fechaAlta, Tiposocio tipoSocio)  throws IngresoInvalido, ElementoDuplicadoEx {
@@ -48,6 +50,14 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
                 .filter(s -> s.getDni().equals(dni))
                 .findFirst()
                 .orElseThrow(() -> new AccionImposible("No existe un socio con DNI " + dni));
+    }
+    public void aplicarRecaudacion(String fecha) throws IngresoInvalido {
+        double totalRecaudado = obtenerRecaudacionTotal();
+        try {
+            gestionPresupuesto.agregar_fondos(totalRecaudado, "Recaudación de socios", fecha);
+        } catch (IngresoInvalido e) {
+            e.printStackTrace();
+        }
     }
 
 
