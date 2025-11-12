@@ -10,14 +10,33 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
         items = new HashMap<>();
     }
 
-    public void agregarElemento(T item) throws IngresoInvalido {
-        if(item == null) {
-            throw new IngresoInvalido("No se puede agregar un item nulo");
-        }
-        if(item.getCantidad() <= 0) {
+    public void agregarProducto(String tipo, String nombre, String marca, int cantidad, String... extra) throws IngresoInvalido {
+        if (cantidad <= 0) {
             throw new IngresoInvalido("Cantidad debe ser mayor que 0");
         }
-        items.put(item.getNombre(), item);
+        Producto producto;
+
+        switch (tipo.toLowerCase()) {
+            case "pelota":
+                if (extra.length < 1) {
+                    throw new IngresoInvalido("Falta el modelo para la pelota");
+                }
+                String modelo = extra[0];
+                producto = new Pelota(nombre, marca, cantidad, modelo);
+                break;
+
+            case "camiseta":
+                if (extra.length < 1) {
+                    throw new IngresoInvalido("Falta el sponsor para la camiseta");
+                }
+                String sponsor = extra[0];
+                producto = new Camiseta(nombre, marca, cantidad, sponsor);
+                break;
+
+            default:
+                throw new IngresoInvalido("Tipo de producto no reconocido");
+        }
+        items.put(nombre, (T) producto);
     }
 
     public void eliminarElemento(String id) throws AccionImposible {

@@ -31,12 +31,11 @@ public class Transaccion {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Transaccion{");
-        sb.append("descripcion='").append(descripcion).append('\'');
-        sb.append(", monto=").append(monto);
-        sb.append(", tipo='").append(tipo).append('\'');
-        sb.append(", fecha='").append(fecha).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Transaccion{" +
+                "descripcion='" + descripcion + '\'' +
+                ", monto=" + monto +
+                ", tipo='" + tipo + '\'' +
+                ", fecha='" + fecha + '\'' +
+                '}';
     }
 }

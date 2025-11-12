@@ -2,72 +2,76 @@ import java.util.Objects;
 
 public class Partido {
     private String fecha;
+    private boolean esLocal;
+    private int golesAFavor;
+    private int golesEnContra;
     private int entradasVendidas;
-    private Estadio estadio;
-    private FichaDelPartido fichaDelPartido;
-    private ValorEntradas valorEntrada;
-    private int EntradasDadasSocio;
+    private double precioEntrada;
+    private String rival;
 
-    public Partido(String fecha, int entradasVendidas, Estadio estadio, FichaDelPartido fichaDelPartido, ValorEntradas valorEntrada, int entradasDadasSocio) {
+    public Partido(String fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada) {
         this.fecha = fecha;
-        this.entradasVendidas = entradasVendidas;
-        this.estadio = estadio;
-        this.fichaDelPartido = fichaDelPartido;
-        this.valorEntrada = valorEntrada;
-        EntradasDadasSocio = entradasDadasSocio;
+        this.esLocal = esLocal;
+        this.rival = rival;
+        this.golesAFavor = golesAFavor;
+        this.golesEnContra = golesEnContra;
+        this.entradasVendidas = esLocal ? entradasVendidas : 0; // solo si fue local
+        this.precioEntrada = precioEntrada;
     }
 
     public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public boolean isEsLocal() {
+        return esLocal;
+    }
+
+    public String getRival() {
+        return rival;
+    }
+
+    public int getGolesAFavor() {
+        return golesAFavor;
+    }
+
+    public int getGolesEnContra() {
+        return golesEnContra;
     }
 
     public int getEntradasVendidas() {
         return entradasVendidas;
     }
 
-    public void setEntradasVendidas(int entradasVendidas) {
-        this.entradasVendidas = entradasVendidas;
+    public double getPrecioEntrada() {
+        return precioEntrada;
     }
 
-    public Estadio getEstadio() {
-        return estadio;
+    public boolean gano() {
+        return golesAFavor > golesEnContra;
     }
 
-    public void setEstadio(Estadio estadio) {
-        this.estadio = estadio;
+    public boolean empato() {
+        return golesAFavor == golesEnContra;
     }
 
-    public FichaDelPartido getFichaDelPartido() {
-        return fichaDelPartido;
+    public boolean perdio() {
+        return golesAFavor < golesEnContra;
     }
 
-    public void setFichaDelPartido(FichaDelPartido fichaDelPartido) {
-        this.fichaDelPartido = fichaDelPartido;
+    public double calcularRecaudacion() {
+        return esLocal ? entradasVendidas * precioEntrada : 0;
     }
 
-    public ValorEntradas getValorEntrada() {
-        return valorEntrada;
-    }
-
-    public void setValorEntrada(ValorEntradas valorEntrada) {
-        this.valorEntrada = valorEntrada;
-    }
-
-    public int getEntradasDadasSocio() {
-        return EntradasDadasSocio;
-    }
-
-    public void setEntradasDadasSocio(int entradasDadasSocio) {
-        EntradasDadasSocio = entradasDadasSocio;
-    }
-
-    public double obtenerGanancia()
-    {
-        return (valorEntrada.getPrecio() * (entradasVendidas - EntradasDadasSocio));
+    @Override
+    public String toString() {
+        return "Partido{" +
+                "fecha='" + fecha + '\'' +
+                ", local=" + esLocal +
+                ", rival='" + rival + '\'' +
+                ", resultado=" + golesAFavor + "-" + golesEnContra +
+                ", recaudacion=" + calcularRecaudacion() +
+                '}';
     }
 
     @Override
