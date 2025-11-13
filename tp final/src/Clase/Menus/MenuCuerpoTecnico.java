@@ -2,7 +2,6 @@ package Clase.Menus;
 
 import Clase.Presupuesto.Contrato;
 import Clase.Persona.CuerpoTecnico;
-import Clase.Gestiones.GestionCuerpoTecnico;
 import enums.Puesto;
 import exeptions.*;
 import java.util.ArrayList;
