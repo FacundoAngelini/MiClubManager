@@ -28,7 +28,7 @@ public class JSONUtiles {
 
     public static String downloadJSON(String archive){
         StringBuilder contenido = new StringBuilder();
-        String lectura= "";
+        String lectura;
         try
         {
             BufferedReader entrada = new BufferedReader(new FileReader(archive+".json"));

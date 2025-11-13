@@ -7,23 +7,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-
 public class GestionJugadores implements MetodosComunes<Jugador, String> {
+
     private HashMap<String, Jugador> jugadores = new HashMap<>();
+    private HashMap<String, EstadisticaJugador> estadisticas = new HashMap<>();
     private GestionPresupuesto gestorpresupuesto;
 
-    public GestionJugadores(GestionPresupuesto gestorpresupuesto, GestorPartido gestorPartido ) {
-        this.jugadores = jugadores;
+    public GestionJugadores(GestionPresupuesto gestorpresupuesto) {
         this.gestorpresupuesto = gestorpresupuesto;
     }
 
     public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Posicion posicion) throws ElementoDuplicadoEx {
+
         if (jugadores.containsKey(dni)) {
             throw new ElementoDuplicadoEx("El DNI ya está registrado.");
         }
 
         boolean camisetaOcupada = jugadores.values().stream().anyMatch(j -> j.getNumeroCamiseta() == numeroCamiseta);
-
         if (camisetaOcupada) {
             throw new ElementoDuplicadoEx("El número de camiseta ya está ocupado.");
         }
@@ -33,38 +33,28 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         jugador.setValorJugador(valorJugador);
 
         jugadores.put(dni, jugador);
+        estadisticas.put(dni, new EstadisticaJugador()); // Inicializa estadísticas
     }
-
 
     @Override
     public void eliminarElemento(String dni) throws AccionImposible {
-        if (!jugadores.containsKey(dni)) {
-            throw new AccionImposible("EL numero ingresado no existe");
-        }
+        if (!jugadores.containsKey(dni)) throw new AccionImposible("El jugador no existe.");
         jugadores.remove(dni);
+        estadisticas.remove(dni);
     }
 
     @Override
     public Jugador devuelveElemento(String dni) throws AccionImposible {
         Jugador jugador = jugadores.get(dni);
-        if (jugador == null) {
-            throw new AccionImposible("Jugador no encontrado con DNI " + dni);
-        }
+        if (jugador == null) throw new AccionImposible("Jugador no encontrado con DNI " + dni);
         return jugador;
     }
 
     public void cambiarEstadoContrato(String dni, boolean nuevoEstado) throws ElementoInexistenteEx {
         Jugador jugador = jugadores.get(dni);
-
-        if (jugador == null) {
-            throw new ElementoInexistenteEx("El jugador con DNI " + dni + " no existe.");
-        }
-
+        if (jugador == null) throw new ElementoInexistenteEx("El jugador no existe.");
         Contrato contrato = jugador.getContrato();
-        if (contrato == null) {
-            throw new ElementoInexistenteEx("El jugador no tiene contrato asignado.");
-        }
-
+        if (contrato == null) throw new ElementoInexistenteEx("El jugador no tiene contrato asignado.");
         contrato.setContratoActivo(nuevoEstado);
         jugadores.put(dni, jugador);
     }
@@ -73,6 +63,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         return jugadores.containsKey(dni);
     }
 
+    @Override
     public ArrayList<Jugador> listar() {
         Collection<Jugador> listadevalores = jugadores.values();
         return new ArrayList<>(listadevalores);
@@ -86,8 +77,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
 
     public void pagar_salarios(String fecha) throws FondoInsuficienteEx, IngresoInvalido {
         double monto = calcularGastoSalarios();
-        if (monto <= 0)
-            throw new IngresoInvalido("No hay salarios para pagar.");
+        if (monto <= 0) throw new IngresoInvalido("No hay salarios para pagar.");
         if (gestorpresupuesto.verSaldoActual() < monto)
             throw new FondoInsuficienteEx("Saldo insuficiente.");
         gestorpresupuesto.quitarFondos(monto, "Pago de sueldos del plantel", fecha);
@@ -100,20 +90,41 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new ElementoDuplicadoEx("El jugador ya está en el club.");
 
         jugadores.put(jugador.getDni(), jugador);
+        estadisticas.put(jugador.getDni(), new EstadisticaJugador());
         gestorpresupuesto.quitarFondos(monto, "Compra de jugador: " + jugador.getApellido(), fecha);
     }
 
     public void vender_jugador(double monto, String dni, String fecha) throws ElementoInexistenteEx, IngresoInvalido {
         Jugador jugador = jugadores.get(dni);
-        if (jugador == null)
-            throw new ElementoInexistenteEx("Jugador no encontrado.");
+        if (jugador == null) throw new ElementoInexistenteEx("Jugador no encontrado.");
         jugadores.remove(dni);
+        estadisticas.remove(dni);
         gestorpresupuesto.agregar_fondos(monto, "Venta de jugador: " + jugador.getApellido(), fecha);
     }
 
+
+    public void actualizarEstadisticas(String dni, boolean gol, boolean asistencia, boolean vallaInvicta,
+                                       boolean amarilla, boolean roja, boolean lesion) throws ElementoInexistenteEx {
+        EstadisticaJugador stats = estadisticas.get(dni);
+        if (stats == null) throw new ElementoInexistenteEx("No se encontró estadísticas para el jugador con DNI: " + dni);
+
+        if (gol) stats.agregarGol();
+        if (asistencia) stats.agregarAsistencia();
+        if (vallaInvicta) stats.agregarVallaInvicta();
+        if (amarilla) stats.agregarTarjetaAmarilla();
+        if (roja) stats.agregarTarjetaRoja();
+        if (lesion) stats.agregarLesion();
+    }
+
+    public EstadisticaJugador getEstadisticas(String dni) throws ElementoInexistenteEx {
+        EstadisticaJugador stats = estadisticas.get(dni);
+        if (stats == null) throw new ElementoInexistenteEx("No se encontró estadísticas para el jugador con DNI: " + dni);
+        return stats;
+    }
+
+
     public void guardarJSON() {
         JSONArray array = new JSONArray();
-
         for (Jugador j : jugadores.values()) {
             JSONObject obj = new JSONObject();
             obj.put("dni", j.getDni());
@@ -139,10 +150,11 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
                 obj.put("contrato", JSONObject.NULL);
             }
 
+            EstadisticaJugador stats = estadisticas.get(j.getDni());
+            if (stats != null) obj.put("estadisticas", stats.toString());
+
             array.put(obj);
         }
-
         JSONUtiles.uploadJSON(array, "Plantel");
     }
-
 }

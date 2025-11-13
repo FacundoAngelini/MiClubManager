@@ -54,8 +54,8 @@ public class MenuClub {
                     menuPresupuesto.mostrarMenuPresupuesto();
                     break;
                 case 7:
-                    MenuInventario menuInventario = new MenuInventario();
-                    menuInventario.mostrarMenuInventario();
+                    MenuInventario<Producto> menu = new MenuInventario<>();
+                    menu.mostrarMenuInventario();
                     break;
                 case 8:
                     salir = true;

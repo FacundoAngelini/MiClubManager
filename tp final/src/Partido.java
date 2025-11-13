@@ -1,14 +1,14 @@
 import java.util.Objects;
 
 public class Partido {
-    private String fecha;
-    private boolean esLocal;
-    private String rival;
-    private int golesAFavor;
-    private int golesEnContra;
-    private int entradasVendidas;
-    private double precioEntrada;
-    private FichaDelPartido fichaDelPartido;
+    private final String fecha;
+    private final boolean esLocal;
+    private final String rival;
+    private final int golesAFavor;
+    private final int golesEnContra;
+    private final int entradasVendidas;
+    private final double precioEntrada;
+    private final FichaDelPartido fichaDelPartido;
 
     public Partido(String fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada) {
         this.fecha = fecha;

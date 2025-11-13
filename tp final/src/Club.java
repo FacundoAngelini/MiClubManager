@@ -11,10 +11,10 @@ public class Club {
 
         this.gestionPresupuesto = new GestionPresupuesto(saldoInicial);
 
-        this.gestionJugadores = new GestionJugadores(gestionPresupuesto, gestorPartidos);
+        this.gestionJugadores = new GestionJugadores(gestionPresupuesto);
         this.gestionCuerpoTecnico = new GestionCuerpoTecnico();
         this.gestionSocios = new GestionSocio();
-        this.gestorPartidos = new GestorPartido();
+        this.gestorPartidos = new GestorPartido(this.getGestionJugadores());
         this.inventario = new Inventario<>();
         this.gestionEstadios = new GestionEstadio(gestionPresupuesto);
     }

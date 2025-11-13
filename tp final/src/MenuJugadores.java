@@ -58,6 +58,7 @@ public class MenuJugadores {
                     break;
                 default:
                     System.out.println("Opcion invalida, intente de nuevo");
+                    break;
             }
         }
     }
@@ -81,9 +82,11 @@ public class MenuJugadores {
 
             System.out.print("Numero camiseta: ");
             int numeroCamiseta = scanner.nextInt();
+            scanner.nextLine();
 
             System.out.print("Valor jugador: ");
             double valorJugador = scanner.nextDouble();
+            scanner.nextLine();
 
             System.out.print("Salario: ");
             double salario = scanner.nextDouble();
@@ -101,7 +104,9 @@ public class MenuJugadores {
 
             System.out.print("Posicion (PORTERO, DEFENSOR, MEDIO, DELANTERO): ");
             Posicion posicion = Posicion.valueOf(scanner.nextLine().toUpperCase());
-            gestionJugadores.agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, valorJugador, salario, fechaInicio, fechaFin, mesesDuracion, posicion);
+
+            gestionJugadores.agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta,
+                    valorJugador, salario, fechaInicio, fechaFin, mesesDuracion, posicion);
             gestionJugadores.guardarJSON();
             System.out.println("Jugador agregado correctamente.");
 
@@ -167,12 +172,15 @@ public class MenuJugadores {
 
             System.out.print("Numero camiseta: ");
             int numeroCamiseta = scanner.nextInt();
+            scanner.nextLine();
 
             System.out.print("Valor jugador: ");
             double valorJugador = scanner.nextDouble();
+            scanner.nextLine();
 
             System.out.print("Salario: ");
             double salario = scanner.nextDouble();
+            scanner.nextLine();
 
             System.out.print("Monto compra: ");
             double monto = scanner.nextDouble();
@@ -207,9 +215,11 @@ public class MenuJugadores {
         try {
             System.out.print("Ingrese DNI del jugador a vender: ");
             String dni = scanner.nextLine();
+
             System.out.print("Monto venta: ");
             double monto = scanner.nextDouble();
             scanner.nextLine();
+
             System.out.print("Fecha: ");
             String fecha = scanner.nextLine();
 
