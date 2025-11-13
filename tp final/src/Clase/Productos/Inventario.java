@@ -22,33 +22,48 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
             throw new IngresoInvalido("La cantidad debe ser mayor que 0");
         }
 
+        if (nombre == null || nombre.isBlank()) {
+            throw new IngresoInvalido("El nombre no puede estar vacío");
+        }
+
+        if (marca == null || marca.isBlank()) {
+            throw new IngresoInvalido("La marca no puede estar vacía");
+        }
+
         Producto producto;
 
         switch (tipo.toLowerCase()) {
-            case "pelota":
+            case "pelota" -> {
                 if (extra.length < 1) throw new IngresoInvalido("Falta el modelo para la pelota");
                 producto = new Pelota(nombre, marca, cantidad, extra[0]);
-                break;
-
-            case "camiseta":
+            }
+            case "camiseta" -> {
                 if (extra.length < 1) throw new IngresoInvalido("Falta el sponsor para la camiseta");
                 producto = new Camiseta(nombre, marca, cantidad, extra[0]);
-                break;
-
-            default:
-                throw new IngresoInvalido("Tipo de producto no reconocido");
+            }
+            default -> throw new IngresoInvalido("Tipo de producto no reconocido: " + tipo);
         }
 
-        items.put(nombre, (T) producto);
+        T prod = (T) producto;
+
+        if (items.containsKey(nombre)) {
+            T existente = items.get(nombre);
+            existente.setCantidad(existente.getCantidad() + cantidad);
+        } else {
+            items.put(nombre, prod);
+        }
+
+        guardarJSON();
     }
 
     public void eliminarElemento(String id) throws AccionImposible {
-        if (!items.containsKey(id)) throw new AccionImposible("Producto no encontrado");
+        if (!items.containsKey(id)) throw new AccionImposible("Producto no encontrado: " + id);
         items.remove(id);
+        guardarJSON();
     }
 
     public T devuelveElemento(String id) throws AccionImposible {
-        if (!items.containsKey(id)) throw new AccionImposible("Producto no encontrado");
+        if (!items.containsKey(id)) throw new AccionImposible("Producto no encontrado: " + id);
         return items.get(id);
     }
 
@@ -61,8 +76,8 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
     }
 
     public int consultarStock(String id) throws AccionImposible {
-        if (!items.containsKey(id)) throw new AccionImposible("Producto no encontrado");
-        return items.get(id).getCantidad();
+        T producto = devuelveElemento(id);
+        return producto.getCantidad();
     }
 
     public void mostrarInventario() {
@@ -70,17 +85,22 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
             System.out.println("Inventario vacío");
             return;
         }
+
         for (T item : items.values()) {
             System.out.println(item.muestraDatos());
         }
     }
 
-    @Override
+
     public void guardarJSON() {
-        JSONArray array = new JSONArray();
-        for (T item : items.values()) {
-            array.put(item.toJSON());
+        try {
+            JSONArray array = new JSONArray();
+            for (T item : items.values()) {
+                array.put(item.toJSON());
+            }
+            JSONUtiles.uploadJSON(array, "inventario");
+        } catch (Exception e) {
+            System.out.println("Error al guardar inventario: " + e.getMessage());
         }
-        JSONUtiles.uploadJSON(array, "inventario");
     }
 }

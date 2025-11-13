@@ -18,9 +18,9 @@ public class Club {
         this.gestionPresupuesto = new GestionPresupuesto();
 
         this.gestionJugadores = new GestionJugadores(gestionPresupuesto);
-        this.gestionCuerpoTecnico = new GestionCuerpoTecnico();
-        this.gestionSocios = new GestionSocio();
-        this.gestorPartidos = new GestorPartido(this.getGestionJugadores());
+        this.gestionCuerpoTecnico = new GestionCuerpoTecnico(gestionPresupuesto);
+        this.gestionSocios = new GestionSocio(gestionPresupuesto);
+        this.gestorPartidos = new GestorPartido (gestionJugadores,gestionPresupuesto);
         this.inventario = new Inventario<>();
         this.gestionEstadios = new GestionEstadio(gestionPresupuesto);
     }

@@ -10,7 +10,8 @@ public class MenuJugadores {
     private MenuClub menuclub;
     private final Scanner scanner;
 
-    public MenuJugadores() {
+    public MenuJugadores(MenuClub menuclub) {
+        this.menuclub = menuclub;
         this.scanner = new Scanner(System.in);
     }
 
@@ -29,37 +30,49 @@ public class MenuJugadores {
             System.out.println("8. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
 
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
+            int opcion = leerEntero();
 
             switch (opcion) {
-                case 1:
-                    agregarJugador();
-                    break;
-                case 2:
-                    eliminarJugador();
-                    break;
-                case 3:
-                    listarJugadores();
-                    break;
-                case 4:
-                    cambiarEstadoContrato();
-                    break;
-                case 5:
-                    comprarJugador();
-                    break;
-                case 6:
-                    venderJugador();
-                    break;
-                case 7:
-                    pagarSalarios();
-                    break;
-                case 8:
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opcion invalida, intente de nuevo");
-                    break;
+                case 1 -> agregarJugador();
+                case 2 -> eliminarJugador();
+                case 3 -> listarJugadores();
+                case 4 -> cambiarEstadoContrato();
+                case 5 -> comprarJugador();
+                case 6 -> venderJugador();
+                case 7 -> pagarSalarios();
+                case 8 -> salir = true;
+                default -> System.out.println("Opcion invalida, intente de nuevo");
+            }
+        }
+    }
+
+    private int leerEntero() {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Entrada inválida. Ingrese un número: ");
+            }
+        }
+    }
+
+    private double leerDouble() {
+        while (true) {
+            try {
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Entrada inválida. Ingrese un número decimal: ");
+            }
+        }
+    }
+
+    private boolean leerBoolean() {
+        while (true) {
+            String entrada = scanner.nextLine().trim().toLowerCase();
+            if (entrada.equals("true") || entrada.equals("false")) {
+                return Boolean.parseBoolean(entrada);
+            } else {
+                System.out.print("Entrada inválida. Ingrese true o false: ");
             }
         }
     }
@@ -82,16 +95,13 @@ public class MenuJugadores {
             String nacionalidad = scanner.nextLine();
 
             System.out.print("Numero camiseta: ");
-            int numeroCamiseta = scanner.nextInt();
-            scanner.nextLine();
+            int numeroCamiseta = leerEntero();
 
             System.out.print("Valor jugador: ");
-            double valorJugador = scanner.nextDouble();
-            scanner.nextLine();
+            double valorJugador = leerDouble();
 
             System.out.print("Salario: ");
-            double salario = scanner.nextDouble();
-            scanner.nextLine();
+            double salario = leerDouble();
 
             System.out.print("Fecha inicio contrato: ");
             String fechaInicio = scanner.nextLine();
@@ -100,19 +110,22 @@ public class MenuJugadores {
             String fechaFin = scanner.nextLine();
 
             System.out.print("Duracion meses: ");
-            int mesesDuracion = scanner.nextInt();
-            scanner.nextLine();
+            int mesesDuracion = leerEntero();
 
             System.out.print("Posicion (PORTERO, DEFENSOR, MEDIO, DELANTERO): ");
             Posicion posicion = Posicion.valueOf(scanner.nextLine().toUpperCase());
 
-            menuclub.club.getGestionJugadores().agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta,
-                    valorJugador, salario, fechaInicio, fechaFin, mesesDuracion, posicion);
+            menuclub.club.getGestionJugadores()
+                    .agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta,
+                            valorJugador, salario, fechaInicio, fechaFin, mesesDuracion, posicion);
+
             menuclub.club.getGestionJugadores().guardarJSON();
-            System.out.println("Clases_Manu.Jugador agregado correctamente.");
+            System.out.println("Jugador agregado correctamente.");
 
         } catch (ElementoDuplicadoEx | IllegalArgumentException e) {
             System.out.println("Error al agregar jugador: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error inesperado: " + e.getMessage());
         }
     }
 
@@ -120,11 +133,15 @@ public class MenuJugadores {
         try {
             System.out.print("Ingrese DNI del jugador a eliminar: ");
             String dni = scanner.nextLine();
+
             menuclub.club.getGestionJugadores().eliminarElemento(dni);
             menuclub.club.getGestionJugadores().guardarJSON();
-            System.out.println("Clases_Manu.Jugador eliminado correctamente.");
-        } catch (AccionImposible e) {
+            System.out.println("Jugador eliminado correctamente.");
+
+        } catch (AccionImposible | ElementoInexistenteEx e) {
             System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error inesperado: " + e.getMessage());
         }
     }
 
@@ -141,14 +158,14 @@ public class MenuJugadores {
 
     private void cambiarEstadoContrato() {
         try {
-            System.out.print("Ingrese DNI del jugador: ");
-            String dni = scanner.nextLine();
+            System.out.print("Ingrese DNI del jugador: "); String dni = scanner.nextLine();
             System.out.print("Nuevo estado (true = activo, false = inactivo): ");
-            boolean nuevoEstado = scanner.nextBoolean();
-            scanner.nextLine();
+            boolean nuevoEstado = leerBoolean();
+
             menuclub.club.getGestionJugadores().cambiarEstadoContrato(dni, nuevoEstado);
             menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Estado de contrato actualizado.");
+
         } catch (ElementoInexistenteEx e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -168,20 +185,20 @@ public class MenuJugadores {
             System.out.print("Fecha nacimiento: ");
             String fechaNacimiento = scanner.nextLine();
 
-            System.out.print("Nacionalidad: ");
-            String nacionalidad = scanner.nextLine();
+           System.out.print("Nacionalidad: ");
+           String nacionalidad = scanner.nextLine();
 
             System.out.print("Numero camiseta: ");
-            int numeroCamiseta = Integer.parseInt(scanner.nextLine());
+            int numeroCamiseta = leerEntero();
 
             System.out.print("Valor jugador: ");
-            double valorJugador = Double.parseDouble(scanner.nextLine());
+            double valorJugador = leerDouble();
 
             System.out.print("Salario: ");
-            double salario = Double.parseDouble(scanner.nextLine());
+            double salario = leerDouble();
 
             System.out.print("Monto compra: ");
-            double monto = Double.parseDouble(scanner.nextLine());
+            double monto = leerDouble();
 
             System.out.print("Fecha inicio contrato: ");
             String fechaInicio = scanner.nextLine();
@@ -190,52 +207,53 @@ public class MenuJugadores {
             String fechaFin = scanner.nextLine();
 
             System.out.print("Duracion meses: ");
-            int mesesDuracion = Integer.parseInt(scanner.nextLine());
+            int mesesDuracion = leerEntero();
 
             System.out.print("Posicion (PORTERO, DEFENSOR, MEDIO, DELANTERO): ");
             Posicion posicion = Posicion.valueOf(scanner.nextLine().toUpperCase());
 
-            menuclub.club.getGestionJugadores().comprar_jugador(
-                    monto, dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    numeroCamiseta, salario, fechaInicio, fechaFin, mesesDuracion,
-                    valorJugador, posicion
-            );
+            menuclub.club.getGestionJugadores()
+                    .comprar_jugador(monto, dni, nombre, apellido, fechaNacimiento, nacionalidad,
+                            numeroCamiseta, salario, fechaInicio, fechaFin, mesesDuracion,
+                            valorJugador, posicion);
 
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Jugador comprado correctamente.");
+
         } catch (FondoInsuficienteEx | ElementoDuplicadoEx | IngresoInvalido | IllegalArgumentException e) {
             System.out.println("Error al comprar jugador: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error inesperado: " + e.getMessage());
         }
     }
 
-
     private void venderJugador() {
         try {
-            System.out.print("Ingrese DNI del jugador a vender: ");
-            String dni = scanner.nextLine();
-
-            System.out.print("Monto venta: ");
-            double monto = scanner.nextDouble();
-            scanner.nextLine();
-
-            System.out.print("Fecha: ");
-            String fecha = scanner.nextLine();
+            System.out.print("Ingrese DNI del jugador a vender: "); String dni = scanner.nextLine();
+            System.out.print("Monto venta: "); double monto = leerDouble();
+            System.out.print("Fecha: "); String fecha = scanner.nextLine();
 
             menuclub.club.getGestionJugadores().vender_jugador(monto, dni, fecha);
             menuclub.club.getGestionJugadores().guardarJSON();
-            System.out.println("Clases_Manu.Jugador vendido correctamente.");
+            System.out.println("Jugador vendido correctamente.");
+
         } catch (ElementoInexistenteEx | IngresoInvalido e) {
             System.out.println("Error al vender jugador: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error inesperado: " + e.getMessage());
         }
     }
 
     private void pagarSalarios() {
         try {
-            System.out.print("Ingrese fecha de pago: ");
-            String fecha = scanner.nextLine();
+            System.out.print("Ingrese fecha de pago: "); String fecha = scanner.nextLine();
             menuclub.club.getGestionJugadores().pagar_salarios(fecha);
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Salarios pagados correctamente.");
         } catch (FondoInsuficienteEx | IngresoInvalido e) {
             System.out.println("Error al pagar salarios: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error inesperado: " + e.getMessage());
         }
     }
 }

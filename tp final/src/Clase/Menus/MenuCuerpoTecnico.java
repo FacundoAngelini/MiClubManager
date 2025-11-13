@@ -12,7 +12,8 @@ public class MenuCuerpoTecnico {
     private MenuClub menuClub;
     private final Scanner scanner;
 
-    public MenuCuerpoTecnico() {
+    public MenuCuerpoTecnico(MenuClub menuClub) {
+        this.menuClub = menuClub;
         this.scanner = new Scanner(System.in);
     }
 
@@ -39,33 +40,18 @@ public class MenuCuerpoTecnico {
             }
 
             switch (opcion) {
-                case 1:
-                    agregarMiembro();
-                    break;
-                case 2:
-                    eliminarMiembro();
-                    break;
-                case 3:
-                    listarMiembros();
-                    break;
-                case 4:
-                    modificarMiembro();
-                    break;
-                case 5:
-                    cambiarEstadoContrato();
-                    break;
-                case 6:
-                    aplicarGastoSalarios();
-                    break;
-                case 7:
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opcion invalida.");
-                    break;
+                case 1 -> agregarMiembro();
+                case 2 -> eliminarMiembro();
+                case 3 -> listarMiembros();
+                case 4 -> modificarMiembro();
+                case 5 -> cambiarEstadoContrato();
+                case 6 -> aplicarGastoSalarios();
+                case 7 -> salir = true;
+                default -> System.out.println("Opcion invalida.");
             }
         }
     }
+
     private void agregarMiembro() {
         try {
             System.out.print("DNI: ");
@@ -101,13 +87,13 @@ public class MenuCuerpoTecnico {
             System.out.print("Anios de experiencia: ");
             int aniosExp = Integer.parseInt(scanner.nextLine());
 
-            menuClub.club.getGestionCuerpoTecnico().agregarElemento(dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    salario, fechaInicio, fechaFin, mesesDuracion, puesto, aniosExp);
-
+            menuClub.club.getGestionCuerpoTecnico().agregarElemento(
+                    dni, nombre, apellido, fechaNacimiento, nacionalidad,
+                    salario, fechaInicio, fechaFin, mesesDuracion, puesto, aniosExp
+            );
+            menuClub.club.getGestionCuerpoTecnico().aplicarGastoSalarios(fechaInicio);
+            menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro agregado correctamente.");
-
-        } catch (ElementoDuplicadoEx | AccionImposible e) {
-            System.out.println("Error: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.out.println("Error: valor invalido para Puesto o numerico.");
         }
@@ -117,10 +103,12 @@ public class MenuCuerpoTecnico {
         try {
             System.out.print("DNI del miembro a eliminar: ");
             String dni = scanner.nextLine();
+
             menuClub.club.getGestionCuerpoTecnico().eliminarElemento(dni);
+
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro eliminado correctamente.");
-        } catch (AccionImposible e) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -138,7 +126,7 @@ public class MenuCuerpoTecnico {
                     " | Puesto: " + ct.getPuesto() +
                     " | Experiencia: " + ct.getAniosExp() + " años" +
                     " | Salario: " + (ct.getContrato() != null ? ct.getContrato().getSalario() : "N/A") +
-                    " | Clases_Manu.Contrato activo: " + (ct.getContrato() != null ? ct.getContrato().isContratoActivo() : "N/A"));
+                    " | Contrato activo: " + (ct.getContrato() != null ? ct.getContrato().isContratoActivo() : "N/A"));
         }
     }
 
@@ -191,14 +179,13 @@ public class MenuCuerpoTecnico {
             int aniosExp = expStr.isEmpty() ? ct.getAniosExp() : Integer.parseInt(expStr);
 
             Contrato nuevoContrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
-            menuClub.club.getGestionCuerpoTecnico().modificarCuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    nuevoContrato, puesto, aniosExp);
 
+            menuClub.club.getGestionCuerpoTecnico().modificarCuerpoTecnico(
+                    dni, nombre, apellido, fechaNacimiento, nacionalidad,
+                    nuevoContrato, puesto, aniosExp
+            );
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro modificado correctamente.");
-
-        } catch (AccionImposible | ElementoInexistenteEx e) {
-            System.out.println("Error: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.out.println("Error: valor inválido para Puesto o numérico.");
         }
@@ -224,6 +211,7 @@ public class MenuCuerpoTecnico {
             System.out.print("Fecha de aplicacion del gasto (dd/mm/yyyy): ");
             String fecha = scanner.nextLine();
             menuClub.club.getGestionCuerpoTecnico().aplicarGastoSalarios(fecha);
+
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Gasto de salarios aplicado correctamente.");
         } catch (IngresoInvalido e) {

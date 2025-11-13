@@ -25,16 +25,21 @@ public class GestionPresupuesto {
 
     public void agregar_fondos(double dinero, String descripcion, String fecha) throws IngresoInvalido {
         if (dinero <= 0) {
-            throw new IngresoInvalido("El ingreso de dinero es inválido");
+            throw new IngresoInvalido("El ingreso de dinero debe ser mayor que 0");
         }
         if (descripcion == null || descripcion.isEmpty()) {
-            throw new IngresoInvalido("La descripción es obligatoria");
+            throw new IngresoInvalido("La descripcion es obligatoria");
         }
 
         presupuesto.aniadir_monto(dinero);
-
         Transaccion t = new Transaccion(descripcion, dinero, "INGRESO", fecha);
         listaTransacciones.add(t);
+
+        try {
+            guardarJSON();
+        } catch (Exception e) {
+            System.out.println("Advertencia: no se pudo guardar el presupuesto en disco. " + e.getMessage());
+        }
     }
 
     public void quitarFondos(double dinero, String descripcion, String fecha) throws FondoInsuficienteEx, IngresoInvalido {
@@ -42,17 +47,22 @@ public class GestionPresupuesto {
             throw new IngresoInvalido("El monto debe ser mayor que 0");
         }
         if (descripcion == null || descripcion.isEmpty()) {
-            throw new IngresoInvalido("La descripción es obligatoria");
+            throw new IngresoInvalido("La descripcion es obligatoria");
         }
 
         if (presupuesto.getPresupuesto() < dinero) {
-            throw new FondoInsuficienteEx("Fondos insuficientes para realizar la operación");
+            throw new FondoInsuficienteEx("Fondos insuficientes para realizar la operacion");
         }
 
         presupuesto.quitar_fondos(dinero);
-
         Transaccion t = new Transaccion(descripcion, dinero, "RETIRO", fecha);
         listaTransacciones.add(t);
+
+        try {
+            guardarJSON();
+        } catch (Exception e) {
+            System.out.println("Advertencia: no se pudo guardar el presupuesto en disco. " + e.getMessage());
+        }
     }
 
     public double verSaldoActual() {
@@ -60,22 +70,26 @@ public class GestionPresupuesto {
     }
 
     public void guardarJSON() {
-        JSONObject presupuestoJSON = new JSONObject();
-        presupuestoJSON.put("saldoActual", presupuesto.getPresupuesto());
+        try {
+            JSONObject presupuestoJSON = new JSONObject();
+            presupuestoJSON.put("saldoActual", presupuesto.getPresupuesto());
 
-        JSONArray transaccionesArray = new JSONArray();
-        for (Transaccion t : listaTransacciones) {
-            JSONObject tJSON = new JSONObject();
-            tJSON.put("descripcion", t.getDescripcion());
-            tJSON.put("monto", t.getMonto());
-            tJSON.put("tipo", t.getTipo());
-            tJSON.put("fecha", t.getFecha());
-            transaccionesArray.put(tJSON);
+            JSONArray transaccionesArray = new JSONArray();
+            for (Transaccion t : listaTransacciones) {
+                JSONObject tJSON = new JSONObject();
+                tJSON.put("descripcion", t.getDescripcion());
+                tJSON.put("monto", t.getMonto());
+                tJSON.put("tipo", t.getTipo());
+                tJSON.put("fecha", t.getFecha());
+                transaccionesArray.put(tJSON);
+            }
+
+            presupuestoJSON.put("transacciones", transaccionesArray);
+
+            JSONUtiles.uploadJSON(presupuestoJSON, "presupuesto");
+        } catch (Exception e) {
+            System.out.println("Error al guardar el presupuesto en JSON: " + e.getMessage());
         }
-
-        presupuestoJSON.put("transacciones", transaccionesArray);
-
-        JSONUtiles.uploadJSON(presupuestoJSON, "presupuesto");
     }
 
     public Presupuesto getPresupuesto() {

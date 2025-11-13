@@ -16,9 +16,9 @@ import java.util.HashMap;
 
 public class GestionSocio implements MetodosComunes<Socio, String> {
     private final HashMap<Integer, Socio> socios;
-    private GestionPresupuesto gestionPresupuesto;
+    private final GestionPresupuesto gestionPresupuesto;
 
-    public GestionSocio() {
+    public GestionSocio(GestionPresupuesto gestionPresupuesto) {
         this.socios = new HashMap<>();
         this.gestionPresupuesto = gestionPresupuesto;
     }
@@ -65,12 +65,13 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
     }
 
     public void aplicarRecaudacion(String fecha) throws IngresoInvalido {
-        double totalRecaudado = obtenerRecaudacionTotal();
-        try {
-            gestionPresupuesto.agregar_fondos(totalRecaudado, "Recaudacion de socios", fecha);
-        } catch (IngresoInvalido e) {
-            e.printStackTrace();
+        if (gestionPresupuesto == null) {
+            throw new IngresoInvalido("No se ha configurado el gestor de presupuesto.");
         }
+
+        double totalRecaudado = obtenerRecaudacionTotal();
+        gestionPresupuesto.agregar_fondos(totalRecaudado, "Recaudación de socios", fecha);
+        gestionPresupuesto.guardarJSON();
     }
 
     public boolean existe(String dni) throws ElementoInexistenteEx {

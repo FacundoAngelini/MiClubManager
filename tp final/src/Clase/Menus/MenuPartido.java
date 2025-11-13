@@ -5,22 +5,19 @@ import java.util.Scanner;
 
 import Clase.Partidos.Partido;
 import Clase.Persona.Jugador;
-import exeptions.AccionImposible;
-import exeptions.ElementoDuplicadoEx;
-import exeptions.ElementoInexistenteEx;
-import exeptions.IngresoInvalido;
+import exeptions.*;
 
 public class MenuPartido {
-    private  MenuClub menuClub;
+    private final MenuClub menuClub;
     private final Scanner scanner;
 
-    public MenuPartido() {
+    public MenuPartido(MenuClub menuClub) {
+        this.menuClub = menuClub;
         this.scanner = new Scanner(System.in);
     }
 
     public void mostrarMenuPartidos() {
         boolean salir = false;
-
         while (!salir) {
             System.out.println("\n----- MENU PARTIDOS -----");
             System.out.println("1. Agregar partido");
@@ -35,7 +32,7 @@ public class MenuPartido {
 
             int opcion;
             try {
-                opcion = Integer.parseInt(scanner.nextLine());
+                opcion = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Error: ingrese un número válido.");
                 continue;
@@ -58,45 +55,53 @@ public class MenuPartido {
     private void agregarPartido() {
         try {
             System.out.print("Fecha (dd/mm/yyyy): ");
-            String fecha = scanner.nextLine();
+            String fecha = scanner.nextLine().trim();
+
             System.out.print("¿Es local? (true/false): ");
-            boolean esLocal = Boolean.parseBoolean(scanner.nextLine());
+            boolean esLocal = Boolean.parseBoolean(scanner.nextLine().trim());
+
             System.out.print("Rival: ");
-            String rival = scanner.nextLine();
+            String rival = scanner.nextLine().trim();
+
             System.out.print("Goles a favor: ");
-            int golesAFavor = Integer.parseInt(scanner.nextLine());
+            int golesAFavor = Integer.parseInt(scanner.nextLine().trim());
+
             System.out.print("Goles en contra: ");
-            int golesEnContra = Integer.parseInt(scanner.nextLine());
+            int golesEnContra = Integer.parseInt(scanner.nextLine().trim());
 
             int entradasVendidas = 0;
             double precioEntrada = 0;
             if (esLocal) {
                 System.out.print("Entradas vendidas: ");
-                entradasVendidas = Integer.parseInt(scanner.nextLine());
+                entradasVendidas = Integer.parseInt(scanner.nextLine().trim());
                 System.out.print("Precio entrada: ");
-                precioEntrada = Double.parseDouble(scanner.nextLine());
+                precioEntrada = Double.parseDouble(scanner.nextLine().trim());
             }
 
-            menuClub.club.getGestorPartidos().agregarPartido(fecha, esLocal, rival, golesAFavor, golesEnContra,
-                    entradasVendidas, precioEntrada, menuClub.club.getGestionPresupuesto());
-            menuClub.club.getGestorPartidos().guardarJSON();
-            System.out.println("Partido agregado correctamente.");
+            menuClub.club.getGestorPartidos().agregarPartido(fecha, esLocal, rival,
+                    golesAFavor, golesEnContra, entradasVendidas, precioEntrada);
+
+            System.out.println("Partido agregado y guardado correctamente.");
+
         } catch (IngresoInvalido | ElementoDuplicadoEx e) {
             System.out.println("Error: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Error: valor numérico inválido.");
+        } catch (Exception e) {
+            System.out.println("Error inesperado al agregar el partido: " + e.getMessage());
         }
     }
 
     private void eliminarPartido() {
         try {
             System.out.print("Fecha del partido a eliminar: ");
-            String fecha = scanner.nextLine();
+            String fecha = scanner.nextLine().trim();
             menuClub.club.getGestorPartidos().eliminarElemento(fecha);
-            menuClub.club.getGestorPartidos().guardarJSON();
             System.out.println("Partido eliminado correctamente.");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al eliminar partido: " + e.getMessage());
         }
     }
 
@@ -124,83 +129,65 @@ public class MenuPartido {
     }
 
     private void registrarGol() {
-        System.out.print("Fecha del partido: ");
-        String fecha = scanner.nextLine();
-        Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
-        if (partido == null) {
-            System.out.println("Partido no encontrado.");
-            return;
-        }
-
-        System.out.print("DNI del jugador: ");
-        String dni = scanner.nextLine();
-        Jugador jugador = buscarJugadorPorDNI(dni);
-        if (jugador == null) {
-            System.out.println("Jugador no encontrado.");
-            return;
-        }
-
         try {
+            System.out.print("Fecha del partido: ");
+            String fecha = scanner.nextLine().trim();
+            Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
+            if (partido == null) throw new ElementoInexistenteEx("Partido no encontrado.");
+
+            System.out.print("DNI del jugador: ");
+            String dni = scanner.nextLine().trim();
+            Jugador jugador = buscarJugadorPorDNI(dni);
+            if (jugador == null) throw new ElementoInexistenteEx("Jugador no encontrado.");
+
             menuClub.club.getGestorPartidos().registrarGol(fecha, jugador, partido.isEsLocal());
-            menuClub.club.getGestorPartidos().guardarJSON();
             System.out.println("Gol registrado correctamente.");
-        } catch (ElementoInexistenteEx e) {
-            System.out.println("Error: " + e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Error inesperado al registrar gol: " + e.getMessage());
         }
     }
 
     private void registrarTarjeta() {
-        System.out.print("Fecha del partido: ");
-        String fecha = scanner.nextLine();
-        Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
-        if (partido == null) {
-            System.out.println("Partido no encontrado.");
-            return;
-        }
-
-        System.out.print("DNI del jugador: ");
-        String dni = scanner.nextLine();
-        Jugador jugador = buscarJugadorPorDNI(dni);
-        if (jugador == null) {
-            System.out.println("Jugador no encontrado.");
-            return;
-        }
-
-        System.out.print("Tipo de tarjeta (Amarilla/Roja): ");
-        String tipo = scanner.nextLine();
-
         try {
+            System.out.print("Fecha del partido: ");
+            String fecha = scanner.nextLine().trim();
+            Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
+            if (partido == null) throw new ElementoInexistenteEx("Partido no encontrado.");
+
+            System.out.print("DNI del jugador: ");
+            String dni = scanner.nextLine().trim();
+            Jugador jugador = buscarJugadorPorDNI(dni);
+            if (jugador == null) throw new ElementoInexistenteEx("Jugador no encontrado.");
+
+            System.out.print("Tipo de tarjeta (Amarilla/Roja): ");
+            String tipo = scanner.nextLine().trim();
+
             menuClub.club.getGestorPartidos().registrarTarjeta(fecha, jugador, tipo);
-            menuClub.club.getGestorPartidos().guardarJSON();
             System.out.println("Tarjeta registrada correctamente.");
-        } catch (ElementoInexistenteEx e) {
-            System.out.println("Error: " + e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Error inesperado al registrar tarjeta: " + e.getMessage());
         }
     }
 
     private void registrarLesion() {
-        System.out.print("Fecha del partido: ");
-        String fecha = scanner.nextLine();
-        Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
-        if (partido == null) {
-            System.out.println("Partido no encontrado.");
-            return;
-        }
-
-        System.out.print("DNI del jugador lesionado: ");
-        String dni = scanner.nextLine();
-        Jugador jugador = buscarJugadorPorDNI(dni);
-        if (jugador == null) {
-            System.out.println("Jugador no encontrado.");
-            return;
-        }
-
         try {
+            System.out.print("Fecha del partido: ");
+            String fecha = scanner.nextLine().trim();
+            Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
+            if (partido == null) throw new ElementoInexistenteEx("Partido no encontrado.");
+
+            System.out.print("DNI del jugador lesionado: ");
+            String dni = scanner.nextLine().trim();
+            Jugador jugador = buscarJugadorPorDNI(dni);
+            if (jugador == null) throw new ElementoInexistenteEx("Jugador no encontrado.");
+
             menuClub.club.getGestorPartidos().registrarLesion(fecha, jugador);
-            menuClub.club.getGestorPartidos().guardarJSON();
             System.out.println("Lesión registrada correctamente.");
-        } catch (ElementoInexistenteEx e) {
-            System.out.println("Error: " + e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Error inesperado al registrar lesión: " + e.getMessage());
         }
     }
 }

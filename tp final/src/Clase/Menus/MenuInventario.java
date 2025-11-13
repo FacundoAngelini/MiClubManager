@@ -13,7 +13,8 @@ public class MenuInventario {
     private MenuClub menuClub;
     private final Scanner sc;
 
-    public MenuInventario() {
+    public MenuInventario(MenuClub menuClub) {
+        this.menuClub = menuClub;
         sc = new Scanner(System.in);
     }
 
@@ -31,84 +32,54 @@ public class MenuInventario {
             System.out.println("8. Salir");
             System.out.print("Seleccione una opción: ");
 
-            int opcion;
-            try {
-                opcion = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Opción inválida");
-                continue;
-            }
+            int opcion = leerEntero();
+            if (opcion == -1) continue;
 
             switch (opcion) {
-                case 1:
-                    agregarProducto();
-                break;
-                case 2:
-                    eliminarProducto();
-                    break;
-                case 3 :
-                    consultarStock();
-                    break;
-                case 4:
-                    mostrarInventario();
-                    break;
-                case 5:
-                    listarProductos();
-                    break;
-                case 6:
-                    modificarPelota();
-                    break;
-                case 7:
-                    modificarCamiseta();
-                    break;
-                case 8:
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opción inválida");
-                    break;
+                case 1 -> agregarProducto();
+                case 2 -> eliminarProducto();
+                case 3 -> consultarStock();
+                case 4 -> mostrarInventario();
+                case 5 -> listarProductos();
+                case 6 -> modificarPelota();
+                case 7 -> modificarCamiseta();
+                case 8 -> salir = true;
+                default -> System.out.println("Opción inválida");
             }
         }
     }
 
     private void agregarProducto() {
         try {
-            System.out.print("Tipo de producto (pelota/camiseta): ");
-            String tipo = sc.nextLine().trim();
+            String tipo = leerStringNoVacio("Tipo de producto (pelota/camiseta): ").toLowerCase();
 
-            System.out.print("Nombre: ");
-            String nombre = sc.nextLine().trim();
-
-            System.out.print("Marca: ");
-            String marca = sc.nextLine().trim();
-
-            System.out.print("Cantidad: ");
-            int cantidad = Integer.parseInt(sc.nextLine().trim());
-
-            String extra = "";
-            if (tipo.equalsIgnoreCase("pelota")) {
-                System.out.print("Modelo de la pelota: ");
-                extra = sc.nextLine().trim();
-            } else if (tipo.equalsIgnoreCase("camiseta")) {
-                System.out.print("Sponsor de la camiseta: ");
-                extra = sc.nextLine().trim();
+            if (!tipo.equals("pelota") && !tipo.equals("camiseta")) {
+                System.out.println("Tipo de producto no válido");
+                return;
             }
 
-            // Delegamos la creación al inventario (no rompemos encapsulamiento)
+            String nombre = leerStringNoVacio("Nombre: ");
+            String marca = leerStringNoVacio("Marca: ");
+            int cantidad = leerEnteroPositivo("Cantidad: ");
+
+            String extra = "";
+            if (tipo.equals("pelota")) {
+                extra = leerStringNoVacio("Modelo de la pelota: ");
+            } else if (tipo.equals("camiseta")) {
+                extra = leerStringNoVacio("Sponsor de la camiseta: ");
+            }
+
             menuClub.club.getInventario().agregarProducto(tipo, nombre, marca, cantidad, extra);
             menuClub.club.getInventario().guardarJSON();
             System.out.println("Producto agregado correctamente");
         } catch (IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Cantidad inválida");
         }
     }
 
     private void eliminarProducto() {
         try {
-            System.out.print("Nombre del producto a eliminar: ");
-            String nombre = sc.nextLine().trim();
+            String nombre = leerStringNoVacio("Nombre del producto a eliminar: ");
             menuClub.club.getInventario().eliminarElemento(nombre);
             menuClub.club.getInventario().guardarJSON();
             System.out.println("Producto eliminado correctamente");
@@ -119,8 +90,7 @@ public class MenuInventario {
 
     private void consultarStock() {
         try {
-            System.out.print("Nombre del producto: ");
-            String nombre = sc.nextLine().trim();
+            String nombre = leerStringNoVacio("Nombre del producto: ");
             int cantidad = menuClub.club.getInventario().consultarStock(nombre);
             System.out.println("Stock actual de " + nombre + ": " + cantidad);
         } catch (AccionImposible e) {
@@ -141,12 +111,12 @@ public class MenuInventario {
 
     private void modificarPelota() {
         try {
-            System.out.print("Nombre de la pelota a modificar: ");
-            Producto prod = menuClub.club.getInventario().devuelveElemento(sc.nextLine().trim());
+            String nombre = leerStringNoVacio("Nombre de la pelota a modificar: ");
+            Producto prod = menuClub.club.getInventario().devuelveElemento(nombre);
 
             if (prod instanceof Pelota pelota) {
-                System.out.print("Nuevo modelo: ");
-                pelota.setModelo(sc.nextLine().trim());
+                String nuevoModelo = leerStringNoVacio("Nuevo modelo: ");
+                pelota.setModelo(nuevoModelo);
                 menuClub.club.getInventario().guardarJSON();
                 System.out.println("Modelo actualizado");
             } else {
@@ -159,12 +129,12 @@ public class MenuInventario {
 
     private void modificarCamiseta() {
         try {
-            System.out.print("Nombre de la camiseta a modificar: ");
-            Producto prod = menuClub.club.getInventario().devuelveElemento(sc.nextLine().trim());
+            String nombre = leerStringNoVacio("Nombre de la camiseta a modificar: ");
+            Producto prod = menuClub.club.getInventario().devuelveElemento(nombre);
 
             if (prod instanceof Camiseta camiseta) {
-                System.out.print("Nuevo sponsor: ");
-                camiseta.cambiarSponsor(sc.nextLine().trim());
+                String nuevoSponsor = leerStringNoVacio("Nuevo sponsor: ");
+                camiseta.cambiarSponsor(nuevoSponsor);
                 menuClub.club.getInventario().guardarJSON();
                 System.out.println("Sponsor actualizado");
             } else {
@@ -173,5 +143,42 @@ public class MenuInventario {
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+
+    private int leerEntero() {
+        try {
+            return Integer.parseInt(sc.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Debe ingresar un número válido");
+            return -1;
+        }
+    }
+
+    private int leerEnteroPositivo(String mensaje) {
+        int numero;
+        do {
+            numero = leerEnteroConMensaje(mensaje);
+            if (numero <= 0) {
+                System.out.println("Debe ser un número mayor que 0");
+            }
+        } while (numero <= 0);
+        return numero;
+    }
+
+    private int leerEnteroConMensaje(String mensaje) {
+        System.out.print(mensaje);
+        return leerEntero();
+    }
+
+    private String leerStringNoVacio(String mensaje) {
+        String input;
+        do {
+            System.out.print(mensaje);
+            input = sc.nextLine().trim();
+            if (input.isEmpty()) {
+                System.out.println("No puede estar vacío");
+            }
+        } while (input.isEmpty());
+        return input;
     }
 }
