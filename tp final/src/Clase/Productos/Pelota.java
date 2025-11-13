@@ -18,7 +18,7 @@ public class Pelota extends Producto {
         this.modelo = modelo;
     }
 
-    protected String muestraDatos() {
+    public String muestraDatos() {
         return "Clases_Manu.Pelota{" +
                 "modelo='" + modelo + '\'' +
                 ", nombre='" + nombre + '\'' +

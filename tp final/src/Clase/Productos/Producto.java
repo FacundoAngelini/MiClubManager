@@ -37,6 +37,6 @@ public abstract class Producto{
         this.marca = marca;
     }
 
-    protected abstract String muestraDatos();
+    public abstract String muestraDatos();
     public abstract JSONObject toJSON();
 }

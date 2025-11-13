@@ -4,7 +4,7 @@ import exeptions.FondoInsuficienteEx;
 import exeptions.IngresoInvalido;
 
 public class MenuPresupuesto {
-
+private MenuClub menuClub;
      private final Scanner scanner;
 
     public MenuPresupuesto() {
@@ -62,8 +62,8 @@ public class MenuPresupuesto {
             System.out.print("Ingrese fecha (dd/mm/yyyy): ");
             String fecha = scanner.nextLine();
 
-            club.getGestionPresupuesto().agregar_fondos(monto, descripcion, fecha);
-            club.getGestionSocios().guardarJSON();
+            menuClub.club.getGestionPresupuesto().agregar_fondos(monto, descripcion, fecha);
+            menuClub.club.getGestionSocios().guardarJSON();
             System.out.println("Fondos agregados correctamente.");
 
         } catch (IngresoInvalido e) {
@@ -82,8 +82,8 @@ public class MenuPresupuesto {
             System.out.print("Ingrese fecha (dd/mm/yyyy): ");
             String fecha = scanner.nextLine();
 
-            club.getGestionPresupuesto().quitarFondos(monto, descripcion, fecha);
-            club.getGestionPresupuesto().guardarJSON();
+            menuClub.club.getGestionPresupuesto().quitarFondos(monto, descripcion, fecha);
+            menuClub.club.getGestionPresupuesto().guardarJSON();
             System.out.println("Fondos retirados correctamente.");
 
         } catch (IngresoInvalido | FondoInsuficienteEx e) {
@@ -94,18 +94,18 @@ public class MenuPresupuesto {
     }
 
     private void verSaldo() {
-        double saldo = club.getGestionPresupuesto().verSaldoActual();
+        double saldo = menuClub.club.getGestionPresupuesto().verSaldoActual();
         System.out.println("Saldo actual: " + saldo);
     }
 
     private void listarTransacciones() {
         System.out.println("\nLista de transacciones:");
-        if (club.getGestionPresupuesto().getListaTransacciones().isEmpty()) {
+        if (menuClub.club.getGestionPresupuesto().getListaTransacciones().isEmpty()) {
             System.out.println("No hay transacciones registradas.");
             return;
         }
 
-        club.getGestionPresupuesto().getListaTransacciones().forEach(t -> {
+        menuClub.club.getGestionPresupuesto().getListaTransacciones().forEach(t -> {
             System.out.println("Tipo: " + t.getTipo() + " | Monto: " + t.getMonto() +
                     " | Descripcion: " + t.getDescripcion() + " | Fecha: " + t.getFecha());
         });

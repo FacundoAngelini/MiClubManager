@@ -91,9 +91,8 @@ public class MenuInventario<T extends Producto> {
                 extra = sc.nextLine().trim();
             }
 
-            menuClub.club.getInventario()
-            menuclub.inventario.agregarProducto(tipo, nombre, marca, cantidad, extra);
-            inventario.guardarJSON();
+            menuClub.club.getInventario().agregarProducto(tipo, nombre, marca, cantidad, extra);
+            menuClub.club.getInventario().guardarJSON();
             System.out.println("Clases_Manu.Producto agregado correctamente");
 
         } catch (IngresoInvalido e) {
@@ -107,8 +106,8 @@ public class MenuInventario<T extends Producto> {
         try {
             System.out.print("Nombre del producto a eliminar: ");
             String nombre = sc.nextLine().trim();
-            inventario.eliminarElemento(nombre);
-            inventario.guardarJSON();
+            menuClub.club.getInventario().eliminarElemento(nombre);
+            menuClub.club.getInventario().guardarJSON();
             System.out.println("Clases_Manu.Producto eliminado correctamente");
 
         } catch (AccionImposible e) {
@@ -120,7 +119,7 @@ public class MenuInventario<T extends Producto> {
         try {
             System.out.print("Nombre del producto: ");
             String nombre = sc.nextLine().trim();
-            int cantidad = inventario.consultarStock(nombre);
+            int cantidad = menuClub.club.getInventario().consultarStock(nombre);
             System.out.println("Stock actual de " + nombre + ": " + cantidad);
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
@@ -128,27 +127,28 @@ public class MenuInventario<T extends Producto> {
     }
 
     private void mostrarInventario() {
-        inventario.mostrarInventario();
+        menuClub.club.getInventario().mostrarInventario();
     }
 
     private void listarProductos() {
         System.out.println("Lista de productos:");
-        for (T producto : inventario.listar()) {
+        for (Producto producto : menuClub.club.getInventario().listar()) {
             System.out.println(producto.muestraDatos());
         }
     }
+
 
     private void modificarPelota() {
         try {
             System.out.print("Nombre de la pelota a modificar: ");
             String nombre = sc.nextLine().trim();
-            T prod = inventario.devuelveElemento(nombre);
+            producto prod = menuClub.club.getInventario().devuelveElemento(nombre);
 
             if (prod instanceof Pelota pelota) {
                 System.out.print("Nuevo modelo: ");
                 String modelo = sc.nextLine().trim();
                 pelota.setModelo(modelo);
-                inventario.guardarJSON();
+                menuClub.club.getInventario().guardarJSON();
                 System.out.println("Modelo de la pelota actualizado");
             } else {
                 System.out.println("El producto no es una pelota");
@@ -162,7 +162,7 @@ public class MenuInventario<T extends Producto> {
         try {
             System.out.print("Nombre de la camiseta a modificar: ");
             String nombre = sc.nextLine().trim();
-            T prod = inventario.devuelveElemento(nombre);
+            T prod = menuClub.club.getInventario().devuelveElemento(nombre);
 
             if (prod instanceof Camiseta camiseta) {
                 System.out.print("Nuevo sponsor: ");
@@ -173,7 +173,7 @@ public class MenuInventario<T extends Producto> {
                     System.out.println("Error: " + e.getMessage());
                     return;
                 }
-                inventario.guardarJSON();
+                menuClub.club.getInventario().guardarJSON();
                 System.out.println("Sponsor de la camiseta actualizado");
             } else {
                 System.out.println("El producto no es una camiseta");

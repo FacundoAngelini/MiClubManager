@@ -37,7 +37,7 @@ public class MenuClub {
                     menuSocios.mostrarMenuSocios();
                     break;
                 case 2:
-                    MenuJugadores menuJugadores = new MenuJugadores(club.getGestionJugadores());
+                    MenuJugadores menuJugadores = new MenuJugadores();
                     menuJugadores.mostrarMenuJugadores();
                     break;
                 case 3:

@@ -12,7 +12,7 @@ public class MenuJugadores {
     private MenuClub menuclub;
     private final Scanner scanner;
 
-    public MenuJugadores(GestionJugadores gestionJugadores) {
+    public MenuJugadores() {
         this.scanner = new Scanner(System.in);
     }
 
@@ -110,7 +110,7 @@ public class MenuJugadores {
 
             menuclub.club.getGestionJugadores().agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta,
                     valorJugador, salario, fechaInicio, fechaFin, mesesDuracion, posicion);
-            gestionJugadores.guardarJSON();
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Clases_Manu.Jugador agregado correctamente.");
 
         } catch (ElementoDuplicadoEx | IllegalArgumentException e) {
@@ -122,8 +122,8 @@ public class MenuJugadores {
         try {
             System.out.print("Ingrese DNI del jugador a eliminar: ");
             String dni = scanner.nextLine();
-            gestionJugadores.eliminarElemento(dni);
-            gestionJugadores.guardarJSON();
+            menuclub.club.getGestionJugadores().eliminarElemento(dni);
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Clases_Manu.Jugador eliminado correctamente.");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
@@ -131,7 +131,7 @@ public class MenuJugadores {
     }
 
     private void listarJugadores() {
-        ArrayList<Jugador> lista = gestionJugadores.listar();
+        ArrayList<Jugador> lista = menuclub.club.getGestionJugadores().listar();
         if (lista.isEmpty()) {
             System.out.println("No hay jugadores registrados.");
         } else {
@@ -148,8 +148,8 @@ public class MenuJugadores {
             System.out.print("Nuevo estado (true = activo, false = inactivo): ");
             boolean nuevoEstado = scanner.nextBoolean();
             scanner.nextLine();
-            gestionJugadores.cambiarEstadoContrato(dni, nuevoEstado);
-            gestionJugadores.guardarJSON();
+            menuclub.club.getGestionJugadores().cambiarEstadoContrato(dni, nuevoEstado);
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Estado de contrato actualizado.");
         } catch (ElementoInexistenteEx e) {
             System.out.println("Error: " + e.getMessage());
@@ -206,8 +206,8 @@ public class MenuJugadores {
             Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, contrato, posicion);
             jugador.setValorJugador(valorJugador);
 
-            gestionJugadores.comprar_jugador(monto, jugador, fechaInicio);
-            gestionJugadores.guardarJSON();
+            menuclub.club.getGestionJugadores().comprar_jugador(monto, jugador, fechaInicio);
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Clases_Manu.Jugador comprado correctamente.");
         } catch (FondoInsuficienteEx | ElementoDuplicadoEx | IngresoInvalido | IllegalArgumentException e) {
             System.out.println("Error al comprar jugador: " + e.getMessage());
@@ -226,8 +226,8 @@ public class MenuJugadores {
             System.out.print("Fecha: ");
             String fecha = scanner.nextLine();
 
-            gestionJugadores.vender_jugador(monto, dni, fecha);
-            gestionJugadores.guardarJSON();
+            menuclub.club.getGestionJugadores().vender_jugador(monto, dni, fecha);
+            menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Clases_Manu.Jugador vendido correctamente.");
         } catch (ElementoInexistenteEx | IngresoInvalido e) {
             System.out.println("Error al vender jugador: " + e.getMessage());
@@ -238,7 +238,7 @@ public class MenuJugadores {
         try {
             System.out.print("Ingrese fecha de pago: ");
             String fecha = scanner.nextLine();
-            gestionJugadores.pagar_salarios(fecha);
+            menuclub.club.getGestionJugadores().pagar_salarios(fecha);
             System.out.println("Salarios pagados correctamente.");
         } catch (FondoInsuficienteEx | IngresoInvalido e) {
             System.out.println("Error al pagar salarios: " + e.getMessage());
