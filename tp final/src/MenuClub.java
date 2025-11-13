@@ -38,7 +38,7 @@ public class MenuClub {
                     menuJugadores.mostrarMenuJugadores();
                     break;
                 case 3:
-                    MenuPartidos menuPartidos = new MenuPartidos(club.getGestorPartidos());
+                    MenuPartido menuPartidos = new MenuPartido(club.getGestorPartidos(), club.getGestionPresupuesto(),club.getGestionJugadores());
                     menuPartidos.mostrarMenuPartidos();
                     break;
                 case 4:
@@ -54,7 +54,7 @@ public class MenuClub {
                     menuPresupuesto.mostrarMenuPresupuesto();
                     break;
                 case 7:
-                    MenuInventario menuInventario = new MenuInventario(club.getInventario());
+                    MenuInventario menuInventario = new MenuInventario();
                     menuInventario.mostrarMenuInventario();
                     break;
                 case 8:
