@@ -20,7 +20,7 @@ public class MenuInventario {
     public void mostrarMenuInventario() {
         boolean salir = false;
         while (!salir) {
-            System.out.println("\n=== MENU INVENTARIO. ===");
+            System.out.println("\n=== MENU INVENTARIO ===");
             System.out.println("1. Agregar producto");
             System.out.println("2. Eliminar producto");
             System.out.println("3. Consultar stock");
