@@ -68,7 +68,6 @@ public class MenuCuerpoTecnico {
             }
         }
     }
-
     private void agregarMiembro() {
         try {
             System.out.print("DNI: ");
@@ -101,13 +100,12 @@ public class MenuCuerpoTecnico {
             System.out.print("Puesto (DT, AYUDANTE, PREPARADOR, FISIOTERAPEUTA): ");
             Puesto puesto = Puesto.valueOf(scanner.nextLine().toUpperCase());
 
-            System.out.print("anios de experiencia: ");
+            System.out.print("Anios de experiencia: ");
             int aniosExp = Integer.parseInt(scanner.nextLine());
 
             gestionCuerpoTecnico.agregarElemento(dni, nombre, apellido, fechaNacimiento, nacionalidad,
                     salario, fechaInicio, fechaFin, mesesDuracion, puesto, aniosExp);
 
-            gestionCuerpoTecnico.guardarJSON();
             System.out.println("Miembro agregado correctamente.");
 
         } catch (ElementoDuplicadoEx | AccionImposible e) {

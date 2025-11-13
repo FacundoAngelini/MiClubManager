@@ -1,7 +1,6 @@
 package Clase.Menus;
 
 import Clase.Productos.Camiseta;
-import Clase.Productos.Inventario;
 import Clase.Productos.Pelota;
 import Clase.Productos.Producto;
 import exeptions.AccionImposible;
@@ -9,7 +8,8 @@ import exeptions.IngresoInvalido;
 
 import java.util.Scanner;
 
-public class MenuInventario<T extends Producto> {
+public class MenuInventario {
+
     private MenuClub menuClub;
     private final Scanner sc;
 
@@ -26,27 +26,27 @@ public class MenuInventario<T extends Producto> {
             System.out.println("3. Consultar stock");
             System.out.println("4. Mostrar inventario");
             System.out.println("5. Listar productos");
-            System.out.println("6. Modificar Clases_Manu.Pelota");
-            System.out.println("7. Modificar Clases_Manu.Camiseta");
+            System.out.println("6. Modificar pelota");
+            System.out.println("7. Modificar camiseta");
             System.out.println("8. Salir");
-            System.out.print("Seleccione una opcion: ");
+            System.out.print("Seleccione una opción: ");
 
             int opcion;
             try {
                 opcion = Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Opcion invalida");
+                System.out.println("Opción inválida");
                 continue;
             }
 
             switch (opcion) {
                 case 1:
                     agregarProducto();
-                    break;
+                break;
                 case 2:
                     eliminarProducto();
                     break;
-                case 3:
+                case 3 :
                     consultarStock();
                     break;
                 case 4:
@@ -54,16 +54,19 @@ public class MenuInventario<T extends Producto> {
                     break;
                 case 5:
                     listarProductos();
-                break;
+                    break;
                 case 6:
                     modificarPelota();
-                break;
+                    break;
                 case 7:
                     modificarCamiseta();
                     break;
                 case 8:
-                    salir = true; System.out.println("Saliendo del menu..."); break;
-                default: System.out.println("Opcion invalida");
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+                    break;
             }
         }
     }
@@ -91,14 +94,14 @@ public class MenuInventario<T extends Producto> {
                 extra = sc.nextLine().trim();
             }
 
+            // Delegamos la creación al inventario (no rompemos encapsulamiento)
             menuClub.club.getInventario().agregarProducto(tipo, nombre, marca, cantidad, extra);
             menuClub.club.getInventario().guardarJSON();
-            System.out.println("Clases_Manu.Producto agregado correctamente");
-
+            System.out.println("Producto agregado correctamente");
         } catch (IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
         } catch (NumberFormatException e) {
-            System.out.println("Cantidad invalida");
+            System.out.println("Cantidad inválida");
         }
     }
 
@@ -108,8 +111,7 @@ public class MenuInventario<T extends Producto> {
             String nombre = sc.nextLine().trim();
             menuClub.club.getInventario().eliminarElemento(nombre);
             menuClub.club.getInventario().guardarJSON();
-            System.out.println("Clases_Manu.Producto eliminado correctamente");
-
+            System.out.println("Producto eliminado correctamente");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -137,19 +139,16 @@ public class MenuInventario<T extends Producto> {
         }
     }
 
-
     private void modificarPelota() {
         try {
             System.out.print("Nombre de la pelota a modificar: ");
-            String nombre = sc.nextLine().trim();
-            producto prod = menuClub.club.getInventario().devuelveElemento(nombre);
+            Producto prod = menuClub.club.getInventario().devuelveElemento(sc.nextLine().trim());
 
             if (prod instanceof Pelota pelota) {
                 System.out.print("Nuevo modelo: ");
-                String modelo = sc.nextLine().trim();
-                pelota.setModelo(modelo);
+                pelota.setModelo(sc.nextLine().trim());
                 menuClub.club.getInventario().guardarJSON();
-                System.out.println("Modelo de la pelota actualizado");
+                System.out.println("Modelo actualizado");
             } else {
                 System.out.println("El producto no es una pelota");
             }
@@ -161,20 +160,13 @@ public class MenuInventario<T extends Producto> {
     private void modificarCamiseta() {
         try {
             System.out.print("Nombre de la camiseta a modificar: ");
-            String nombre = sc.nextLine().trim();
-            T prod = menuClub.club.getInventario().devuelveElemento(nombre);
+            Producto prod = menuClub.club.getInventario().devuelveElemento(sc.nextLine().trim());
 
             if (prod instanceof Camiseta camiseta) {
                 System.out.print("Nuevo sponsor: ");
-                String sponsor = sc.nextLine().trim();
-                try {
-                    camiseta.cambiarSponsor(sponsor);
-                } catch (AccionImposible e) {
-                    System.out.println("Error: " + e.getMessage());
-                    return;
-                }
+                camiseta.cambiarSponsor(sc.nextLine().trim());
                 menuClub.club.getInventario().guardarJSON();
-                System.out.println("Sponsor de la camiseta actualizado");
+                System.out.println("Sponsor actualizado");
             } else {
                 System.out.println("El producto no es una camiseta");
             }

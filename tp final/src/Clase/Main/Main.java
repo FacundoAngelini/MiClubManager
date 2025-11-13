@@ -12,9 +12,6 @@ public class Main {
     private static Club club;
 
     public static void main(String[] args) {
-        double presupuesto_inicial = 0;
-        club = new Club(presupuesto_inicial);
-
         try {
             club.getGestionPresupuesto().agregar_fondos(3000000, "Sponsor ropa", "1/2/2025"); // presupuesto inicial
             club.getGestionEstadios().agregarEstadio("Libertad", 50000, "Buenos Aires", 100000); // estadio
@@ -23,7 +20,7 @@ public class Main {
             System.out.println("Error al agregar datos iniciales: " + e.getMessage());
         }
 
-        MenuClub menu = new MenuClub(club);
+        MenuClub menu = new MenuClub();
         menu.mostrarMenuPrincipal();
     }
 

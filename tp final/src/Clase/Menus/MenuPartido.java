@@ -3,17 +3,15 @@ package Clase.Menus;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Clase.Gestiones.GestionJugadores;
-import Clase.Gestiones.GestionPresupuesto;
-import Clase.Gestiones.GestorPartido;
 import Clase.Partidos.Partido;
 import Clase.Persona.Jugador;
 import exeptions.AccionImposible;
 import exeptions.ElementoDuplicadoEx;
+import exeptions.ElementoInexistenteEx;
 import exeptions.IngresoInvalido;
 
 public class MenuPartido {
-     private MenuClub menuClub;
+    private  MenuClub menuClub;
     private final Scanner scanner;
 
     public MenuPartido() {
@@ -44,33 +42,15 @@ public class MenuPartido {
             }
 
             switch (opcion) {
-                case 1:
-                    agregarPartido();
-                    break;
-                case 2:
-                    eliminarPartido();
-                    break;
-                case 3:
-                    listarPartidos();
-                    break;
-                case 4:
-                    registrarGol();
-                    break;
-                case 5:
-                    registrarTarjeta();
-                    break;
-                case 6:
-                    registrarLesion();
-                    break;
-                case 7:
-                    System.out.println(menuClub.club.getGestorPartidos().resumenResultados());
-                    break;
-                case 8:
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opción inválida");
-                    break;
+                case 1 -> agregarPartido();
+                case 2 -> eliminarPartido();
+                case 3 -> listarPartidos();
+                case 4 -> registrarGol();
+                case 5 -> registrarTarjeta();
+                case 6 -> registrarLesion();
+                case 7 -> System.out.println(menuClub.club.getGestorPartidos().resumenResultados());
+                case 8 -> salir = true;
+                default -> System.out.println("Opción inválida");
             }
         }
     }
@@ -99,10 +79,8 @@ public class MenuPartido {
 
             menuClub.club.getGestorPartidos().agregarPartido(fecha, esLocal, rival, golesAFavor, golesEnContra,
                     entradasVendidas, precioEntrada, menuClub.club.getGestionPresupuesto());
-
             menuClub.club.getGestorPartidos().guardarJSON();
-            System.out.println("Clases_Manu.Partido agregado correctamente.");
-
+            System.out.println("Partido agregado correctamente.");
         } catch (IngresoInvalido | ElementoDuplicadoEx e) {
             System.out.println("Error: " + e.getMessage());
         } catch (NumberFormatException e) {
@@ -116,7 +94,7 @@ public class MenuPartido {
             String fecha = scanner.nextLine();
             menuClub.club.getGestorPartidos().eliminarElemento(fecha);
             menuClub.club.getGestorPartidos().guardarJSON();
-            System.out.println("Clases_Manu.Partido eliminado correctamente.");
+            System.out.println("Partido eliminado correctamente.");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -139,7 +117,7 @@ public class MenuPartido {
 
     private Jugador buscarJugadorPorDNI(String dni) {
         try {
-            return menuClub.club.getGestorPartidos().devuelveElemento(dni);
+            return menuClub.club.getGestionJugadores().devuelveElemento(dni);
         } catch (AccionImposible e) {
             return null;
         }
@@ -150,7 +128,7 @@ public class MenuPartido {
         String fecha = scanner.nextLine();
         Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
         if (partido == null) {
-            System.out.println("Clases_Manu.Partido no encontrado.");
+            System.out.println("Partido no encontrado.");
             return;
         }
 
@@ -158,16 +136,17 @@ public class MenuPartido {
         String dni = scanner.nextLine();
         Jugador jugador = buscarJugadorPorDNI(dni);
         if (jugador == null) {
-            System.out.println("Clases_Manu.Jugador no encontrado.");
+            System.out.println("Jugador no encontrado.");
             return;
         }
 
-        System.out.print("¿Fue local? (true/false): ");
-        boolean esLocal = Boolean.parseBoolean(scanner.nextLine());
-
-        menuClub.club.getGestorPartidos().registrarGol(fecha, jugador, esLocal);
-        menuClub.club.getGestorPartidos().guardarJSON();
-        System.out.println("Gol registrado correctamente.");
+        try {
+            menuClub.club.getGestorPartidos().registrarGol(fecha, jugador, partido.isEsLocal());
+            menuClub.club.getGestorPartidos().guardarJSON();
+            System.out.println("Gol registrado correctamente.");
+        } catch (ElementoInexistenteEx e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     private void registrarTarjeta() {
@@ -175,7 +154,7 @@ public class MenuPartido {
         String fecha = scanner.nextLine();
         Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
         if (partido == null) {
-            System.out.println("Clases_Manu.Partido no encontrado.");
+            System.out.println("Partido no encontrado.");
             return;
         }
 
@@ -183,16 +162,20 @@ public class MenuPartido {
         String dni = scanner.nextLine();
         Jugador jugador = buscarJugadorPorDNI(dni);
         if (jugador == null) {
-            System.out.println("Clases_Manu.Jugador no encontrado.");
+            System.out.println("Jugador no encontrado.");
             return;
         }
 
         System.out.print("Tipo de tarjeta (Amarilla/Roja): ");
         String tipo = scanner.nextLine();
 
-        menuClub.club.getGestorPartidos().registrarTarjeta(fecha, jugador, tipo);
-        menuClub.club.getGestorPartidos().guardarJSON();
-        System.out.println("Tarjeta registrada correctamente.");
+        try {
+            menuClub.club.getGestorPartidos().registrarTarjeta(fecha, jugador, tipo);
+            menuClub.club.getGestorPartidos().guardarJSON();
+            System.out.println("Tarjeta registrada correctamente.");
+        } catch (ElementoInexistenteEx e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     private void registrarLesion() {
@@ -200,7 +183,7 @@ public class MenuPartido {
         String fecha = scanner.nextLine();
         Partido partido = menuClub.club.getGestorPartidos().buscarPorFecha(fecha);
         if (partido == null) {
-            System.out.println("Clases_Manu.Partido no encontrado.");
+            System.out.println("Partido no encontrado.");
             return;
         }
 
@@ -208,12 +191,16 @@ public class MenuPartido {
         String dni = scanner.nextLine();
         Jugador jugador = buscarJugadorPorDNI(dni);
         if (jugador == null) {
-            System.out.println("Clases_Manu.Jugador no encontrado.");
+            System.out.println("Jugador no encontrado.");
             return;
         }
 
-        menuClub.club.getGestorPartidos().registrarLesion(fecha, jugador);
-        menuClub.club.getGestorPartidos().guardarJSON();
-        System.out.println("Lesión registrada correctamente.");
+        try {
+            menuClub.club.getGestorPartidos().registrarLesion(fecha, jugador);
+            menuClub.club.getGestorPartidos().guardarJSON();
+            System.out.println("Lesión registrada correctamente.");
+        } catch (ElementoInexistenteEx e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }

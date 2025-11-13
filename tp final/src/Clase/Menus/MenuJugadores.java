@@ -1,7 +1,5 @@
 package Clase.Menus;
 
-import Clase.Presupuesto.Contrato;
-import Clase.Gestiones.GestionJugadores;
 import Clase.Persona.Jugador;
 import enums.Posicion;
 import exeptions.*;
@@ -174,20 +172,16 @@ public class MenuJugadores {
             String nacionalidad = scanner.nextLine();
 
             System.out.print("Numero camiseta: ");
-            int numeroCamiseta = scanner.nextInt();
-            scanner.nextLine();
+            int numeroCamiseta = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Valor jugador: ");
-            double valorJugador = scanner.nextDouble();
-            scanner.nextLine();
+            double valorJugador = Double.parseDouble(scanner.nextLine());
 
             System.out.print("Salario: ");
-            double salario = scanner.nextDouble();
-            scanner.nextLine();
+            double salario = Double.parseDouble(scanner.nextLine());
 
             System.out.print("Monto compra: ");
-            double monto = scanner.nextDouble();
-            scanner.nextLine();
+            double monto = Double.parseDouble(scanner.nextLine());
 
             System.out.print("Fecha inicio contrato: ");
             String fechaInicio = scanner.nextLine();
@@ -196,23 +190,23 @@ public class MenuJugadores {
             String fechaFin = scanner.nextLine();
 
             System.out.print("Duracion meses: ");
-            int mesesDuracion = scanner.nextInt();
-            scanner.nextLine();
+            int mesesDuracion = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Posicion (PORTERO, DEFENSOR, MEDIO, DELANTERO): ");
             Posicion posicion = Posicion.valueOf(scanner.nextLine().toUpperCase());
 
-            Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
-            Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, contrato, posicion);
-            jugador.setValorJugador(valorJugador);
+            menuclub.club.getGestionJugadores().comprar_jugador(
+                    monto, dni, nombre, apellido, fechaNacimiento, nacionalidad,
+                    numeroCamiseta, salario, fechaInicio, fechaFin, mesesDuracion,
+                    valorJugador, posicion
+            );
 
-            menuclub.club.getGestionJugadores().comprar_jugador(monto, jugador, fechaInicio);
-            menuclub.club.getGestionJugadores().guardarJSON();
-            System.out.println("Clases_Manu.Jugador comprado correctamente.");
+            System.out.println("Jugador comprado correctamente.");
         } catch (FondoInsuficienteEx | ElementoDuplicadoEx | IngresoInvalido | IllegalArgumentException e) {
             System.out.println("Error al comprar jugador: " + e.getMessage());
         }
     }
+
 
     private void venderJugador() {
         try {

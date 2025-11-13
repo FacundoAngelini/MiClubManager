@@ -10,7 +10,7 @@ public class MenuClub {
     private final Scanner scanner;
 
     public MenuClub() {
-;        this.scanner = new Scanner(System.in);
+       this.scanner = new Scanner(System.in);
     }
 
     public void mostrarMenuPrincipal() {
@@ -41,7 +41,7 @@ public class MenuClub {
                     menuJugadores.mostrarMenuJugadores();
                     break;
                 case 3:
-                    MenuPartido menuPartidos = new MenuPartido(club.getGestorPartidos(), club.getGestionPresupuesto(),club.getGestionJugadores());
+                    MenuPartido menuPartidos = new MenuPartido();
                     menuPartidos.mostrarMenuPartidos();
                     break;
                 case 4:
@@ -49,7 +49,7 @@ public class MenuClub {
                     menuCuerpo.mostrarMenuCuerpoTecnico();
                     break;
                 case 5:
-                    MenuEstadio menuEstadio = new MenuEstadio(club.getGestionEstadios());
+                    MenuEstadio menuEstadio = new MenuEstadio();
                     menuEstadio.mostrarMenuEstadio();
                     break;
                 case 6:
@@ -57,7 +57,7 @@ public class MenuClub {
                     menuPresupuesto.mostrarMenuPresupuesto();
                     break;
                 case 7:
-                    MenuInventario<Producto> menu = new MenuInventario<>();
+                    MenuInventario menu = new MenuInventario();
                     menu.mostrarMenuInventario();
                     break;
                 case 8:

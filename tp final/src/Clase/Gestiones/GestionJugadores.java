@@ -90,16 +90,25 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         gestorpresupuesto.quitarFondos(monto, "Pago de sueldos del plantel", fecha);
     }
 
-    public void comprar_jugador(double monto, Jugador jugador, String fecha) throws FondoInsuficienteEx, ElementoDuplicadoEx, IngresoInvalido {
+    public void comprar_jugador(double monto, String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double salario, String fechaInicio, String fechaFin, int mesesDuracion, double valorJugador, Posicion posicion) throws FondoInsuficienteEx, ElementoDuplicadoEx, IngresoInvalido {
         if (gestorpresupuesto.verSaldoActual() < monto)
             throw new FondoInsuficienteEx("Saldo insuficiente para comprar al jugador.");
-        if (jugadores.containsKey(jugador.getDni()))
+        if (jugadores.containsKey(dni))
             throw new ElementoDuplicadoEx("El jugador ya está en el club.");
 
-        jugadores.put(jugador.getDni(), jugador);
-        estadisticas.put(jugador.getDni(), new EstadisticaJugador());
-        gestorpresupuesto.quitarFondos(monto, "Compra de jugador: " + jugador.getApellido(), fecha);
+        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
+
+        Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad,
+                numeroCamiseta, contrato, posicion);
+        jugador.setValorJugador(valorJugador);
+
+        jugadores.put(dni, jugador);
+        estadisticas.put(dni, new EstadisticaJugador());
+
+        gestorpresupuesto.quitarFondos(monto, "Compra de jugador: " + apellido, fechaInicio);
     }
+
+
 
     public void vender_jugador(double monto, String dni, String fecha) throws ElementoInexistenteEx, IngresoInvalido {
         Jugador jugador = jugadores.get(dni);
