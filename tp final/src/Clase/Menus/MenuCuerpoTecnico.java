@@ -10,11 +10,11 @@ import java.util.Scanner;
 
 public class MenuCuerpoTecnico {
 
-    private final GestionCuerpoTecnico gestionCuerpoTecnico;
+    private MenuClub menuClub;
     private final Scanner scanner;
 
     public MenuCuerpoTecnico(GestionCuerpoTecnico gestionCuerpoTecnico) {
-        this.gestionCuerpoTecnico = gestionCuerpoTecnico;
+
         this.scanner = new Scanner(System.in);
     }
 
@@ -104,10 +104,10 @@ public class MenuCuerpoTecnico {
             System.out.print("anios de experiencia: ");
             int aniosExp = Integer.parseInt(scanner.nextLine());
 
-            gestionCuerpoTecnico.agregarElemento(dni, nombre, apellido, fechaNacimiento, nacionalidad,
+            menuClub.club.getGestionCuerpoTecnico().agregarElemento(dni, nombre, apellido, fechaNacimiento, nacionalidad,
                     salario, fechaInicio, fechaFin, mesesDuracion, puesto, aniosExp);
 
-            gestionCuerpoTecnico.guardarJSON();
+            menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro agregado correctamente.");
 
         } catch (ElementoDuplicadoEx | AccionImposible e) {
@@ -121,8 +121,8 @@ public class MenuCuerpoTecnico {
         try {
             System.out.print("DNI del miembro a eliminar: ");
             String dni = scanner.nextLine();
-            gestionCuerpoTecnico.eliminarElemento(dni);
-            gestionCuerpoTecnico.guardarJSON();
+            menuClub.club.getGestionCuerpoTecnico().eliminarElemento(dni);
+            menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro eliminado correctamente.");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
@@ -130,7 +130,7 @@ public class MenuCuerpoTecnico {
     }
 
     private void listarMiembros() {
-        ArrayList<CuerpoTecnico> lista = gestionCuerpoTecnico.listar();
+        ArrayList<CuerpoTecnico> lista = menuClub.club.getGestionCuerpoTecnico().listar();
         if (lista.isEmpty()) {
             System.out.println("No hay miembros del cuerpo técnico.");
             return;
@@ -151,7 +151,7 @@ public class MenuCuerpoTecnico {
             System.out.print("DNI del miembro a modificar: ");
             String dni = scanner.nextLine();
 
-            CuerpoTecnico ct = gestionCuerpoTecnico.devuelveElemento(dni);
+            CuerpoTecnico ct = menuClub.club.getGestionCuerpoTecnico().devuelveElemento(dni);
 
             System.out.print("Nuevo nombre (" + ct.getNombre() + "): ");
             String nombre = scanner.nextLine();
@@ -195,10 +195,10 @@ public class MenuCuerpoTecnico {
             int aniosExp = expStr.isEmpty() ? ct.getAniosExp() : Integer.parseInt(expStr);
 
             Contrato nuevoContrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
-            gestionCuerpoTecnico.modificarCuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad,
+            menuClub.club.getGestionCuerpoTecnico().modificarCuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad,
                     nuevoContrato, puesto, aniosExp);
 
-            gestionCuerpoTecnico.guardarJSON();
+            menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro modificado correctamente.");
 
         } catch (AccionImposible | ElementoInexistenteEx e) {
@@ -215,8 +215,8 @@ public class MenuCuerpoTecnico {
             System.out.print("Nuevo estado de contrato (true/false): ");
             boolean estado = Boolean.parseBoolean(scanner.nextLine());
 
-            gestionCuerpoTecnico.cambiarEstadoContrato(dni, estado);
-            gestionCuerpoTecnico.guardarJSON();
+            menuClub.club.getGestionCuerpoTecnico().cambiarEstadoContrato(dni, estado);
+            menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Estado de contrato actualizado correctamente.");
         } catch (ElementoInexistenteEx e) {
             System.out.println("Error: " + e.getMessage());
@@ -227,8 +227,8 @@ public class MenuCuerpoTecnico {
         try {
             System.out.print("Fecha de aplicacion del gasto (dd/mm/yyyy): ");
             String fecha = scanner.nextLine();
-            gestionCuerpoTecnico.aplicarGastoSalarios(fecha);
-            gestionCuerpoTecnico.guardarJSON();
+            menuClub.club.getGestionCuerpoTecnico().aplicarGastoSalarios(fecha);
+            menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Gasto de salarios aplicado correctamente.");
         } catch (IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());

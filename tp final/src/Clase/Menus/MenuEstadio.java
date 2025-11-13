@@ -9,9 +9,9 @@ import exeptions.IngresoInvalido;
 public class MenuEstadio {
 
     private final Scanner scanner;
-
+    private MenuClub menuClub;
     public MenuEstadio(GestionEstadio gestionEstadio) {
-        this.gestionEstadio = gestionEstadio;
+
         this.scanner = new Scanner(System.in);
     }
 
@@ -77,8 +77,8 @@ public class MenuEstadio {
             System.out.print("Costo de mantenimiento: ");
             double costo = Double.parseDouble(scanner.nextLine());
 
-            gestionEstadio.agregarEstadio(nombre, capacidad, ubicacion, costo);
-            gestionEstadio.guardarJSON();
+            menuClub.club.getGestionEstadios().agregarEstadio(nombre, capacidad, ubicacion, costo);
+            menuClub.club.getGestionEstadios().guardarJSON();
             System.out.println("Clases_Manu.Estadio agregado correctamente");
         } catch (NumberFormatException e) {
             System.out.println("Error: valor numerico invalido");
@@ -89,8 +89,8 @@ public class MenuEstadio {
         try {
             System.out.print("Nuevo nombre del estadio: ");
             String nuevoNombre = scanner.nextLine();
-            gestionEstadio.cambiarNombre(nuevoNombre);
-            gestionEstadio.guardarJSON();
+            menuClub.club.getGestionEstadios().cambiarNombre(nuevoNombre);
+            menuClub.club.getGestionEstadios().guardarJSON();
             System.out.println("Nombre cambiado correctamente");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
@@ -101,8 +101,8 @@ public class MenuEstadio {
         try {
             System.out.print("Nueva capacidad: ");
             int nuevaCapacidad = Integer.parseInt(scanner.nextLine());
-            gestionEstadio.modificar_capacidad(nuevaCapacidad);
-            gestionEstadio.guardarJSON();
+            menuClub.club.getGestionEstadios().modificar_capacidad(nuevaCapacidad);
+            menuClub.club.getGestionEstadios().guardarJSON();
             System.out.println("Capacidad modificada correctamente");
         } catch (NumberFormatException e) {
             System.out.println("Error: valor numerico invalido");
@@ -115,8 +115,8 @@ public class MenuEstadio {
         try {
             System.out.print("Nuevo costo de mantenimiento: ");
             int nuevoCosto = Integer.parseInt(scanner.nextLine());
-            gestionEstadio.actualizar_costo_mantenimiento(nuevoCosto);
-            gestionEstadio.guardarJSON();
+            menuClub.club.getGestionEstadios().actualizar_costo_mantenimiento(nuevoCosto);
+            menuClub.club.getGestionEstadios().guardarJSON();
             System.out.println("Costo de mantenimiento actualizado correctamente");
         } catch (NumberFormatException e) {
             System.out.println("Error: valor numerico invalido");
@@ -129,8 +129,8 @@ public class MenuEstadio {
         try {
             System.out.print("Fecha del pago (dd/mm/yyyy): ");
             String fecha = scanner.nextLine();
-            gestionEstadio.pagarMantenimiento(fecha);
-            gestionEstadio.guardarJSON();
+            menuClub.club.getGestionEstadios().pagarMantenimiento(fecha);
+            menuClub.club.getGestionEstadios().guardarJSON();
             System.out.println("Mantenimiento pagado correctamente");
         } catch (AccionImposible | IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
@@ -138,13 +138,13 @@ public class MenuEstadio {
     }
 
     private void mostrarDatos() {
-        if (gestionEstadio.getEstadio() == null) {
+        if (menuClub.club.getGestionEstadios().getEstadio() == null) {
             System.out.println("No hay estadio creado");
             return;
         }
-        System.out.println("Nombre: " + gestionEstadio.getEstadio().getNombre());
-        System.out.println("Capacidad: " + gestionEstadio.getEstadio().getCapacidad());
-        System.out.println("Ubicacion: " + gestionEstadio.getEstadio().getUbicacion());
-        System.out.println("Costo mantenimiento: " + gestionEstadio.getEstadio().getCostoMantenimiento());
+        System.out.println("Nombre: " + menuClub.club.getGestionEstadios().getEstadio().getNombre());
+        System.out.println("Capacidad: " + menuClub.club.getGestionEstadios().getEstadio().getCapacidad());
+        System.out.println("Ubicacion: " + menuClub.club.getGestionEstadios().getEstadio().getUbicacion());
+        System.out.println("Costo mantenimiento: " + menuClub.club.getGestionEstadios().getEstadio().getCostoMantenimiento());
     }
 }
