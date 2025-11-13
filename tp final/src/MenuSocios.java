@@ -25,7 +25,8 @@ public class MenuSocios {
             System.out.println("3. Modificar socio");
             System.out.println("4. Listar socios");
             System.out.println("5. Aplicar recaudacion");
-            System.out.println("6. Volver al menu principal");
+            System.out.println("6. Cambiar tipo de socio");
+            System.out.println("7. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
 
             int opcion = scanner.nextInt();
@@ -48,6 +49,9 @@ public class MenuSocios {
                     aplicarRecaudacion();
                     break;
                 case 6:
+                    cambiarTipoSocio();
+                    break;
+                case 7:
                     salir = true;
                     break;
                 default:
@@ -79,11 +83,10 @@ public class MenuSocios {
             System.out.print("Fecha de alta (dd/mm/yyyy): ");
             String fechaAlta = scanner.nextLine();
 
-            System.out.print("Tipo de socio (JUVENIL, ADULTO, VIP): ");
+            System.out.print("Tipo de socio (JUVENIL, ACTIVO, VITALICIO): ");
             Tiposocio tipo = Tiposocio.valueOf(scanner.nextLine().toUpperCase());
 
             gestionSocio.agregarSocio(dni, nombre, apellido, fechaNacimiento, nacionalidad, cuotaAlDia, fechaAlta, tipo);
-            gestionSocio.guardarJSON();
             System.out.println("Socio agregado correctamente");
         } catch (IngresoInvalido | ElementoDuplicadoEx e) {
             System.out.println("Error: " + e.getMessage());
@@ -97,7 +100,6 @@ public class MenuSocios {
             System.out.print("DNI del socio a eliminar: ");
             String dni = scanner.nextLine();
             gestionSocio.eliminarElemento(dni);
-            gestionSocio.guardarJSON();
             System.out.println("Socio eliminado correctamente");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
@@ -123,7 +125,6 @@ public class MenuSocios {
             if (!cuota.isEmpty()) socio.setCuotaAlDia(Boolean.parseBoolean(cuota));
 
             gestionSocio.modificarElemento(socio);
-            gestionSocio.guardarJSON();
             System.out.println("Socio modificado correctamente");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
@@ -148,9 +149,18 @@ public class MenuSocios {
             System.out.print("Fecha de aplicacion (dd/mm/yyyy): ");
             String fecha = scanner.nextLine();
             gestionSocio.aplicarRecaudacion(fecha);
-            gestionSocio.guardarJSON();
             System.out.println("Recaudacion aplicada correctamente");
         } catch (IngresoInvalido e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void cambiarTipoSocio() {
+        try {
+            System.out.print("DNI del socio a cambiar tipo: ");
+            String dni = scanner.nextLine();
+            gestionSocio.cambiarTipoSocio(dni);
+        } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

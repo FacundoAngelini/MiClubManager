@@ -18,7 +18,8 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         this.gestionPresupuesto = gestionPresupuesto;
     }
 
-    public void agregarSocio(String dni, String nombre, String apellido,  String fechaNacimiento, String nacionalidad,  boolean cuotaAlDia, String fechaAlta, Tiposocio tipoSocio)  throws IngresoInvalido, ElementoDuplicadoEx {
+    public void agregarSocio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad,
+                             boolean cuotaAlDia, String fechaAlta, Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
         if (dni == null || dni.isEmpty()) {
             throw new IngresoInvalido("El DNI no fue cargado correctamente.");
         }
@@ -34,8 +35,8 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
                 nacionalidad, cuotaAlDia, fechaAlta, tipoSocio);
 
         socios.put(nuevoSocio.getNumeroSocio(), nuevoSocio);
+        guardarJSON();
     }
-
 
     public void eliminarElemento(String dni) throws AccionImposible {
         Socio socioAEliminar = socios.values().stream()
@@ -48,6 +49,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         }
 
         socios.remove(socioAEliminar.getNumeroSocio());
+        guardarJSON();
     }
 
     public Socio devuelveElemento(String dni) throws AccionImposible {
@@ -56,20 +58,20 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
                 .findFirst()
                 .orElseThrow(() -> new AccionImposible("No existe un socio con DNI " + dni));
     }
+
     public void aplicarRecaudacion(String fecha) throws IngresoInvalido {
         double totalRecaudado = obtenerRecaudacionTotal();
         try {
-            gestionPresupuesto.agregar_fondos(totalRecaudado, "Recaudación de socios", fecha);
+            gestionPresupuesto.agregar_fondos(totalRecaudado, "Recaudacion de socios", fecha);
         } catch (IngresoInvalido e) {
             e.printStackTrace();
         }
     }
 
-
     public boolean existe(String dni) throws ElementoInexistenteEx {
         boolean existe = socios.values().stream().anyMatch(s -> s.getDni().equals(dni));
         if (!existe) {
-            throw new ElementoInexistenteEx("No se encontró un socio con el DNI: " + dni);
+            throw new ElementoInexistenteEx("No se encontro un socio con el DNI: " + dni);
         }
         return true;
     }
@@ -85,12 +87,12 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
 
         int numeroSocio = socioModificado.getNumeroSocio();
         if (!socios.containsKey(numeroSocio)) {
-            throw new AccionImposible("No se encontró un socio con el número " + numeroSocio);
+            throw new AccionImposible("No se encontro un socio con el numero " + numeroSocio);
         }
 
         socios.put(numeroSocio, socioModificado);
+        guardarJSON();
     }
-
 
     public void guardarJSON() {
         JSONArray array = new JSONArray();
@@ -112,11 +114,33 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         JSONUtiles.uploadJSON(array, "socios");
     }
 
-
     public double obtenerRecaudacionTotal() {
         return socios.values().stream()
                 .mapToDouble(Socio::obtenerMontoRecaudado)
                 .sum();
     }
-}
 
+    public void cambiarTipoSocio(String dni) throws AccionImposible {
+        Socio socio = socios.values().stream()
+                .filter(s -> s.getDni().equals(dni))
+                .findFirst()
+                .orElseThrow(() -> new AccionImposible("No se encontro un socio con el DNI: " + dni));
+
+        switch (socio.getTipoSocio()) {
+            case JUVENIL -> {
+                socio.setTipoSocio(Tiposocio.ACTIVO);
+                System.out.println("El socio con DNI " + dni + " ahora es ACTIVO.");
+            }
+            case ACTIVO -> {
+                socio.setTipoSocio(Tiposocio.VITALICIO);
+                System.out.println("El socio con DNI " + dni + " ahora es VITALICIO.");
+            }
+            case VITALICIO -> {
+                throw new AccionImposible("El socio ya es VITALICIO. No se puede cambiar el tipo.");
+            }
+            default -> throw new AccionImposible("Tipo de socio desconocido.");
+        }
+
+        guardarJSON();
+    }
+}
