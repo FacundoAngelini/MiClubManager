@@ -45,7 +45,7 @@ public class MenuClub {
                     menuPartidos.mostrarMenuPartidos();
                     break;
                 case 4:
-                    MenuCuerpoTecnico menuCuerpo = new MenuCuerpoTecnico(club.getGestionCuerpoTecnico());
+                    MenuCuerpoTecnico menuCuerpo = new MenuCuerpoTecnico();
                     menuCuerpo.mostrarMenuCuerpoTecnico();
                     break;
                 case 5:
