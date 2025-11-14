@@ -158,7 +158,8 @@ public class MenuJugadores {
 
     private void cambiarEstadoContrato() {
         try {
-            System.out.print("Ingrese DNI del jugador: "); String dni = scanner.nextLine();
+            System.out.print("Ingrese DNI del jugador: ");
+            String dni = scanner.nextLine();
             System.out.print("Nuevo estado (true = activo, false = inactivo): ");
             boolean nuevoEstado = leerBoolean();
 

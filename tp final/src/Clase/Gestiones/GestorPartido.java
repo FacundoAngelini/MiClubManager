@@ -113,8 +113,12 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
     }
 
     private String resultadoTexto(Partido p) {
-        if (p.gano()) return "Victoria";
-        if (p.empato()) return "Empate";
+        if (p.gano()) {
+            return "Victoria";
+        }
+        if (p.empato()) {
+            return "Empate";
+        }
         return "Derrota";
     }
 
