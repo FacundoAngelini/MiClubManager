@@ -2,14 +2,24 @@ package Clase.Persona;
 
 import Clase.Presupuesto.Contrato;
 import enums.Puesto;
+import java.time.LocalDate;
 
 public class CuerpoTecnico extends Persona {
     private Contrato contrato;
     private Puesto puesto;
     private int aniosExp;
 
-    public CuerpoTecnico(String dni, String nombre, String apellido, String fechaNacimeiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp) {
-        super(dni, nombre, apellido, fechaNacimeiento, nacionalidad);
+    public CuerpoTecnico(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
+                         String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp) {
+        super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
+
+        if (contrato == null) {
+            throw new IllegalArgumentException("El contrato no puede ser nulo.");
+        }
+        if (aniosExp < 0) {
+            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos.");
+        }
+
         this.contrato = contrato;
         this.puesto = puesto;
         this.aniosExp = aniosExp;
@@ -20,6 +30,9 @@ public class CuerpoTecnico extends Persona {
     }
 
     public void setContrato(Contrato contrato) {
+        if (contrato == null) {
+            throw new IllegalArgumentException("El contrato no puede ser nulo.");
+        }
         this.contrato = contrato;
     }
 
@@ -36,11 +49,14 @@ public class CuerpoTecnico extends Persona {
     }
 
     public void setAniosExp(int aniosExp) {
+        if (aniosExp < 0) {
+            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos.");
+        }
         this.aniosExp = aniosExp;
     }
 
     public String obtenerDatos() {
-        return "Clases_Manu.CuerpoTecnico{" +
+        return "CuerpoTecnico{" +
                 "contrato=" + contrato +
                 ", puesto=" + puesto +
                 ", aniosExp=" + aniosExp +
@@ -51,6 +67,4 @@ public class CuerpoTecnico extends Persona {
     public String toString() {
         return obtenerDatos();
     }
-
-
 }
