@@ -1,20 +1,20 @@
 package Clase.Persona;
-
+import java.time.LocalDate;
 import java.util.Objects;
 
 public abstract class Persona {
     private String dni;
     private String nombre;
     private String apellido;
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String nacionalidad;
 
-    public Persona(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad) {
-        this.dni = dni;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.fechaNacimiento = fechaNacimiento;
-        this.nacionalidad = nacionalidad;
+    public Persona(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad) {
+        setDni(dni);
+        setNombre(nombre);
+        setApellido(apellido);
+        setFechaNacimiento(fechaNacimiento);
+        setNacionalidad(nacionalidad);
     }
 
     public String getDni() {
@@ -22,6 +22,9 @@ public abstract class Persona {
     }
 
     public void setDni(String dni) {
+        if (dni == null || !dni.matches("\\d+")) {
+            throw new IllegalArgumentException("El DNI debe contener solo números.");
+        }
         this.dni = dni;
     }
 
@@ -30,6 +33,9 @@ public abstract class Persona {
     }
 
     public void setNombre(String nombre) {
+        if (nombre == null || !nombre.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+")) {
+            throw new IllegalArgumentException("El nombre solo puede contener letras y espacios.");
+        }
         this.nombre = nombre;
     }
 
@@ -38,14 +44,20 @@ public abstract class Persona {
     }
 
     public void setApellido(String apellido) {
+        if (apellido == null || !apellido.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+")) {
+            throw new IllegalArgumentException("El apellido solo puede contener letras y espacios.");
+        }
         this.apellido = apellido;
     }
 
-    public String getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        if (fechaNacimiento == null || fechaNacimiento.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de nacimiento no puede ser futura ni nula.");
+        }
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -54,6 +66,9 @@ public abstract class Persona {
     }
 
     public void setNacionalidad(String nacionalidad) {
+        if (nacionalidad == null || !nacionalidad.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+")) {
+            throw new IllegalArgumentException("La nacionalidad solo puede contener letras y espacios.");
+        }
         this.nacionalidad = nacionalidad;
     }
 
@@ -71,11 +86,11 @@ public abstract class Persona {
 
     @Override
     public String toString() {
-        return "Clases_Manu.Persona{" +
+        return "Persona{" +
                 "dni='" + dni + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
-                ", fechaNacimeiento='" + fechaNacimiento + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
                 ", nacionalidad='" + nacionalidad + '\'' +
                 '}';
     }

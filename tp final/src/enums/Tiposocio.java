@@ -1,6 +1,7 @@
 package enums;
 
 public enum Tiposocio {
+    INACTIVO(0),
     ACTIVO(15000),
     JUVENIL(5000),
     VITALICIO(8000);

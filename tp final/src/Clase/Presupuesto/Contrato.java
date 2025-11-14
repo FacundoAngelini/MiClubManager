@@ -1,56 +1,71 @@
 package Clase.Presupuesto;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Contrato {
-    private String dni;
-    private final double salario;
-    private final String fechaInicio;
-    private final String fechaFin;
-    private boolean contratoActivo;
 
-    public Contrato(String dni, double salario, String fechaFin, boolean contratoActivo, String fechaInicio) {
+    private final String dni;
+    private final double salario;
+    private final LocalDate fechaInicio;
+    private final LocalDate fechaFin;
+
+    public Contrato(String dni, double salario, LocalDate fechaInicio, LocalDate fechaFin, LocalDate fechaNacimiento) {
+
+        if (!dni.matches("\\d+")) {
+            throw new IllegalArgumentException("El DNI debe contener solo números.");
+        }
+
+        if (salario <= 0) {
+            throw new IllegalArgumentException("El salario debe ser mayor a 0.");
+        }
+
+        if (fechaInicio.isBefore(fechaNacimiento.plusYears(10))) {
+            throw new IllegalArgumentException("No se puede contratar antes de los 10 años de edad.");
+        }
+
+        if (fechaFin.isBefore(fechaInicio)) {
+            throw new IllegalArgumentException("La fecha de finalización del contrato debe ser posterior a la fecha de inicio.");
+        }
+
         this.dni = dni;
         this.salario = salario;
-        this.fechaFin = fechaFin;
-        this.contratoActivo = contratoActivo;
         this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public String getDni() {
         return dni;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
     public double getSalario() {
         return salario;
     }
 
-    public String getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public String getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
     public boolean isContratoActivo() {
-        return contratoActivo;
+        LocalDate hoy = LocalDate.now();
+        return !hoy.isAfter(fechaFin);
     }
 
-    public void setContratoActivo(boolean contratoActivo) {
-        this.contratoActivo = contratoActivo;
-    }
+
 
     @Override
     public String toString() {
-        return "Clases_Manu.Contrato{" +
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "Contrato{" +
                 "dni='" + dni + '\'' +
                 ", salario=" + salario +
-                ", fechaInicio='" + fechaInicio + '\'' +
-                ", fechaFin='" + fechaFin + '\'' +
-                ", contratoActivo=" + contratoActivo +
+                ", fechaInicio=" + fechaInicio.format(formato) +
+                ", fechaFin=" + fechaFin.format(formato) +
+                ", contratoActivo=" + isContratoActivo() +
                 '}';
     }
 }
+

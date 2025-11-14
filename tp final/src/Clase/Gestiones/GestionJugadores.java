@@ -99,7 +99,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         gestorpresupuesto.quitarFondos(monto, "Pago de sueldos del plantel", fecha);
     }
 
-    public void comprar_jugador(double monto, String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double salario, String fechaInicio, String fechaFin, int mesesDuracion, double valorJugador, Posicion posicion) throws FondoInsuficienteEx, ElementoDuplicadoEx, IngresoInvalido {
+    public void comprar_jugador(double monto, String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double salario, String fechaInicio, String fechaFin, double valorJugador, Posicion posicion) throws FondoInsuficienteEx, ElementoDuplicadoEx, IngresoInvalido {
         if (gestorpresupuesto.verSaldoActual() < monto) {
             throw new FondoInsuficienteEx("Saldo insuficiente para comprar al jugador.");
         }
@@ -128,14 +128,18 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         guardarJSON();
     }
 
-    public void actualizarEstadisticas(String dni, boolean gol, boolean amarilla, boolean roja, boolean lesion) throws ElementoInexistenteEx {
+    public void actualizarEstadisticas(String dni, int goles, int asistencias, int vallasInvictas) throws ElementoInexistenteEx {
         EstadisticaJugador stats = estadisticas.get(dni);
         if (stats == null) throw new ElementoInexistenteEx("No se encontró estadísticas para el jugador con DNI: " + dni);
 
-        if (gol) stats.agregarGol();
-        if (amarilla) stats.agregarTarjetaAmarilla();
-        if (roja) stats.agregarTarjetaRoja();
-        if (lesion) stats.agregarLesion();
+        stats.agregarGoles(goles);
+        stats.agregarAsistencias(asistencias);
+
+        Jugador jugador = jugadores.get(dni);
+        if (jugador.getPosicion() == Posicion.ARQUERO) {
+            stats.agregarVallasInvictas(vallasInvictas);
+        }
+
         guardarJSON();
     }
 
@@ -174,5 +178,4 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
 
         JSONUtiles.uploadJSON(array, "Plantel");
     }
-
 }
