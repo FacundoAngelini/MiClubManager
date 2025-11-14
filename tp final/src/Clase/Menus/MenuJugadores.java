@@ -109,15 +109,12 @@ public class MenuJugadores {
             System.out.print("Fecha fin contrato: ");
             String fechaFin = scanner.nextLine();
 
-            System.out.print("Duracion meses: ");
-            int mesesDuracion = leerEntero();
-
             System.out.print("Posicion (PORTERO, DEFENSOR, MEDIO, DELANTERO): ");
             Posicion posicion = Posicion.valueOf(scanner.nextLine().toUpperCase());
 
             menuclub.club.getGestionJugadores()
                     .agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta,
-                            valorJugador, salario, fechaInicio, fechaFin, mesesDuracion, posicion);
+                            valorJugador, salario, fechaInicio, fechaFin, posicion);
 
             menuclub.club.getGestionJugadores().guardarJSON();
             System.out.println("Jugador agregado correctamente.");

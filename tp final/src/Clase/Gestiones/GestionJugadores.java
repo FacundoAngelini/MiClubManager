@@ -23,7 +23,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         this.gestorpresupuesto = gestorpresupuesto;
     }
 
-    public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Posicion posicion) throws ElementoDuplicadoEx {
+    public void agregarJugador(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, String fechaInicio, String fechaFin, Posicion posicion) throws ElementoDuplicadoEx {
         if (jugadores.containsKey(dni)) {
             throw new ElementoDuplicadoEx("El DNI ya está registrado.");
         }
@@ -32,7 +32,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new ElementoDuplicadoEx("El número de camiseta ya está ocupado.");
         }
 
-        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
+        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio);
         Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, contrato, posicion);
         jugador.setValorJugador(valorJugador);
 
@@ -107,7 +107,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new ElementoDuplicadoEx("El jugador ya está en el club.");
         }
 
-        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
+        Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio);
         Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, contrato, posicion);
         jugador.setValorJugador(valorJugador);
 
@@ -128,13 +128,11 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         guardarJSON();
     }
 
-    public void actualizarEstadisticas(String dni, boolean gol, boolean asistencia, boolean vallaInvicta, boolean amarilla, boolean roja, boolean lesion) throws ElementoInexistenteEx {
+    public void actualizarEstadisticas(String dni, boolean gol, boolean amarilla, boolean roja, boolean lesion) throws ElementoInexistenteEx {
         EstadisticaJugador stats = estadisticas.get(dni);
         if (stats == null) throw new ElementoInexistenteEx("No se encontró estadísticas para el jugador con DNI: " + dni);
 
         if (gol) stats.agregarGol();
-        if (asistencia) stats.agregarAsistencia();
-        if (vallaInvicta) stats.agregarVallaInvicta();
         if (amarilla) stats.agregarTarjetaAmarilla();
         if (roja) stats.agregarTarjetaRoja();
         if (lesion) stats.agregarLesion();
@@ -162,7 +160,6 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
                 contratoJSON.put("salario", contrato.getSalario());
                 contratoJSON.put("fechaInicio", contrato.getFechaInicio());
                 contratoJSON.put("fechaFin", contrato.getFechaFin());
-                contratoJSON.put("mesesDuracion", contrato.getMesesDuracion());
                 contratoJSON.put("contratoActivo", contrato.isContratoActivo());
                 obj.put("contrato", contratoJSON);
             } else {

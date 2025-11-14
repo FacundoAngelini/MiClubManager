@@ -128,7 +128,7 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
             throw new ElementoInexistenteEx("No se encontró el partido.");
         }
         partido.getFichaDelPartido().registrarGol(jugador, esLocal);
-        gestionJugadores.actualizarEstadisticas(jugador.getDni(), true, false, false, false, false, false);
+        gestionJugadores.actualizarEstadisticas(jugador.getDni(), true, false,false, false );
         guardarJSON();
     }
 
@@ -140,9 +140,9 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
         partido.getFichaDelPartido().registrarTarjeta(jugador, tipo);
 
         if (tipo.equalsIgnoreCase("amarilla"))
-            gestionJugadores.actualizarEstadisticas(jugador.getDni(), false, false, false, true, false, false);
+            gestionJugadores.actualizarEstadisticas(jugador.getDni(), false, true, false, false);
         else if (tipo.equalsIgnoreCase("roja"))
-            gestionJugadores.actualizarEstadisticas(jugador.getDni(), false, false, false, false, true, false);
+            gestionJugadores.actualizarEstadisticas(jugador.getDni(), false, false, true, false);
 
         guardarJSON();
     }
@@ -153,7 +153,7 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
             throw new ElementoInexistenteEx("No se encontró el partido.");
         }
         partido.getFichaDelPartido().registrarLesion(jugador);
-        gestionJugadores.actualizarEstadisticas(jugador.getDni(), false, false, false, false, false, true);
+        gestionJugadores.actualizarEstadisticas(jugador.getDni(), false, false, false, true);
         guardarJSON();
     }
 

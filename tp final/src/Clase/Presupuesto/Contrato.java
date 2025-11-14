@@ -3,18 +3,16 @@ package Clase.Presupuesto;
 public class Contrato {
     private String dni;
     private final double salario;
-    private final int mesesDuracion;
     private final String fechaInicio;
     private final String fechaFin;
     private boolean contratoActivo;
 
-    public Contrato(String dni, double salario, String fechaFin, boolean contratoActivo, String fechaInicio, int mesesDuracion) {
+    public Contrato(String dni, double salario, String fechaFin, boolean contratoActivo, String fechaInicio) {
         this.dni = dni;
         this.salario = salario;
         this.fechaFin = fechaFin;
         this.contratoActivo = contratoActivo;
         this.fechaInicio = fechaInicio;
-        this.mesesDuracion = mesesDuracion;
     }
 
     public String getDni() {
@@ -27,10 +25,6 @@ public class Contrato {
 
     public double getSalario() {
         return salario;
-    }
-
-    public int getMesesDuracion() {
-        return mesesDuracion;
     }
 
     public String getFechaInicio() {
@@ -54,7 +48,6 @@ public class Contrato {
         return "Clases_Manu.Contrato{" +
                 "dni='" + dni + '\'' +
                 ", salario=" + salario +
-                ", mesesDuracion=" + mesesDuracion +
                 ", fechaInicio='" + fechaInicio + '\'' +
                 ", fechaFin='" + fechaFin + '\'' +
                 ", contratoActivo=" + contratoActivo +

@@ -23,7 +23,7 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         this.gestionPresupuesto = gestionPresupuesto;
     }
 
-    public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, double salario, String fechaInicio, String fechaFin, int mesesDuracion, Puesto puesto, int aniosExp) {
+    public void agregarElemento(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad, double salario, String fechaInicio, String fechaFin, Puesto puesto, int aniosExp) {
         try {
             if (cuerpoTecnico.containsKey(dni)) {
                 throw new ElementoDuplicadoEx("Ya existe un miembro del cuerpo técnico con ese DNI");
@@ -31,7 +31,7 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
 
             gestionPresupuesto.quitarFondos(salario, "Contrato cuerpo técnico: " + nombre + " " + apellido, fechaInicio);
 
-            Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
+            Contrato contrato = new Contrato(dni, salario, fechaFin, true, fechaInicio);
             CuerpoTecnico nuevoCT = new CuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad, contrato, puesto, aniosExp);
 
             cuerpoTecnico.put(dni, nuevoCT);
@@ -170,7 +170,6 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
                     contratoJSON.put("salario", contrato.getSalario());
                     contratoJSON.put("fechaInicio", contrato.getFechaInicio());
                     contratoJSON.put("fechaFin", contrato.getFechaFin());
-                    contratoJSON.put("mesesDuracion", contrato.getMesesDuracion());
                     contratoJSON.put("contratoActivo", contrato.isContratoActivo());
                     obj.put("contrato", contratoJSON);
                 } else {

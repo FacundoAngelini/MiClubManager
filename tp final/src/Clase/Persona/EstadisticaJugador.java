@@ -3,8 +3,6 @@ package Clase.Persona;
 public class EstadisticaJugador {
     private int partidosJugados;
     private int goles;
-    private int asistencias;
-    private int vallasInvictas;
     private int tarjetasAmarillas;
     private int tarjetasRojas;
     private int lesiones;
@@ -12,8 +10,6 @@ public class EstadisticaJugador {
     public EstadisticaJugador() {
         this.partidosJugados = 0;
         this.goles = 0;
-        this.asistencias = 0;
-        this.vallasInvictas = 0;
         this.tarjetasAmarillas = 0;
         this.tarjetasRojas = 0;
         this.lesiones = 0;
@@ -25,14 +21,6 @@ public class EstadisticaJugador {
 
     public void agregarGol() {
         this.goles++;
-    }
-
-    public void agregarAsistencia() {
-        this.asistencias++;
-    }
-
-    public void agregarVallaInvicta() {
-        this.vallasInvictas++;
     }
 
     public void agregarTarjetaAmarilla() {
@@ -79,8 +67,6 @@ public class EstadisticaJugador {
     public String toString() {
         return "Partidos jugados=" + partidosJugados +
                 ", Goles=" + goles +
-                ", Asistencias=" + asistencias +
-                ", Vallas invictas=" + vallasInvictas +
                 ", Tarjetas amarillas=" + tarjetasAmarillas +
                 ", Tarjetas rojas=" + tarjetasRojas +
                 ", Lesiones=" + lesiones +

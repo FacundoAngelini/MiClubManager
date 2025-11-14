@@ -78,18 +78,16 @@ public class MenuCuerpoTecnico {
             System.out.print("Fecha fin contrato (dd/mm/yyyy): ");
             String fechaFin = scanner.nextLine();
 
-            System.out.print("Meses de duracion: ");
-            int mesesDuracion = Integer.parseInt(scanner.nextLine());
-
             System.out.print("Puesto (DT, AYUDANTE, PREPARADOR, FISIOTERAPEUTA): ");
-            Puesto puesto = Puesto.valueOf(scanner.nextLine().toUpperCase());
+            String inputPuesto = scanner.nextLine().trim().toUpperCase();
+            Puesto puesto = Puesto.valueOf(inputPuesto);
 
             System.out.print("Anios de experiencia: ");
             int aniosExp = Integer.parseInt(scanner.nextLine());
 
             menuClub.club.getGestionCuerpoTecnico().agregarElemento(
                     dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    salario, fechaInicio, fechaFin, mesesDuracion, puesto, aniosExp
+                    salario, fechaInicio, fechaFin, puesto, aniosExp
             );
             menuClub.club.getGestionCuerpoTecnico().aplicarGastoSalarios(fechaInicio);
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
@@ -166,10 +164,6 @@ public class MenuCuerpoTecnico {
             String fechaFin = scanner.nextLine();
             if (fechaFin.isEmpty() && contrato != null) fechaFin = contrato.getFechaFin();
 
-            System.out.print("Nueva duracion meses (" + (contrato != null ? contrato.getMesesDuracion() : "0") + "): ");
-            String mesesStr = scanner.nextLine();
-            int mesesDuracion = mesesStr.isEmpty() && contrato != null ? contrato.getMesesDuracion() : Integer.parseInt(mesesStr);
-
             System.out.print("Nuevo puesto (" + ct.getPuesto() + "): ");
             String puestoStr = scanner.nextLine();
             Puesto puesto = puestoStr.isEmpty() ? ct.getPuesto() : Puesto.valueOf(puestoStr.toUpperCase());
@@ -178,7 +172,7 @@ public class MenuCuerpoTecnico {
             String expStr = scanner.nextLine();
             int aniosExp = expStr.isEmpty() ? ct.getAniosExp() : Integer.parseInt(expStr);
 
-            Contrato nuevoContrato = new Contrato(dni, salario, fechaFin, true, fechaInicio, mesesDuracion);
+            Contrato nuevoContrato = new Contrato(dni, salario, fechaFin, true, fechaInicio);
 
             menuClub.club.getGestionCuerpoTecnico().modificarCuerpoTecnico(
                     dni, nombre, apellido, fechaNacimiento, nacionalidad,
