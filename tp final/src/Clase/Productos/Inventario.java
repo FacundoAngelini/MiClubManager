@@ -1,11 +1,9 @@
 package Clase.Productos;
-
 import Clase.Json.JSONUtiles;
 import interfaz.MetodosComunes;
 import exeptions.AccionImposible;
 import exeptions.IngresoInvalido;
 import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
