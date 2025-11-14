@@ -29,14 +29,6 @@ public abstract class Producto{
         this.cantidad = cantidad;
     }
 
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
     public abstract String muestraDatos();
     public abstract JSONObject toJSON();
 }

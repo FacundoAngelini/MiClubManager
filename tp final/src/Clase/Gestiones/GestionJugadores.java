@@ -15,9 +15,9 @@ import java.util.HashMap;
 
 public class GestionJugadores implements MetodosComunes<Jugador, String> {
 
-    private HashMap<String, Jugador> jugadores = new HashMap<>();
-    private HashMap<String, EstadisticaJugador> estadisticas = new HashMap<>();
-    private GestionPresupuesto gestorpresupuesto;
+    private final HashMap<String, Jugador> jugadores = new HashMap<>();
+    private final HashMap<String, EstadisticaJugador> estadisticas = new HashMap<>();
+    private final GestionPresupuesto gestorpresupuesto;
 
     public GestionJugadores(GestionPresupuesto gestorpresupuesto) {
         this.gestorpresupuesto = gestorpresupuesto;
@@ -139,14 +139,6 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         if (roja) stats.agregarTarjetaRoja();
         if (lesion) stats.agregarLesion();
         guardarJSON();
-    }
-
-    public EstadisticaJugador getEstadisticas(String dni) throws ElementoInexistenteEx {
-        EstadisticaJugador stats = estadisticas.get(dni);
-        if (stats == null) {
-            throw new ElementoInexistenteEx("No se encontró estadísticas para el jugador con DNI: " + dni);
-        }
-        return stats;
     }
 
     public void guardarJSON() {

@@ -10,18 +10,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class GestionPresupuesto {
-    private Presupuesto presupuesto;
-    private ArrayList<Transaccion> listaTransacciones;
+    private final Presupuesto presupuesto;
+    private final ArrayList<Transaccion> listaTransacciones;
 
     public GestionPresupuesto() {
         this.presupuesto = new Presupuesto(3000000);
         this.listaTransacciones = new ArrayList<>();
     }
 
-    public GestionPresupuesto(Presupuesto presupuestoCentral) {
-        this.presupuesto = presupuestoCentral;
-        this.listaTransacciones = new ArrayList<>();
-    }
 
     public void agregar_fondos(double dinero, String descripcion, String fecha) throws IngresoInvalido {
         if (dinero <= 0) {

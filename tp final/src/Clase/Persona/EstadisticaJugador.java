@@ -55,19 +55,7 @@ public class EstadisticaJugador {
         return goles;
     }
 
-    public int getAsistencias() {
-        return asistencias;
-    }
-
-    public int getVallasInvictas() {
-        return vallasInvictas;
-    }
-
-    public int getTarjetasAmarillas() {
-        return tarjetasAmarillas;
-    }
-
-    public int getTarjetasRojas() {
+      public int getTarjetasRojas() {
         return tarjetasRojas;
     }
 

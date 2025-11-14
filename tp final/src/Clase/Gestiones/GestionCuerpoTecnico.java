@@ -15,8 +15,8 @@ import java.util.HashMap;
 
 public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, String> {
 
-    private HashMap<String, CuerpoTecnico> cuerpoTecnico;
-    private GestionPresupuesto gestionPresupuesto;
+    private final HashMap<String, CuerpoTecnico> cuerpoTecnico;
+    private final GestionPresupuesto gestionPresupuesto;
 
     public GestionCuerpoTecnico(GestionPresupuesto gestionPresupuesto) {
         this.cuerpoTecnico = new HashMap<>();

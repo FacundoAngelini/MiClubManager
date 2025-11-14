@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class Inventario<T extends Producto> implements MetodosComunes<T, String> {
 
-    private HashMap<String, T> items;
+    private final HashMap<String, T> items;
 
     public Inventario() {
         items = new HashMap<>();

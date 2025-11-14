@@ -3,7 +3,7 @@ package Clase.Club;
 public class Estadio {
     private String nombre;
     private int capacidad;
-    private String ubicacion;
+    private final String ubicacion;
     private double costoMantenimiento;
 
     public Estadio(String nombre, int capacidad, String ubicacion, double costoMantenimiento) {
@@ -35,10 +35,6 @@ public class Estadio {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
     }
 
     public void setCostoMantenimiento(double costoMantenimiento) {

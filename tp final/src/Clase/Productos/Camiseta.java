@@ -13,21 +13,11 @@ public class Camiseta extends Producto {
         this.sponsor = sponsor;
     }
 
-    public String getSponsor() {
-        return sponsor;
-    }
-
     public void cambiarSponsor(String sponsor) throws AccionImposible {
         if(this.sponsor.equals(sponsor)){
             throw new AccionImposible("El sponsor es el mismo");
         }
         this.sponsor = sponsor;
-    }
-
-    public void agregarSponsor(String sponsor) throws AccionImposible{
-        if(this.sponsor!=null){
-            throw new AccionImposible("Ya existe un sponsor");
-        }
     }
 
     public void setSponsor(String sponsor) {

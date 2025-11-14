@@ -74,13 +74,6 @@ public class GestorPartido implements MetodosComunes<Partido, String> {
         return new ArrayList<>(partidos);
     }
 
-    public double calcularRecaudacionTotal() {
-        return partidos.stream()
-                .filter(Partido::isEsLocal)
-                .mapToDouble(Partido::calcularRecaudacion)
-                .sum();
-    }
-
     @Override
     public void guardarJSON() {
         try {

@@ -5,13 +5,13 @@ import Clase.Productos.Inventario;
 import Clase.Productos.Producto;
 
 public class Club {
-    private GestionJugadores gestionJugadores;
-    private GestionCuerpoTecnico gestionCuerpoTecnico;
-    private GestionSocio gestionSocios;
-    private GestorPartido gestorPartidos;
-    private Inventario<Producto> inventario;
-    private GestionEstadio gestionEstadios;
-    private GestionPresupuesto gestionPresupuesto;
+    private final GestionJugadores gestionJugadores;
+    private final GestionCuerpoTecnico gestionCuerpoTecnico;
+    private final GestionSocio gestionSocios;
+    private final GestorPartido gestorPartidos;
+    private final Inventario<Producto> inventario;
+    private final GestionEstadio gestionEstadios;
+    private final GestionPresupuesto gestionPresupuesto;
 
     public Club() {
 
@@ -53,14 +53,4 @@ public class Club {
         return gestionPresupuesto;
     }
 
-
-    public void guardarDatosJSON() {
-        gestionJugadores.guardarJSON();
-        gestionCuerpoTecnico.guardarJSON();
-        gestionSocios.guardarJSON();
-        gestorPartidos.guardarJSON();
-        inventario.guardarJSON();
-        gestionEstadios.guardarJSON();
-        gestionPresupuesto.guardarJSON();
-    }
 }

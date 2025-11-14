@@ -141,9 +141,9 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
                 socio.setTipoSocio(Tiposocio.VITALICIO);
                 System.out.println("El socio con DNI " + dni + " ahora es VITALICIO.");
             }
-            case Tiposocio.VITALICIO -> {
+            case Tiposocio.VITALICIO ->
                 throw new AccionImposible("El socio ya es VITALICIO. No se puede cambiar el tipo.");
-            }
+
             default -> throw new AccionImposible("Tipo de socio desconocido.");
         }
 
