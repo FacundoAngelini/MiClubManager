@@ -1,1 +1,1 @@
-{"transacciones":[{"descripcion":"Sponsor ropa","fecha":"1/2/2025","tipo":"INGRESO","monto":3000000}],"saldoActual":6000000}
+{"transacciones":[{"descripcion":"Sponsor ropa","fecha":"1/2/2025","tipo":"INGRESO","monto":3000000},{"descripcion":"Contrato cuerpo técnico: juan arr","fecha":"01/07/2024","tipo":"RETIRO","monto":20000},{"descripcion":"Pago de salarios del cuerpo técnico","fecha":"01/07/2024","tipo":"RETIRO","monto":20000}],"saldoActual":5960000}

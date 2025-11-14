@@ -92,7 +92,7 @@ public class MenuCuerpoTecnico {
             menuClub.club.getGestionCuerpoTecnico().aplicarGastoSalarios(fechaInicio);
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro agregado correctamente.");
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e){
             System.out.println("Error: valor invalido para Puesto o numerico.");
         }
     }
