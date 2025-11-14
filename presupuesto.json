@@ -1,1 +1,1 @@
-{"transacciones":[{"descripcion":"Sponsor ropa","fecha":"1/2/2025","tipo":"INGRESO","monto":3000000},{"descripcion":"Venta de jugador: angelini","fecha":"01/06/2025","tipo":"INGRESO","monto":1000000},{"descripcion":"Pago de mantenimiento del estadio","fecha":"01/01/2025","tipo":"RETIRO","monto":100000}],"saldoActual":6900000}
+{"transacciones":[{"descripcion":"Sponsor ropa","fecha":"1/2/2025","tipo":"INGRESO","monto":3000000}],"saldoActual":6000000}
