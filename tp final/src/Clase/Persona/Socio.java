@@ -9,21 +9,18 @@ public class Socio extends Persona {
     private Tiposocio tiposocio;
     private LocalDate fechaAlta;
 
-    public Socio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad,
-                 LocalDate fechaAlta, Tiposocio tiposocio) {
-
+    public Socio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tiposocio) {
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
-
         if (fechaAlta == null) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser nula.");
+            throw new IllegalArgumentException("La fecha de alta no puede ser nula");
         }
 
         if (fechaAlta.isBefore(fechaNacimiento)) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser anterior a la fecha de nacimiento.");
+            throw new IllegalArgumentException("La fecha de alta no puede ser anterior a la fecha de nacimiento");
         }
 
         if (fechaAlta.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser posterior a hoy.");
+            throw new IllegalArgumentException("La fecha de alta no puede ser posterior a hoy");
         }
 
         this.numeroSocio = contador++;
@@ -41,7 +38,7 @@ public class Socio extends Persona {
 
     public void setTipoSocio(Tiposocio tipoSocio) {
         if (tipoSocio == null) {
-            throw new IllegalArgumentException("El tipo de socio no puede ser null.");
+            throw new IllegalArgumentException("El tipo de socio no puede ser null");
         }
         this.tiposocio = tipoSocio;
     }
@@ -52,27 +49,27 @@ public class Socio extends Persona {
 
     public void setFechaAlta(LocalDate fechaAlta) {
         if (fechaAlta == null) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser nula.");
+            throw new IllegalArgumentException("La fecha de alta no puede ser nula");
         }
         if (fechaAlta.isBefore(getFechaNacimiento())) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser anterior a la fecha de nacimiento.");
+            throw new IllegalArgumentException("La fecha de alta no puede ser anterior a la fecha de nacimiento");
         }
         if (fechaAlta.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser posterior a hoy.");
+            throw new IllegalArgumentException("La fecha de alta no puede ser posterior a hoy");
         }
         this.fechaAlta = fechaAlta;
     }
 
     public void cambiarAActivo() throws AccionImposible {
         if (tiposocio == Tiposocio.ACTIVO) {
-            throw new AccionImposible("El socio ya está activo.");
+            throw new AccionImposible("El socio ya esta activo");
         }
         this.tiposocio = Tiposocio.ACTIVO;
     }
 
     public void cambiarAVitalicio() throws AccionImposible {
         if (tiposocio == Tiposocio.VITALICIO) {
-            throw new AccionImposible("El socio ya es vitalicio.");
+            throw new AccionImposible("El socio ya es vitalicio");
         }
         this.tiposocio = Tiposocio.VITALICIO;
     }

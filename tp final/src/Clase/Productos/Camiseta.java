@@ -26,7 +26,7 @@ public class Camiseta extends Producto {
 
     @Override
     public String muestraDatos() {
-        return "Clases_Manu.Camiseta{" +
+        return "Camiseta{" +
                 "sponsor='" + sponsor + '\'' +
                 ", camisetasVendidas=" + camisetasVendidas +
                 ", nombre='" + nombre + '\'' +

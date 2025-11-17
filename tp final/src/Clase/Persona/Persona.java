@@ -23,7 +23,7 @@ public abstract class Persona {
 
     public void setDni(String dni) {
         if (dni == null || !dni.matches("\\d+")) {
-            throw new IllegalArgumentException("El DNI debe contener solo números.");
+            throw new IllegalArgumentException("El DNI debe contener solo numeros.");
         }
         this.dni = dni;
     }
@@ -34,7 +34,7 @@ public abstract class Persona {
 
     public void setNombre(String nombre) {
         if (nombre == null || !nombre.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+")) {
-            throw new IllegalArgumentException("El nombre solo puede contener letras y espacios.");
+            throw new IllegalArgumentException("El nombre solo puede contener letras y espacios");
         }
         this.nombre = nombre;
     }
@@ -45,7 +45,7 @@ public abstract class Persona {
 
     public void setApellido(String apellido) {
         if (apellido == null || !apellido.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+")) {
-            throw new IllegalArgumentException("El apellido solo puede contener letras y espacios.");
+            throw new IllegalArgumentException("El apellido solo puede contener letras y espacios");
         }
         this.apellido = apellido;
     }
@@ -56,7 +56,7 @@ public abstract class Persona {
 
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         if (fechaNacimiento == null || fechaNacimiento.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de nacimiento no puede ser futura ni nula.");
+            throw new IllegalArgumentException("La fecha de nacimiento no puede ser futura ni nula");
         }
         this.fechaNacimiento = fechaNacimiento;
     }
@@ -67,15 +67,19 @@ public abstract class Persona {
 
     public void setNacionalidad(String nacionalidad) {
         if (nacionalidad == null || !nacionalidad.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+")) {
-            throw new IllegalArgumentException("La nacionalidad solo puede contener letras y espacios.");
+            throw new IllegalArgumentException("La nacionalidad solo puede contener letras y espacios");
         }
         this.nacionalidad = nacionalidad;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Persona persona)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Persona persona)) {
+            return false;
+        }
         return Objects.equals(dni, persona.dni);
     }
 

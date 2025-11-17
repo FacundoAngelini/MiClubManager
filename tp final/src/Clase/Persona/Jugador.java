@@ -12,18 +12,14 @@ public class Jugador extends Persona {
     private double valorJugador;
     private int numeroCamiseta;
 
-    public Jugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
-                   String nacionalidad, int numeroCamiseta, Contrato contrato, Posicion posicion, double valorJugador) {
+    public Jugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, int numeroCamiseta, Contrato contrato, Posicion posicion, double valorJugador) {
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
-
         if (contrato == null) {
-            throw new IllegalArgumentException("El jugador debe tener un contrato asignado.");
+            throw new IllegalArgumentException("El jugador debe tener un contrato asignado");
         }
-
         if (numeroCamiseta <= 0) {
-            throw new IllegalArgumentException("El número de camiseta debe ser mayor a 0.");
+            throw new IllegalArgumentException("El numero de camiseta debe ser mayor a 0");
         }
-
         if (valorJugador <= 0) {
             throw new IllegalArgumentException("El valor del jugador debe ser mayor a 0.");
         }
@@ -61,7 +57,7 @@ public class Jugador extends Persona {
 
     public void setValorJugador(double valorJugador) {
         if (valorJugador <= 0) {
-            throw new IllegalArgumentException("El valor del jugador debe ser mayor a 0.");
+            throw new IllegalArgumentException("El valor del jugador debe ser mayor a 0");
         }
         this.valorJugador = valorJugador;
     }
@@ -72,7 +68,7 @@ public class Jugador extends Persona {
 
     public void setNumeroCamiseta(int numeroCamiseta) {
         if (numeroCamiseta <= 0) {
-            throw new IllegalArgumentException("El número de camiseta debe ser mayor a 0.");
+            throw new IllegalArgumentException("El numero de camiseta debe ser mayor a 0.");
         }
         this.numeroCamiseta = numeroCamiseta;
     }

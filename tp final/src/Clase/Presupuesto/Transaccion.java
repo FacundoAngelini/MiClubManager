@@ -10,23 +10,23 @@ public class Transaccion {
 
     public Transaccion(String descripcion, double monto, String tipo, LocalDate fecha) {
         if (descripcion == null || descripcion.isBlank()) {
-            throw new IllegalArgumentException("La descripción no puede ser nula ni vacía.");
+            throw new IllegalArgumentException("La descripción no puede ser nula ni vacia");
         }
 
         if (monto <= 0) {
-            throw new IllegalArgumentException("El monto debe ser mayor que cero.");
+            throw new IllegalArgumentException("El monto debe ser mayor que cero");
         }
 
         if (tipo == null || tipo.isBlank()) {
-            throw new IllegalArgumentException("El tipo de transacción no puede ser nulo ni vacío.");
+            throw new IllegalArgumentException("El tipo de transaccion no puede ser nulo ni vacio");
         }
 
         if (fecha == null) {
-            throw new IllegalArgumentException("La fecha no puede ser nula.");
+            throw new IllegalArgumentException("La fecha no puede ser nula");
         }
 
         if (fecha.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha no puede ser mayor al día de hoy.");
+            throw new IllegalArgumentException("La fecha no puede ser mayor al dia de hoy");
         }
 
         this.descripcion = descripcion;

@@ -42,7 +42,7 @@ public class Partido {
 
     @Override
     public String toString() {
-        return "Clases_Manu.Partido{" +
+        return "Partido{" +
                 "fecha='" + fecha + '\'' +
                 ", local=" + esLocal +
                 ", rival='" + rival + '\'' +

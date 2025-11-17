@@ -1,6 +1,5 @@
 package exeptions;
-
-public class FondoInsuficienteEx extends RuntimeException {
+public class FondoInsuficienteEx extends Exception {
     public FondoInsuficienteEx(String message) {
         super(message);
     }

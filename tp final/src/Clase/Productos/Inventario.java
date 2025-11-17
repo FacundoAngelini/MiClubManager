@@ -18,18 +18,18 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
     }
 
     private String generarClave(String nombre, String tipo, String marca) {
-        return tipo.toLowerCase() + "-" + nombre.toLowerCase() + "-" + marca.toLowerCase();
+        return tipo.toLowerCase() + nombre.toLowerCase() +  marca.toLowerCase();
     }
 
     public void agregarProducto(String tipo, String nombre, String marca, int cantidad, String... extra) throws IngresoInvalido {
         if (cantidad <= 0) {
-            throw new IngresoInvalido("La cantidad debe ser mayor a 0.");
+            throw new IngresoInvalido("La cantidad debe ser mayor a 0");
         }
         if (nombre == null || nombre.isBlank()) {
-            throw new IngresoInvalido("El nombre no puede estar vacío.");
+            throw new IngresoInvalido("El nombre no puede estar vacio");
         }
         if (marca == null || marca.isBlank()) {
-            throw new IngresoInvalido("La marca no puede estar vacía.");
+            throw new IngresoInvalido("La marca no puede estar vacia");
         }
 
         Producto producto;
@@ -37,17 +37,17 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
         switch (tipo.toLowerCase()) {
             case "pelota" -> {
                 if (extra.length < 1) {
-                    throw new IngresoInvalido("Por favor indique el modelo de la pelota.");
+                    throw new IngresoInvalido("indique el modelo de la pelota");
                 }
                 producto = new Pelota(nombre, marca, cantidad, extra[0]);
             }
             case "camiseta" -> {
                 if (extra.length < 1) {
-                    throw new IngresoInvalido("Por favor indique el sponsor de la camiseta.");
+                    throw new IngresoInvalido("indique el sponsor de la camiseta");
                 }
                 producto = new Camiseta(nombre, marca, cantidad, extra[0]);
             }
-            default -> throw new IngresoInvalido("Tipo de producto no reconocido: " + tipo);
+            default -> throw new IngresoInvalido("tipo de producto no reconocido: " + tipo);
         }
 
         T prod = (T) producto;
@@ -71,7 +71,7 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
             throw new AccionImposible("Producto no encontrado con la clave: " + clave);
         }
         items.remove(clave);
-        System.out.println("Producto eliminado correctamente.");
+        System.out.println("Producto eliminado correctamente");
         guardarJSON();
     }
 
@@ -100,7 +100,7 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
 
     public void mostrarInventario() {
         if (items.isEmpty()) {
-            System.out.println("Inventario vacío.");
+            System.out.println("Inventario vacio");
             return;
         }
         for (T item : items.values()) {

@@ -12,19 +12,19 @@ public class Contrato {
     public Contrato(String dni, double salario, LocalDate fechaInicio, LocalDate fechaFin, LocalDate fechaNacimiento) {
 
         if (!dni.matches("\\d+")) {
-            throw new IllegalArgumentException("El DNI debe contener solo números.");
+            throw new IllegalArgumentException("El DNI debe contener solo numeros");
         }
 
         if (salario <= 0) {
-            throw new IllegalArgumentException("El salario debe ser mayor a 0.");
+            throw new IllegalArgumentException("El salario debe ser mayor a 0");
         }
 
         if (fechaInicio.isBefore(fechaNacimiento.plusYears(10))) {
-            throw new IllegalArgumentException("No se puede contratar antes de los 10 años de edad.");
+            throw new IllegalArgumentException("No se puede contratar antes de los 10 años de edad");
         }
 
         if (fechaFin.isBefore(fechaInicio)) {
-            throw new IllegalArgumentException("La fecha de finalización del contrato debe ser posterior a la fecha de inicio.");
+            throw new IllegalArgumentException("La fecha de finalizacion del contrato debe ser posterior a la fecha de inicio");
         }
 
         this.dni = dni;

@@ -24,13 +24,13 @@ public class Presupuesto {
     public void quitar_fondos(double monto)  throws FondoInsuficienteEx
     {
         if(this.presupuesto<monto){
-           throw new FondoInsuficienteEx("Clases_Manu.Presupuesto insuficiente");
+           throw new FondoInsuficienteEx("Presupuesto insuficiente");
         }
         this.presupuesto-=monto;
     }
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Clases_Manu.Presupuesto{");
+        final StringBuilder sb = new StringBuilder("Presupuesto{");
         sb.append("presupuesto=").append(presupuesto);
         sb.append('}');
         return sb.toString();
