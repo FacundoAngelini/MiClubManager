@@ -116,6 +116,19 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         return new ArrayList<>(jugadores.values());
     }
 
+    public ArrayList<String> listarJugadoresInfo() {
+        ArrayList<String> listaInfo = new ArrayList<>();
+        for (Jugador j : jugadores.values()) {
+            listaInfo.add(
+                    j.getDni() + " - " + j.getNombre() + " " + j.getApellido() +
+                            " | " + j.getPosicion() +
+                            " | Nº " + j.getNumeroCamiseta()
+            );
+        }
+        return listaInfo;
+    }
+
+
     @Override
     public void guardarJSON() {
         JSONArray array = new JSONArray();
@@ -190,4 +203,16 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         gestorpresupuesto.quitarFondos(monto, "Pago sueldos plantel", fecha);
         System.out.println("salarios pagados correctamente");
     }
+
+    public String mostrarJugador(String dni) throws AccionImposible {
+        Jugador j = jugadores.get(dni);
+        if (j == null) throw new AccionImposible("Jugador no encontrado");
+
+        return j.getDni() + " - " + j.getNombre() + " " + j.getApellido()
+                + " | " + j.getPosicion() + " | Nº " + j.getNumeroCamiseta()
+                + " | Valor: " + j.getValorJugador()
+                + " | Salario: " + j.getContrato().getSalario()
+                + " | Contrato: " + j.getContrato().getFechaInicio() + " a " + j.getContrato().getFechaFin();
+    }
+
 }

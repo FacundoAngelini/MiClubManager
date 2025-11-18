@@ -165,6 +165,17 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
     public ArrayList<Partido> listar() {
         return new ArrayList<>(partidos);
     }
+    public ArrayList<String> listarPartidosInfo() {
+        ArrayList<String> lista = new ArrayList<>();
+        for (Partido p : partidos) {
+            String info = p.getFecha() + " | " + (p.isEsLocal() ? "Local" : "Visitante") +
+                    " vs " + p.getRival() +
+                    " | Goles: " + p.getGolesAFavor() + "-" + p.getGolesEnContra();
+            lista.add(info);
+        }
+        return lista;
+    }
+
 
     @Override
     public void guardarJSON() {

@@ -1,15 +1,17 @@
 package Clase.Menus;
 
-import java.util.Scanner;
 import exeptions.FondoInsuficienteEx;
 import exeptions.IngresoInvalido;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MenuPresupuesto {
 
     private MenuClub menuClub;
     private final Scanner scanner;
 
-    public MenuPresupuesto(MenuClub menuClub) {
+    public MenuPresupuesto() {
         this.menuClub = menuClub;
         this.scanner = new Scanner(System.in);
     }
@@ -22,7 +24,7 @@ public class MenuPresupuesto {
             System.out.println("1. Agregar fondos");
             System.out.println("2. Quitar fondos");
             System.out.println("3. Ver saldo actual");
-            System.out.println("4. Ver lista de transacciones");
+            System.out.println("4. Ver transacciones");
             System.out.println("5. Salir");
             System.out.print("Seleccione una opcion: ");
 
@@ -33,7 +35,14 @@ public class MenuPresupuesto {
                 case "2" -> quitarFondos();
                 case "3" -> verSaldo();
                 case "4" -> listarTransacciones();
-                case "5" -> salir = true;
+                case "5" -> calcularGastoSalariosCT();
+                case "6" -> aplicarGastoSalariosCT();
+                case "7" -> actualizarCostoMantenimientoEstadio();
+                case "8" -> pagarMantenimientoEstadio();
+                case "9" -> pagarSalariosJugadores();
+                case "10" -> aplicarRecaudacionSocios();
+                case "11" -> mostrarRecaudacionTotalSocios();
+                case "12" -> salir = true;
                 default -> System.out.println("Opcion invalida");
             }
         }
@@ -41,73 +50,151 @@ public class MenuPresupuesto {
 
     private void agregarFondos() {
         try {
-            System.out.print("Ingrese monto a agregar: ");
+            System.out.print("Monto a agregar: ");
             double monto = Double.parseDouble(scanner.nextLine());
 
-            System.out.print("Ingrese descripcion del ingreso: ");
+            System.out.print("Descripcion del ingreso: ");
             String descripcion = scanner.nextLine();
 
-            System.out.print("Ingrese fecha (dd/mm/yyyy): ");
-            String fecha = scanner.nextLine();
+            System.out.print("Fecha (yyyy-mm-dd): ");
+            LocalDate fecha = LocalDate.parse(scanner.nextLine());
 
-            menuClub.club.getGestionPresupuesto().agregar_fondos(monto, descripcion, fecha);
+            menuClub.club.getGestionPresupuesto().agregarFondos(monto, descripcion, fecha);
+            System.out.println("Fondos agregados correctamente");
 
-            System.out.println("Fondos agregados correctamente.");
         } catch (IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Error: monto invalido");
         } catch (Exception e) {
-            System.out.println("Error inesperado al guardar los fondos: " + e.getMessage());
+            System.out.println("Error: datos invalidos");
         }
     }
 
     private void quitarFondos() {
         try {
-            System.out.print("Ingrese monto a retirar: ");
+            System.out.print("Monto a retirar: ");
             double monto = Double.parseDouble(scanner.nextLine());
 
-            System.out.print("Ingrese descripcion del retiro: ");
+            System.out.print("Descripcion del retiro: ");
             String descripcion = scanner.nextLine();
 
-            System.out.print("Ingrese fecha (dd/mm/yyyy): ");
-            String fecha = scanner.nextLine();
+            System.out.print("Fecha (yyyy-mm-dd): ");
+            LocalDate fecha = LocalDate.parse(scanner.nextLine());
 
             menuClub.club.getGestionPresupuesto().quitarFondos(monto, descripcion, fecha);
+            System.out.println("Fondos retirados correctamente");
 
-            System.out.println("Fondos retirados correctamente.");
         } catch (IngresoInvalido | FondoInsuficienteEx e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Error: monto invalido");
         } catch (Exception e) {
-            System.out.println("Error inesperado al guardar los fondos: " + e.getMessage());
+            System.out.println("Error: datos invalidos");
         }
     }
 
     private void verSaldo() {
-        try {
-            double saldo = menuClub.club.getGestionPresupuesto().verSaldoActual();
-            System.out.println("Saldo actual: " + saldo);
-        } catch (Exception e) {
-            System.out.println("Error al obtener el saldo: " + e.getMessage());
-        }
+        double saldo = menuClub.club.getGestionPresupuesto().verSaldoActual();
+        System.out.println("Saldo actual: " + saldo);
     }
 
     private void listarTransacciones() {
-        try {
-            System.out.println("\nLista de transacciones:");
-            if (menuClub.club.getGestionPresupuesto().getListaTransacciones().isEmpty()) {
-                System.out.println("No hay transacciones registradas");
-                return;
-            }
+        ArrayList<String> transacciones = menuClub.club.getGestionPresupuesto().listarTransaccionesInfo();
+        if (transacciones.isEmpty()) {
+            System.out.println("No hay transacciones registradas");
+            return;
+        }
 
-            menuClub.club.getGestionPresupuesto().getListaTransacciones().forEach(t -> {
-                System.out.println("Tipo: " + t.getTipo() + " | Monto: " + t.getMonto() +
-                        " | Descripcion: " + t.getDescripcion() + " | Fecha: " + t.getFecha());
-            });
+        System.out.println("\nTransacciones:");
+        transacciones.forEach(System.out::println);
+    }
+
+    private void calcularGastoSalariosCT() {
+        try {
+            double gasto = menuClub.club.getGestionCuerpoTecnico().calcularGastoSalarios();
+            System.out.println("Gasto total en salarios del cuerpo técnico: " + gasto);
         } catch (Exception e) {
-            System.out.println("Error al listar transacciones: " + e.getMessage());
+            System.out.println("Error al calcular salarios: " + e.getMessage());
         }
     }
+
+    private void aplicarGastoSalariosCT() {
+        try {
+            System.out.print("Ingrese la fecha del pago (yyyy-mm-dd): ");
+            LocalDate fecha = LocalDate.parse(scanner.nextLine());
+
+            menuClub.club.getGestionCuerpoTecnico().aplicarGastoSalarios(fecha);
+        } catch (Exception e) {
+            System.out.println("Error al aplicar el pago de salarios: " + e.getMessage());
+        }
+    }
+
+    private void actualizarCostoMantenimientoEstadio() {
+        try {
+            System.out.print("Ingrese el nuevo costo de mantenimiento: ");
+            double nuevoCosto = Double.parseDouble(scanner.nextLine());
+
+            menuClub.club.getGestionEstadios().actualizarCostoMantenimiento(nuevoCosto);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: monto invalido");
+        } catch (Exception e) {
+            System.out.println("Error al actualizar costo: " + e.getMessage());
+        }
+    }
+
+    private void pagarMantenimientoEstadio() {
+        try {
+            System.out.print("Ingrese la fecha del pago (yyyy-mm-dd): ");
+            LocalDate fecha = LocalDate.parse(scanner.nextLine());
+
+            menuClub.club.getGestionEstadios().pagarMantenimiento(fecha);
+        } catch (Exception e) {
+            System.out.println("Error al pagar mantenimiento: " + e.getMessage());
+        }
+    }
+
+    public void pagarSalariosJugadores() {
+        try {
+            System.out.print("Ingrese la fecha del pago (yyyy-mm-dd): ");
+            LocalDate fecha = LocalDate.parse(scanner.nextLine());
+
+            menuClub.club.getGestionJugadores().pagarSalarios(fecha); // Llama al método de la clase de gestión de jugadores
+
+        } catch (FondoInsuficienteEx | IngresoInvalido e) {
+            System.out.println("Error al pagar salarios: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    public void aplicarRecaudacionSocios() {
+        try {
+            System.out.print("Ingrese la fecha de la recaudacion (yyyy-mm-dd) o deje vacio para hoy: ");
+            String input = scanner.nextLine().trim();
+            LocalDate fecha;
+            if (input.isEmpty()) {
+                fecha = LocalDate.now();
+            } else {
+                fecha = LocalDate.parse(input);
+            }
+
+            menuClub.club.getGestionSocios().aplicarRecaudacion(fecha); // Llama al método de la clase de gestión de socios
+            System.out.println("Recaudacion aplicada correctamente al presupuesto");
+
+        } catch (IngresoInvalido e) {
+            System.out.println("Error al aplicar recaudacion: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    public void mostrarRecaudacionTotalSocios() {
+        try {
+            double total = menuClub.club.getGestionSocios().obtenerRecaudacionTotal();
+            System.out.println("Recaudacion total de socios: $" + total);
+        } catch (Exception e) {
+            System.out.println("Error al obtener la recaudacion: " + e.getMessage());
+        }
+    }
+
+
+
+
 }

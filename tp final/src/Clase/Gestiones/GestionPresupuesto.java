@@ -67,6 +67,16 @@ public class GestionPresupuesto {
         }
     }
 
+    public ArrayList<String> listarTransaccionesInfo() {
+        ArrayList<String> lista = new ArrayList<>();
+        for (Transaccion t : listaTransacciones) {
+            String info = t.getTipo() + " | " + t.getMonto() + " | " + t.getDescripcion() + " | " + t.getFecha();
+            lista.add(info);
+        }
+        return lista;
+    }
+
+
     public Presupuesto getPresupuesto() {
         return presupuesto;
     }

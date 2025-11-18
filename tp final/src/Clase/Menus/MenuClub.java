@@ -10,10 +10,10 @@ public class MenuClub {
     private final MenuSocios menuSocios;
     private final MenuJugadores menuJugadores;
     private final MenuPartido menuPartidos;
-    private final MenuCuerpoTecnico menuCuerpo;
+    private final MenuPlantel menuPlantel;
     private final MenuEstadio menuEstadio;
     private final MenuPresupuesto menuPresupuesto;
-    private final MenuInventario menuInventario;
+    private final MenuGeneralClub menuInventario;
 
     public MenuClub(Club clubExistente) {
         this.club = clubExistente;
@@ -22,10 +22,10 @@ public class MenuClub {
         this.menuSocios = new MenuSocios(this);
         this.menuJugadores = new MenuJugadores(this);
         this.menuPartidos = new MenuPartido(this);
-        this.menuCuerpo = new MenuCuerpoTecnico(this);
+        this.menuPlantel = new MenuPlantel(this);
         this.menuEstadio = new MenuEstadio(this);
         this.menuPresupuesto = new MenuPresupuesto(this);
-        this.menuInventario = new MenuInventario(this);
+        this.menuInventario = new MenuGeneralClub(this);
     }
 
     public void mostrarMenuPrincipal() {
@@ -49,7 +49,7 @@ public class MenuClub {
                 case "1" -> menuSocios.mostrarMenuSocios();
                 case "2" -> menuJugadores.mostrarMenuJugadores();
                 case "3" -> menuPartidos.mostrarMenuPartidos();
-                case "4" -> menuCuerpo.mostrarMenuCuerpoTecnico();
+                case "4" -> menuPlantel.mostrarMenuCuerpoTecnico();
                 case "5" -> menuEstadio.mostrarMenuEstadio();
                 case "6" -> menuPresupuesto.mostrarMenuPresupuesto();
                 case "7" -> menuInventario.mostrarMenuInventario();

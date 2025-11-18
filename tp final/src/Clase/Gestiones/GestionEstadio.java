@@ -98,7 +98,7 @@ public class GestionEstadio {
         obj.put("ubicacion", estadio.getUbicacion());
         obj.put("costoMantenimiento", estadio.getCostoMantenimiento());
 
-        JSONUtiles.uploadJSON(obj, "Clases_Manu.Estadio");
+        JSONUtiles.uploadJSON(obj, "Estadio");
     }
 
     public void validarEstadioExistente() throws AccionImposible {
