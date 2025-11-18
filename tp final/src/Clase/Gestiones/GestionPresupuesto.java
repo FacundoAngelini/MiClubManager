@@ -7,9 +7,12 @@ import exeptions.FondoInsuficienteEx;
 import exeptions.IngresoInvalido;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class GestionPresupuesto {
+
     private final Presupuesto presupuesto;
     private final ArrayList<Transaccion> listaTransacciones;
 
@@ -18,47 +21,24 @@ public class GestionPresupuesto {
         this.listaTransacciones = new ArrayList<>();
     }
 
-
-    public void agregar_fondos(double dinero, String descripcion, String fecha) throws IngresoInvalido {
-        if (dinero <= 0) {
-            throw new IngresoInvalido("El ingreso de dinero debe ser mayor que 0");
-        }
-        if (descripcion == null || descripcion.isEmpty()) {
-            throw new IngresoInvalido("La descripcion es obligatoria");
-        }
+    public void agregarFondos(double dinero, String descripcion, LocalDate fecha) throws IngresoInvalido {
+        if(dinero <= 0) throw new IngresoInvalido("El ingreso de dinero debe ser mayor que 0");
+        if(descripcion == null || descripcion.isBlank()) throw new IngresoInvalido("La descripcion es obligatoria");
 
         presupuesto.aniadir_monto(dinero);
         Transaccion t = new Transaccion(descripcion, dinero, "INGRESO", fecha);
         listaTransacciones.add(t);
-
-        try {
-            guardarJSON();
-        } catch (Exception e) {
-            System.out.println("Advertencia: no se pudo guardar el presupuesto en disco. " + e.getMessage());
-        }
+        guardarJSON();
     }
 
-    public void quitarFondos(double dinero, String descripcion, String fecha) throws FondoInsuficienteEx, IngresoInvalido {
-        if (dinero <= 0) {
-            throw new IngresoInvalido("El monto debe ser mayor que 0");
-        }
-        if (descripcion == null || descripcion.isEmpty()) {
-            throw new IngresoInvalido("La descripcion es obligatoria");
-        }
-
-        if (presupuesto.getPresupuesto() < dinero) {
-            throw new FondoInsuficienteEx("Fondos insuficientes para realizar la operacion");
-        }
+    public void quitarFondos(double dinero, String descripcion, LocalDate fecha) throws FondoInsuficienteEx, IngresoInvalido {
+        if(dinero <= 0) throw new IngresoInvalido("El monto debe ser mayor que 0");
+        if(descripcion == null || descripcion.isBlank()) throw new IngresoInvalido("La descripcion es obligatoria");
 
         presupuesto.quitar_fondos(dinero);
         Transaccion t = new Transaccion(descripcion, dinero, "RETIRO", fecha);
         listaTransacciones.add(t);
-
-        try {
-            guardarJSON();
-        } catch (Exception e) {
-            System.out.println("Advertencia: no se pudo guardar el presupuesto en disco. " + e.getMessage());
-        }
+        guardarJSON();
     }
 
     public double verSaldoActual() {
@@ -71,20 +51,19 @@ public class GestionPresupuesto {
             presupuestoJSON.put("saldoActual", presupuesto.getPresupuesto());
 
             JSONArray transaccionesArray = new JSONArray();
-            for (Transaccion t : listaTransacciones) {
+            for(Transaccion t : listaTransacciones) {
                 JSONObject tJSON = new JSONObject();
                 tJSON.put("descripcion", t.getDescripcion());
                 tJSON.put("monto", t.getMonto());
                 tJSON.put("tipo", t.getTipo());
-                tJSON.put("fecha", t.getFecha());
+                tJSON.put("fecha", t.getFecha().toString());
                 transaccionesArray.put(tJSON);
             }
 
             presupuestoJSON.put("transacciones", transaccionesArray);
-
             JSONUtiles.uploadJSON(presupuestoJSON, "presupuesto");
-        } catch (Exception e) {
-            System.out.println("Error al guardar el presupuesto en JSON: " + e.getMessage());
+        } catch(Exception e) {
+            System.out.println("Error al guardar presupuesto en JSON " + e.getMessage());
         }
     }
 

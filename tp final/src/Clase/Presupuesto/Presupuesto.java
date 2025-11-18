@@ -1,6 +1,7 @@
 package Clase.Presupuesto;
 
 import exeptions.FondoInsuficienteEx;
+import exeptions.IngresoInvalido;
 
 public class Presupuesto {
     private double presupuesto;
@@ -17,23 +18,21 @@ public class Presupuesto {
         this.presupuesto = presupuesto;
     }
 
-    public void aniadir_monto(double monto){
-        this.presupuesto+=monto;
+    public void aniadirMonto(double monto) throws IngresoInvalido {
+        if(monto <= 0) throw new IngresoInvalido("El monto a aniadir debe ser mayor que 0");
+        this.presupuesto += monto;
     }
 
-    public void quitar_fondos(double monto)  throws FondoInsuficienteEx
-    {
-        if(this.presupuesto<monto){
-           throw new FondoInsuficienteEx("Presupuesto insuficiente");
-        }
-        this.presupuesto-=monto;
+    public void quitarFondos(double monto) throws FondoInsuficienteEx, IngresoInvalido {
+        if(monto <= 0) throw new IngresoInvalido("El monto a quitar debe ser mayor que 0");
+        if(this.presupuesto < monto) throw new FondoInsuficienteEx("Presupuesto insuficiente");
+        this.presupuesto -= monto;
     }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Presupuesto{");
-        sb.append("presupuesto=").append(presupuesto);
-        sb.append('}');
-        return sb.toString();
+        return "Presupuesto{" +
+                "presupuesto=" + presupuesto +
+                '}';
     }
 }
-

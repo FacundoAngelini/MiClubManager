@@ -1,89 +1,68 @@
 package Clase.Partidos;
 
 import Clase.Persona.Jugador;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class FichaDelPartido {
-    private int golesLocal;
-    private int golesVisitante;
+
     private final Map<Jugador, Integer> golesPorJugador;
     private final Map<Jugador, String> tarjetas;
-    private final List<Jugador> lesionados;
+    private final Set<Jugador> lesionados;
 
     public FichaDelPartido() {
-        this.golesLocal = 0;
-        this.golesVisitante = 0;
         this.golesPorJugador = new HashMap<>();
         this.tarjetas = new HashMap<>();
-        this.lesionados = new ArrayList<>();
+        this.lesionados = new HashSet<>();
     }
 
     public void registrarGol(Jugador jugador, boolean esLocal) {
-        golesPorJugador.merge(jugador, 1, Integer::sum);
-        jugador.getEstadisticaJugador().agregarGol();
-        if (esLocal) golesLocal++;
-        else golesVisitante++;
+        if (jugador == null) {
+            throw new IllegalArgumentException("No se puede registrar gol para un jugador nulo");
+        }
+        golesPorJugador.put(jugador, golesPorJugador.getOrDefault(jugador, 0) + 1);
     }
 
     public void registrarTarjeta(Jugador jugador, String tipo) {
-        tarjetas.put(jugador, tipo.toLowerCase());
-        if (tipo.equalsIgnoreCase("amarilla")) {
-            jugador.getEstadisticaJugador().agregarTarjetaAmarilla();
-        } else if (tipo.equalsIgnoreCase("roja")) {
-            jugador.getEstadisticaJugador().agregarTarjetaRoja();
+        if (jugador == null) {
+            throw new IllegalArgumentException("No se puede registrar tarjeta para un jugador nulo");
         }
+        if (tipo == null || (!tipo.equalsIgnoreCase("amarilla") && !tipo.equalsIgnoreCase("roja"))) {
+            throw new IllegalArgumentException("Tipo de tarjeta invalido " + tipo + " solo amarilla o roja");
+        }
+        tarjetas.put(jugador, tipo.toLowerCase());
     }
 
     public void registrarLesion(Jugador jugador) {
-        if (!lesionados.contains(jugador)) {
-            lesionados.add(jugador);
-            jugador.getEstadisticaJugador().agregarLesion();
+        if (jugador == null) {
+            throw new IllegalArgumentException("No se puede registrar lesion para un jugador nulo");
         }
-    }
-
-    public int getGolesLocal() {
-        return golesLocal;
-    }
-
-    public int getGolesVisitante() {
-        return golesVisitante;
+        if (lesionados.contains(jugador)) {
+            throw new IllegalArgumentException("El jugador " + jugador.getNombre() + " ya esta registrado como lesionado");
+        }
+        lesionados.add(jugador);
     }
 
     public Map<Jugador, Integer> getGolesPorJugador() {
-        return golesPorJugador;
+        return new HashMap<>(golesPorJugador);
     }
 
     public Map<Jugador, String> getTarjetas() {
-        return tarjetas;
+        return new HashMap<>(tarjetas);
     }
 
-    public List<Jugador> getLesionados() {
-        return lesionados;
+    public Set<Jugador> getLesionados() {
+        return new HashSet<>(lesionados);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("resultado: ").append(golesLocal).append(" - ").append(golesVisitante).append("\n");
-
-        sb.append("goles por jugador:\n");
-        for (Map.Entry<Jugador, Integer> entry : golesPorJugador.entrySet()) {
-            sb.append("  ").append(entry.getKey().getNombre()).append(": ").append(entry.getValue()).append("\n");
-        }
-
-        sb.append("tarjetas:\n");
-        for (Map.Entry<Jugador, String> entry : tarjetas.entrySet()) {
-            sb.append("  ").append(entry.getKey().getNombre()).append(": ").append(entry.getValue()).append("\n");
-        }
-
-        if (!lesionados.isEmpty()) {
-            sb.append("lesionados:\n");
-            for (Jugador j : lesionados) {
-                sb.append("  ").append(j.getNombre()).append("\n");
-            }
-        }
-
-        return sb.toString();
+        return "FichaDelPartido{" +
+                "golesPorJugador=" + golesPorJugador +
+                ", tarjetas=" + tarjetas +
+                ", lesionados=" + lesionados +
+                '}';
     }
 }

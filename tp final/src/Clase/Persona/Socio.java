@@ -1,30 +1,33 @@
 package Clase.Persona;
+
 import enums.Tiposocio;
 import exeptions.AccionImposible;
 import java.time.LocalDate;
 
 public class Socio extends Persona {
+
     private static int contador = 1;
     private int numeroSocio;
     private Tiposocio tiposocio;
     private LocalDate fechaAlta;
 
-    public Socio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tiposocio) {
+    public Socio(String dni, String nombre, String apellido,
+                 LocalDate fechaNacimiento, String nacionalidad,
+                 LocalDate fechaAlta, Tiposocio tiposocio) {
+
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
-        if (fechaAlta == null) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser nula");
-        }
 
-        if (fechaAlta.isBefore(fechaNacimiento)) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser anterior a la fecha de nacimiento");
-        }
+        if (fechaAlta == null)
+            throw new IllegalArgumentException("fecha alta invalida");
 
-        if (fechaAlta.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser posterior a hoy");
-        }
+        if (fechaAlta.isBefore(fechaNacimiento))
+            throw new IllegalArgumentException("fecha alta anterior a nacimiento");
+
+        if (fechaAlta.isAfter(LocalDate.now()))
+            throw new IllegalArgumentException("fecha alta futura");
 
         this.numeroSocio = contador++;
-        this.tiposocio = (tiposocio != null) ? tiposocio : Tiposocio.ACTIVO;
+        this.tiposocio = tiposocio == null ? Tiposocio.ACTIVO : tiposocio;
         this.fechaAlta = fechaAlta;
     }
 
@@ -37,9 +40,8 @@ public class Socio extends Persona {
     }
 
     public void setTipoSocio(Tiposocio tipoSocio) {
-        if (tipoSocio == null) {
-            throw new IllegalArgumentException("El tipo de socio no puede ser null");
-        }
+        if (tipoSocio == null)
+            throw new IllegalArgumentException("tipo socio invalido");
         this.tiposocio = tipoSocio;
     }
 
@@ -48,29 +50,27 @@ public class Socio extends Persona {
     }
 
     public void setFechaAlta(LocalDate fechaAlta) {
-        if (fechaAlta == null) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser nula");
-        }
-        if (fechaAlta.isBefore(getFechaNacimiento())) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser anterior a la fecha de nacimiento");
-        }
-        if (fechaAlta.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de alta no puede ser posterior a hoy");
-        }
+        if (fechaAlta == null)
+            throw new IllegalArgumentException("fecha alta invalida");
+
+        if (fechaAlta.isBefore(getFechaNacimiento()))
+            throw new IllegalArgumentException("fecha alta anterior a nacimiento");
+
+        if (fechaAlta.isAfter(LocalDate.now()))
+            throw new IllegalArgumentException("fecha alta futura");
+
         this.fechaAlta = fechaAlta;
     }
 
     public void cambiarAActivo() throws AccionImposible {
-        if (tiposocio == Tiposocio.ACTIVO) {
-            throw new AccionImposible("El socio ya esta activo");
-        }
+        if (tiposocio == Tiposocio.ACTIVO)
+            throw new AccionImposible("ya es activo");
         this.tiposocio = Tiposocio.ACTIVO;
     }
 
     public void cambiarAVitalicio() throws AccionImposible {
-        if (tiposocio == Tiposocio.VITALICIO) {
-            throw new AccionImposible("El socio ya es vitalicio");
-        }
+        if (tiposocio == Tiposocio.VITALICIO)
+            throw new AccionImposible("ya es vitalicio");
         this.tiposocio = Tiposocio.VITALICIO;
     }
 
@@ -79,20 +79,8 @@ public class Socio extends Persona {
     }
 
     public double obtenerMontoRecaudado() {
-        if (tiposocio == Tiposocio.INACTIVO) {
+        if (tiposocio == Tiposocio.INACTIVO)
             return 0;
-        }
         return tiposocio.getPrecio();
-    }
-
-    @Override
-    public String toString() {
-        return "Socio{" +
-                "numeroSocio=" + numeroSocio +
-                ", tiposocio=" + tiposocio +
-                ", fechaAlta=" + fechaAlta +
-                ", nombre='" + getNombre() + '\'' +
-                ", apellido='" + getApellido() + '\'' +
-                '}';
     }
 }

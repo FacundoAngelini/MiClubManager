@@ -23,7 +23,7 @@ public abstract class Persona {
 
     public void setDni(String dni) {
         if (dni == null || !dni.matches("\\d+")) {
-            throw new IllegalArgumentException("El DNI debe contener solo numeros.");
+            throw new IllegalArgumentException("El DNI debe contener solo numeros");
         }
         this.dni = dni;
     }

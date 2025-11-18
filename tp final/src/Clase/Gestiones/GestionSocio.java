@@ -11,113 +11,127 @@ import exeptions.IngresoInvalido;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GestionSocio implements MetodosComunes<Socio, String> {
-    private final HashMap<Integer, Socio> socios;
+
+    private final HashMap<Integer, Socio> socios = new HashMap<>();
     private final GestionPresupuesto gestionPresupuesto;
 
     public GestionSocio(GestionPresupuesto gestionPresupuesto) {
-        this.socios = new HashMap<>();
         this.gestionPresupuesto = gestionPresupuesto;
     }
 
-    public void agregarSocio(String dni, String nombre, String apellido, String fechaNacimiento, String nacionalidad,
-                             boolean cuotaAlDia, String fechaAlta, Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
-        if (dni == null || dni.isEmpty()) {
-            throw new IngresoInvalido("El DNI no fue cargado correctamente.");
-        }
+    public void agregarSocio(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
+                             String nacionalidad, boolean cuotaAlDia, LocalDate fechaAlta,
+                             Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
 
-        boolean existeSocio = socios.values().stream()
-                .anyMatch(s -> dni.equals(s.getDni()));
+        if (dni == null || dni.isEmpty())
+            throw new IngresoInvalido("dni invalido");
 
-        if (existeSocio) {
-            throw new ElementoDuplicadoEx("El socio con DNI " + dni + " ya existe.");
-        }
+        if (nombre == null || nombre.isEmpty())
+            throw new IngresoInvalido("nombre invalido");
 
-        Socio nuevoSocio = new Socio(dni, nombre, apellido, fechaNacimiento,
-                nacionalidad, cuotaAlDia, fechaAlta, tipoSocio);
+        if (apellido == null || apellido.isEmpty())
+            throw new IngresoInvalido("apellido invalido");
 
-        socios.put(nuevoSocio.getNumeroSocio(), nuevoSocio);
+        if (fechaNacimiento == null)
+            throw new IngresoInvalido("fecha nacimiento invalida");
+
+        if (nacionalidad == null || nacionalidad.isEmpty())
+            throw new IngresoInvalido("nacionalidad invalida");
+
+        if (fechaAlta == null)
+            throw new IngresoInvalido("fecha alta invalida");
+
+        if (tipoSocio == null)
+            throw new IngresoInvalido("tipo socio invalido");
+
+        boolean existe = socios.values().stream()
+                .anyMatch(s -> s.getDni().equals(dni));
+
+        if (existe)
+            throw new ElementoDuplicadoEx("dni repetido");
+
+        if (fechaAlta.isBefore(fechaNacimiento))
+            throw new IngresoInvalido("fecha alta anterior a nacimiento");
+
+        if (fechaAlta.isAfter(LocalDate.now()))
+            throw new IngresoInvalido("fecha alta futura");
+
+        Socio nuevo = new Socio(dni, nombre, apellido, fechaNacimiento, nacionalidad, fechaAlta, tipoSocio);
+        socios.put(nuevo.getNumeroSocio(), nuevo);
         guardarJSON();
     }
 
+    @Override
     public void eliminarElemento(String dni) throws AccionImposible {
-        Socio socioAEliminar = socios.values().stream()
+        Socio socio = socios.values().stream()
                 .filter(s -> s.getDni().equals(dni))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new AccionImposible("socio no encontrado"));
 
-        if (socioAEliminar == null) {
-            throw new AccionImposible("El socio con DNI " + dni + " no se encuentra registrado.");
-        }
-
-        socios.remove(socioAEliminar.getNumeroSocio());
+        socios.remove(socio.getNumeroSocio());
         guardarJSON();
     }
 
+    @Override
     public Socio devuelveElemento(String dni) throws AccionImposible {
         return socios.values().stream()
                 .filter(s -> s.getDni().equals(dni))
                 .findFirst()
-                .orElseThrow(() -> new AccionImposible("No existe un socio con DNI " + dni));
+                .orElseThrow(() -> new AccionImposible("socio no encontrado"));
     }
 
-    public void aplicarRecaudacion(String fecha) throws IngresoInvalido {
-        if (gestionPresupuesto == null) {
-            throw new IngresoInvalido("No se ha configurado el gestor de presupuesto.");
-        }
-
-        double totalRecaudado = obtenerRecaudacionTotal();
-        gestionPresupuesto.agregar_fondos(totalRecaudado, "Recaudación de socios", fecha);
-        gestionPresupuesto.guardarJSON();
-    }
-
+    @Override
     public boolean existe(String dni) throws ElementoInexistenteEx {
-        boolean existe = socios.values().stream().anyMatch(s -> s.getDni().equals(dni));
-        if (!existe) {
-            throw new ElementoInexistenteEx("No se encontro un socio con el DNI: " + dni);
-        }
+        boolean encontrado = socios.values().stream()
+                .anyMatch(s -> s.getDni().equals(dni));
+
+        if (!encontrado)
+            throw new ElementoInexistenteEx("no existe socio");
+
         return true;
     }
 
+    @Override
     public ArrayList<Socio> listar() {
         return new ArrayList<>(socios.values());
     }
 
     public void modificarElemento(Socio socioModificado) throws AccionImposible {
-        if (socioModificado == null) {
-            throw new AccionImposible("El socio a modificar no puede ser nulo.");
-        }
+        if (socioModificado == null)
+            throw new AccionImposible("socio nulo");
 
-        int numeroSocio = socioModificado.getNumeroSocio();
-        if (!socios.containsKey(numeroSocio)) {
-            throw new AccionImposible("No se encontro un socio con el numero " + numeroSocio);
-        }
+        int numero = socioModificado.getNumeroSocio();
 
-        socios.put(numeroSocio, socioModificado);
+        if (!socios.containsKey(numero))
+            throw new AccionImposible("socio no encontrado");
+
+        LocalDate alta = socioModificado.getFechaAlta();
+
+        if (alta.isBefore(socioModificado.getFechaNacimiento()))
+            throw new AccionImposible("fecha alta invalida");
+
+        if (alta.isAfter(LocalDate.now()))
+            throw new AccionImposible("fecha alta futura");
+
+        socios.put(numero, socioModificado);
         guardarJSON();
     }
 
-    public void guardarJSON() {
-        JSONArray array = new JSONArray();
+    public void aplicarRecaudacion(LocalDate fecha) throws IngresoInvalido {
+        if (gestionPresupuesto == null)
+            throw new IngresoInvalido("presupuesto no configurado");
 
-        for (Socio s : socios.values()) {
-            JSONObject obj = new JSONObject();
-            obj.put("dni", s.getDni());
-            obj.put("nombre", s.getNombre());
-            obj.put("apellido", s.getApellido());
-            obj.put("fechaNacimiento", s.getFechaNacimiento());
-            obj.put("nacionalidad", s.getNacionalidad());
-            obj.put("numeroSocio", s.getNumeroSocio());
-            obj.put("fechaAlta", s.getFechaAlta());
-            obj.put("cuotaAlDia", s.isCuotaAlDia());
-            obj.put("tipoSocio", s.getTipoSocio().toString());
-            array.put(obj);
-        }
+        if (fecha == null)
+            fecha = LocalDate.now();
 
-        JSONUtiles.uploadJSON(array, "socios");
+        double total = obtenerRecaudacionTotal();
+        gestionPresupuesto.agregar_fondos(total, "recaudacion socios", fecha);
+        gestionPresupuesto.guardarJSON();
     }
 
     public double obtenerRecaudacionTotal() {
@@ -130,23 +144,37 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         Socio socio = socios.values().stream()
                 .filter(s -> s.getDni().equals(dni))
                 .findFirst()
-                .orElseThrow(() -> new AccionImposible("No se encontro un socio con el DNI: " + dni));
+                .orElseThrow(() -> new AccionImposible("socio no encontrado"));
 
-        switch (socio.getTipoSocio()) {
-            case Tiposocio.JUVENIL -> {
-                socio.setTipoSocio(Tiposocio.ACTIVO);
-                System.out.println("El socio con DNI " + dni + " ahora es ACTIVO.");
-            }
-            case Tiposocio.ACTIVO -> {
-                socio.setTipoSocio(Tiposocio.VITALICIO);
-                System.out.println("El socio con DNI " + dni + " ahora es VITALICIO.");
-            }
-            case Tiposocio.VITALICIO ->
-                throw new AccionImposible("El socio ya es VITALICIO. No se puede cambiar el tipo.");
+        Tiposocio tipo = socio.getTiposocio();
 
-            default -> throw new AccionImposible("Tipo de socio desconocido.");
-        }
+        if (tipo == Tiposocio.JUVENIL)
+            socio.setTipoSocio(Tiposocio.ACTIVO);
+        else if (tipo == Tiposocio.ACTIVO)
+            socio.setTipoSocio(Tiposocio.VITALICIO);
+        else if (tipo == Tiposocio.VITALICIO)
+            throw new AccionImposible("ya es vitalicio");
 
         guardarJSON();
+    }
+
+    @Override
+    public void guardarJSON() {
+        JSONArray array = new JSONArray();
+
+        for (Socio s : socios.values()) {
+            JSONObject obj = new JSONObject();
+            obj.put("dni", s.getDni());
+            obj.put("nombre", s.getNombre());
+            obj.put("apellido", s.getApellido());
+            obj.put("fechaNacimiento", s.getFechaNacimiento().toString());
+            obj.put("nacionalidad", s.getNacionalidad());
+            obj.put("numeroSocio", s.getNumeroSocio());
+            obj.put("fechaAlta", s.getFechaAlta().toString());
+            obj.put("tipoSocio", s.getTiposocio().toString());
+            array.put(obj);
+        }
+
+        JSONUtiles.uploadJSON(array, "socios");
     }
 }

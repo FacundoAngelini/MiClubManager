@@ -1,4 +1,5 @@
 package Clase.Presupuesto;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -8,29 +9,36 @@ public class Contrato {
     private final double salario;
     private final LocalDate fechaInicio;
     private final LocalDate fechaFin;
+    private boolean contratoActivo;
 
     public Contrato(String dni, double salario, LocalDate fechaInicio, LocalDate fechaFin, LocalDate fechaNacimiento) {
 
-        if (!dni.matches("\\d+")) {
-            throw new IllegalArgumentException("El DNI debe contener solo numeros");
+        if (dni == null || !dni.matches("\\d+")) {
+            throw new IllegalArgumentException("dni invalido debe contener solo numeros");
         }
 
         if (salario <= 0) {
-            throw new IllegalArgumentException("El salario debe ser mayor a 0");
+            throw new IllegalArgumentException("salario debe ser mayor a 0");
         }
 
-        if (fechaInicio.isBefore(fechaNacimiento.plusYears(10))) {
-            throw new IllegalArgumentException("No se puede contratar antes de los 10 años de edad");
+        if (fechaInicio == null || fechaInicio.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("fecha de inicio invalida");
         }
 
-        if (fechaFin.isBefore(fechaInicio)) {
-            throw new IllegalArgumentException("La fecha de finalizacion del contrato debe ser posterior a la fecha de inicio");
+        if (fechaFin == null || fechaFin.isBefore(fechaInicio)) {
+            throw new IllegalArgumentException("fecha fin debe ser posterior a inicio");
+        }
+
+        // Verificar edad minima 18 años
+        if (fechaNacimiento != null && fechaInicio.isBefore(fechaNacimiento.plusYears(18))) {
+            throw new IllegalArgumentException("no se puede contratar antes de los 18 anos");
         }
 
         this.dni = dni;
         this.salario = salario;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.contratoActivo = true;
     }
 
     public String getDni() {
@@ -50,11 +58,12 @@ public class Contrato {
     }
 
     public boolean isContratoActivo() {
-        LocalDate hoy = LocalDate.now();
-        return !hoy.isAfter(fechaFin);
+        return contratoActivo && !LocalDate.now().isAfter(fechaFin);
     }
 
-
+    public void setContratoActivo(boolean contratoActivo) {
+        this.contratoActivo = contratoActivo;
+    }
 
     @Override
     public String toString() {
@@ -68,4 +77,3 @@ public class Contrato {
                 '}';
     }
 }
-

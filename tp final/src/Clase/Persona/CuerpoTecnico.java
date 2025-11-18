@@ -3,20 +3,24 @@ package Clase.Persona;
 import Clase.Presupuesto.Contrato;
 import enums.Puesto;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class CuerpoTecnico extends Persona {
+
     private Contrato contrato;
     private Puesto puesto;
     private int aniosExp;
 
     public CuerpoTecnico(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp) {
+
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
 
         if (contrato == null) {
-            throw new IllegalArgumentException("El contrato no puede ser nulo");
+            throw new IllegalArgumentException("contrato no puede ser nulo");
         }
+
         if (aniosExp < 0) {
-            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos");
+            throw new IllegalArgumentException("anios de experiencia no pueden ser negativos");
         }
 
         this.contrato = contrato;
@@ -30,7 +34,7 @@ public class CuerpoTecnico extends Persona {
 
     public void setContrato(Contrato contrato) {
         if (contrato == null) {
-            throw new IllegalArgumentException("El contrato no puede ser nulo");
+            throw new IllegalArgumentException("contrato no puede ser nulo");
         }
         this.contrato = contrato;
     }
@@ -49,7 +53,7 @@ public class CuerpoTecnico extends Persona {
 
     public void setAniosExp(int aniosExp) {
         if (aniosExp < 0) {
-            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos");
+            throw new IllegalArgumentException("anios de experiencia no pueden ser negativos");
         }
         this.aniosExp = aniosExp;
     }
