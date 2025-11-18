@@ -20,9 +20,18 @@ public class Club {
         this.gestionJugadores = new GestionJugadores(gestionPresupuesto);
         this.gestionCuerpoTecnico = new GestionCuerpoTecnico(gestionPresupuesto);
         this.gestionSocios = new GestionSocio(gestionPresupuesto);
-        this.gestorPartidos = new GestorPartido (gestionJugadores,gestionPresupuesto);
-        this.inventario = new Inventario<>();
         this.gestionEstadios = new GestionEstadio(gestionPresupuesto);
+        this.gestorPartidos = new GestorPartido (0);
+        this.inventario = new Inventario<>();
+
+        this.gestionPresupuesto.guardarJSON();
+        this.gestionEstadios.guardarJSON();
+        this.gestionSocios.guardarJSON();
+        this.inventario.guardarJSON();
+        this.gestionJugadores.guardarJSON();
+        this.gestionCuerpoTecnico.guardarJSON();
+
+
     }
 
     public GestionJugadores getGestionJugadores() {

@@ -11,9 +11,7 @@ public class Socio extends Persona {
     private Tiposocio tiposocio;
     private LocalDate fechaAlta;
 
-    public Socio(String dni, String nombre, String apellido,
-                 LocalDate fechaNacimiento, String nacionalidad,
-                 LocalDate fechaAlta, Tiposocio tiposocio) {
+    public Socio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tiposocio) {
 
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
 

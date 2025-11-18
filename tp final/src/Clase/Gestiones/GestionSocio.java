@@ -24,9 +24,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         this.gestionPresupuesto = gestionPresupuesto;
     }
 
-    public void agregarSocio(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
-                             String nacionalidad, boolean cuotaAlDia, LocalDate fechaAlta,
-                             Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
+    public void agregarSocio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
 
         if (dni == null || dni.isEmpty())
             throw new IngresoInvalido("dni invalido");
@@ -101,26 +99,26 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         return new ArrayList<>(socios.values());
     }
 
-    public void modificarElemento(Socio socioModificado) throws AccionImposible {
-        if (socioModificado == null)
-            throw new AccionImposible("socio nulo");
+    public void modificarSocio(String dni, String nuevoNombre, String nuevoApellido, LocalDate nuevaFechaAlta) throws AccionImposible {
+        Socio socio = socios.values().stream().filter(s -> s.getDni().equals(dni)).findFirst().orElseThrow(() -> new AccionImposible("socio no encontrado"));
 
-        int numero = socioModificado.getNumeroSocio();
+        if (nuevoNombre != null && !nuevoNombre.isBlank())
+            socio.setNombre(nuevoNombre);
 
-        if (!socios.containsKey(numero))
-            throw new AccionImposible("socio no encontrado");
+        if (nuevoApellido != null && !nuevoApellido.isBlank())
+            socio.setApellido(nuevoApellido);
 
-        LocalDate alta = socioModificado.getFechaAlta();
+        if (nuevaFechaAlta != null) {
+            if (nuevaFechaAlta.isBefore(socio.getFechaNacimiento()))
+                throw new AccionImposible("fecha alta invalida");
+            if (nuevaFechaAlta.isAfter(LocalDate.now()))
+                throw new AccionImposible("fecha alta futura");
+            socio.setFechaAlta(nuevaFechaAlta);
+        }
 
-        if (alta.isBefore(socioModificado.getFechaNacimiento()))
-            throw new AccionImposible("fecha alta invalida");
-
-        if (alta.isAfter(LocalDate.now()))
-            throw new AccionImposible("fecha alta futura");
-
-        socios.put(numero, socioModificado);
         guardarJSON();
     }
+
 
     public void aplicarRecaudacion(LocalDate fecha) throws IngresoInvalido {
         if (gestionPresupuesto == null)

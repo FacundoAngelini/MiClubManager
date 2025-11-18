@@ -11,7 +11,7 @@ public class MenuPresupuesto {
     private MenuClub menuClub;
     private final Scanner scanner;
 
-    public MenuPresupuesto() {
+    public MenuPresupuesto(MenuClub menuClub) {
         this.menuClub = menuClub;
         this.scanner = new Scanner(System.in);
     }
