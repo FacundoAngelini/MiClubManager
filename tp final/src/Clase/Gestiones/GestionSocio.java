@@ -130,7 +130,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
             fecha = LocalDate.now();
 
         double total = obtenerRecaudacionTotal();
-        gestionPresupuesto.agregar_fondos(total, "recaudacion socios", fecha);
+        gestionPresupuesto.agregarFondos(total, "recaudacion socios", fecha);
         gestionPresupuesto.guardarJSON();
     }
 

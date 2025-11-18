@@ -25,7 +25,7 @@ public class GestionPresupuesto {
         if(dinero <= 0) throw new IngresoInvalido("El ingreso de dinero debe ser mayor que 0");
         if(descripcion == null || descripcion.isBlank()) throw new IngresoInvalido("La descripcion es obligatoria");
 
-        presupuesto.aniadir_monto(dinero);
+        presupuesto.aniadirMonto(dinero);
         Transaccion t = new Transaccion(descripcion, dinero, "INGRESO", fecha);
         listaTransacciones.add(t);
         guardarJSON();
@@ -35,7 +35,7 @@ public class GestionPresupuesto {
         if(dinero <= 0) throw new IngresoInvalido("El monto debe ser mayor que 0");
         if(descripcion == null || descripcion.isBlank()) throw new IngresoInvalido("La descripcion es obligatoria");
 
-        presupuesto.quitar_fondos(dinero);
+        presupuesto.quitarFondos(dinero);
         Transaccion t = new Transaccion(descripcion, dinero, "RETIRO", fecha);
         listaTransacciones.add(t);
         guardarJSON();
