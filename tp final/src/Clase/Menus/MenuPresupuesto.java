@@ -49,44 +49,92 @@ public class MenuPresupuesto {
     }
 
     private void agregarFondos() {
-        try {
-            System.out.print("Monto a agregar: ");
-            double monto = Double.parseDouble(scanner.nextLine());
+        Double monto = null;
+        String descripcion = null;
+        LocalDate fecha = null;
 
+        while (monto == null) {
+            try {
+                System.out.print("Monto a agregar: ");
+                monto = Double.parseDouble(scanner.nextLine());
+                if (monto <= 0) {
+                    System.out.println("Monto debe ser mayor que 0");
+                    monto = null;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Monto invalido, ingrese un numero");
+            }
+        }
+
+        while (descripcion == null) {
             System.out.print("Descripcion del ingreso: ");
-            String descripcion = scanner.nextLine();
+            String input = scanner.nextLine();
+            if (input == null || input.isBlank()) {
+                System.out.println("Descripcion obligatoria");
+            } else {
+                descripcion = input;
+            }
+        }
 
-            System.out.print("Fecha (yyyy-mm-dd): ");
-            LocalDate fecha = LocalDate.parse(scanner.nextLine());
+        while (fecha == null) {
+            try {
+                System.out.print("Fecha (yyyy-mm-dd): ");
+                fecha = LocalDate.parse(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Fecha invalida, intente de nuevo");
+            }
+        }
 
+        try {
             menuClub.club.getGestionPresupuesto().agregarFondos(monto, descripcion, fecha);
             System.out.println("Fondos agregados correctamente");
-
         } catch (IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error: datos invalidos");
         }
     }
 
     private void quitarFondos() {
-        try {
-            System.out.print("Monto a retirar: ");
-            double monto = Double.parseDouble(scanner.nextLine());
+        Double monto = null;
+        String descripcion = null;
+        LocalDate fecha = null;
 
+        while (monto == null) {
+            try {
+                System.out.print("Monto a retirar: ");
+                monto = Double.parseDouble(scanner.nextLine());
+                if (monto <= 0) {
+                    System.out.println("Monto debe ser mayor que 0");
+                    monto = null;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Monto invalido, ingrese un numero");
+            }
+        }
+
+        while (descripcion == null) {
             System.out.print("Descripcion del retiro: ");
-            String descripcion = scanner.nextLine();
+            String input = scanner.nextLine();
+            if (input == null || input.isBlank()) {
+                System.out.println("Descripcion obligatoria");
+            } else {
+                descripcion = input;
+            }
+        }
 
-            System.out.print("Fecha (yyyy-mm-dd): ");
-            LocalDate fecha = LocalDate.parse(scanner.nextLine());
+        while (fecha == null) {
+            try {
+                System.out.print("Fecha (yyyy-mm-dd): ");
+                fecha = LocalDate.parse(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Fecha invalida, intente de nuevo");
+            }
+        }
 
+        try {
             menuClub.club.getGestionPresupuesto().quitarFondos(monto, descripcion, fecha);
             System.out.println("Fondos retirados correctamente");
-
         } catch (IngresoInvalido | FondoInsuficienteEx e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error: datos invalidos");
         }
     }
 

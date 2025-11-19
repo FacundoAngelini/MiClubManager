@@ -1,7 +1,9 @@
 package Clase.Menus;
 import enums.Tiposocio;
+import exeptions.ElementoDuplicadoEx;
 import exeptions.IngresoInvalido;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import exeptions.AccionImposible;
 
@@ -66,24 +68,58 @@ public class MenuGeneralClub {
 
 
     private void agregarEstadio() {
-        try {
+        String nombre;
+        int capacidad;
+        String ubicacion;
+        double costo;
+
+        while (true) {
             System.out.print("Nombre del estadio: ");
-            String nombre = scanner.nextLine();
+            nombre = scanner.nextLine().trim();
+            if (!nombre.isEmpty() && nombre.matches("[a-zA-Z ]+")) {
+                break;
+            }
+            System.out.println("Nombre invalido. Solo letras y espacios, intente de nuevo");
+        }
 
-            System.out.print("Capacidad: ");
-            int capacidad = Integer.parseInt(scanner.nextLine());
+        while (true) {
+            try {
+                System.out.print("Capacidad: ");
+                capacidad = Integer.parseInt(scanner.nextLine());
+                if (capacidad > 0) break;
+                System.out.println("La capacidad debe ser mayor a 0");
+            } catch (NumberFormatException e) {
+                System.out.println("Numero invalido. Ingrese un valor entero");
+            }
+        }
 
+        while (true) {
             System.out.print("Ubicacion: ");
-            String ubicacion = scanner.nextLine();
+            ubicacion = scanner.nextLine().trim();
+            if (!ubicacion.isEmpty()) break;
+            System.out.println("Ubicacion invalida. No puede estar vacia");
+        }
 
-            System.out.print("Costo de mantenimiento: ");
-            double costo = Double.parseDouble(scanner.nextLine());
+        while (true) {
+            try {
+                System.out.print("Costo de mantenimiento: ");
+                costo = Double.parseDouble(scanner.nextLine());
+                if (costo >= 0) break;
+                System.out.println("El costo no puede ser negativo");
+            } catch (NumberFormatException e) {
+                System.out.println("Numero invalido. Ingrese un valor numerico");
+            }
+        }
 
+        try {
             menuClub.club.getGestionEstadios().agregarEstadio(nombre, capacidad, ubicacion, costo);
-        } catch (NumberFormatException e) {
-            System.out.println("Error: capacidad o costo invalido");
+            System.out.println("Estadio agregado correctamente");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al agregar estadio: " + e.getMessage());
         }
     }
+
+
 
     private void modificarCapacidad() {
         try {
@@ -115,44 +151,173 @@ public class MenuGeneralClub {
     }
 
     private void agregarSocio() {
-        try {
-            System.out.print("dni: ");
-            String dni = scanner.nextLine();
+        String dni = null;
+        String nombre = null;
+        String apellido = null;
+        LocalDate fechaNacimiento = null;
+        String nacionalidad = null;
+        LocalDate fechaAlta = null;
+        Tiposocio tipoSocio = null;
 
-            System.out.print("nombre: ");
-            String nombre = scanner.nextLine();
+        while (dni == null) {
+            System.out.print("DNI: ");
+            String input = scanner.nextLine();
+            if (!input.isBlank()) dni = input;
+            else System.out.println("Error: DNI no puede estar vacio");
+        }
 
-            System.out.print("apellido: ");
-            String apellido = scanner.nextLine();
+        while (nombre == null) {
+            System.out.print("Nombre: ");
+            String input = scanner.nextLine();
+            if (!input.isBlank()) nombre = input;
+            else System.out.println("Error: Nombre no puede estar vacio");
+        }
 
-            System.out.print("fecha nacimiento (yyyy-mm-dd): ");
-            LocalDate fn = LocalDate.parse(scanner.nextLine());
+        while (apellido == null) {
+            System.out.print("Apellido: ");
+            String input = scanner.nextLine();
+            if (!input.isBlank()) apellido = input;
+            else System.out.println("Error: Apellido no puede estar vacio");
+        }
 
-            System.out.print("nacionalidad: ");
-            String nacionalidad = scanner.nextLine();
+        while (fechaNacimiento == null) {
+            System.out.print("Fecha nacimiento (yyyy-mm-dd): ");
+            String input = scanner.nextLine();
+            try {
+                fechaNacimiento = LocalDate.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: formato de fecha invalido");
+            }
+        }
 
-            System.out.print("fecha alta (yyyy-mm-dd): ");
-            LocalDate alta = LocalDate.parse(scanner.nextLine());
+        while (nacionalidad == null) {
+            System.out.print("Nacionalidad: ");
+            String input = scanner.nextLine();
+            if (!input.isBlank()) nacionalidad = input;
+            else System.out.println("Error: Nacionalidad no puede estar vacia");
+        }
 
-            System.out.println("tipo socio: 1- JUVENIL | 2- ACTIVO | 3- VITALICIO");
-            int t = Integer.parseInt(scanner.nextLine());
-            Tiposocio tipo = switch (t) {
-                case 1 -> Tiposocio.JUVENIL;
-                case 2 -> Tiposocio.ACTIVO;
-                case 3 -> Tiposocio.VITALICIO;
-                default -> throw new IngresoInvalido("tipo invalido");
-            };
+        while (fechaAlta == null) {
+            System.out.print("Fecha alta (yyyy-mm-dd): ");
+            String input = scanner.nextLine();
+            try {
+                fechaAlta = LocalDate.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: formato de fecha invalido");
+            }
+        }
 
-            menuClub.club.getGestionSocios().agregarSocio(
-                    dni, nombre, apellido, fn, nacionalidad, alta, tipo
-            );
+        while (tipoSocio == null) {
+            System.out.println("Tipo socio: 1- JUVENIL | 2- ACTIVO | 3- VITALICIO");
+            String input = scanner.nextLine();
+            try {
+                int t = Integer.parseInt(input);
+                tipoSocio = switch (t) {
+                    case 1 -> Tiposocio.JUVENIL;
+                    case 2 -> Tiposocio.ACTIVO;
+                    case 3 -> Tiposocio.VITALICIO;
+                    default -> throw new IngresoInvalido("Tipo invalido");
+                };
+            } catch (NumberFormatException | IngresoInvalido e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
 
-            System.out.println("socio agregado correctamente");
+        boolean agregado = false;
+        while (!agregado) {
+            try {
+                menuClub.club.getGestionSocios().agregarSocio(
+                        dni, nombre, apellido, fechaNacimiento, nacionalidad, fechaAlta, tipoSocio
+                );
+                System.out.println("Socio agregado correctamente");
+                agregado = true;
+            } catch (ElementoDuplicadoEx e) {
+                System.out.println("Error: " + e.getMessage());
+                dni = null;
+                while (dni == null) {
+                    System.out.print("Ingrese un nuevo DNI: ");
+                    String input = scanner.nextLine();
+                    if (!input.isBlank()) dni = input;
+                    else System.out.println("Error: DNI no puede estar vacio");
+                }
+            } catch (IngresoInvalido e) {
+                System.out.println("Error: " + e.getMessage());
+                String msg = e.getMessage().toLowerCase();
+                if (msg.contains("nombre")) nombre = null;
+                if (msg.contains("apellido")) apellido = null;
+                if (msg.contains("nacionalidad")) nacionalidad = null;
+                if (msg.contains("fecha de nacimiento")) fechaNacimiento = null;
+                if (msg.contains("fecha de alta")) fechaAlta = null;
+                if (msg.contains("tipo")) tipoSocio = null;
 
-        } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+                if (nombre == null) {
+                    while (nombre == null) {
+                        System.out.print("Nombre: ");
+                        String input = scanner.nextLine();
+                        if (!input.isBlank()) nombre = input;
+                        else System.out.println("Error: Nombre no puede estar vacio");
+                    }
+                }
+                if (apellido == null) {
+                    while (apellido == null) {
+                        System.out.print("Apellido: ");
+                        String input = scanner.nextLine();
+                        if (!input.isBlank()) apellido = input;
+                        else System.out.println("Error: Apellido no puede estar vacio");
+                    }
+                }
+                if (nacionalidad == null) {
+                    while (nacionalidad == null) {
+                        System.out.print("Nacionalidad: ");
+                        String input = scanner.nextLine();
+                        if (!input.isBlank()) nacionalidad = input;
+                        else System.out.println("Error: Nacionalidad no puede estar vacia");
+                    }
+                }
+                if (fechaNacimiento == null) {
+                    while (fechaNacimiento == null) {
+                        System.out.print("Fecha nacimiento (yyyy-mm-dd): ");
+                        String input = scanner.nextLine();
+                        try {
+                            fechaNacimiento = LocalDate.parse(input);
+                        } catch (DateTimeParseException ex) {
+                            System.out.println("Error: formato de fecha invalido");
+                        }
+                    }
+                }
+                if (fechaAlta == null) {
+                    while (fechaAlta == null) {
+                        System.out.print("Fecha alta (yyyy-mm-dd): ");
+                        String input = scanner.nextLine();
+                        try {
+                            fechaAlta = LocalDate.parse(input);
+                        } catch (DateTimeParseException ex) {
+                            System.out.println("Error: formato de fecha invalido");
+                        }
+                    }
+                }
+                if (tipoSocio == null) {
+                    while (tipoSocio == null) {
+                        System.out.println("Tipo socio: 1- JUVENIL | 2- ACTIVO | 3- VITALICIO");
+                        String input = scanner.nextLine();
+                        try {
+                            int t = Integer.parseInt(input);
+                            tipoSocio = switch (t) {
+                                case 1 -> Tiposocio.JUVENIL;
+                                case 2 -> Tiposocio.ACTIVO;
+                                case 3 -> Tiposocio.VITALICIO;
+                                default -> throw new IngresoInvalido("Tipo invalido");
+                            };
+                        } catch (NumberFormatException | IngresoInvalido ex) {
+                            System.out.println("Error: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
         }
     }
+
+
 
     private void eliminarSocio() {
         try {
@@ -219,36 +384,81 @@ public class MenuGeneralClub {
             System.out.println("error: " + e.getMessage());
         }
     }
-
     private void agregarProducto() {
-        try {
+        String tipo = null;
+        String nombre = null;
+        String marca = null;
+        int cantidad = 0;
+        String extra = null;
+
+        while (tipo == null) {
             System.out.print("Tipo (pelota/camiseta): ");
-            String tipo = scanner.nextLine();
-
-            System.out.print("Nombre: ");
-            String nombre = scanner.nextLine();
-
-            System.out.print("Marca: ");
-            String marca = scanner.nextLine();
-
-            System.out.print("Cantidad: ");
-            int cantidad = Integer.parseInt(scanner.nextLine());
-
-            String extra = "";
-            if (tipo.equalsIgnoreCase("pelota")) {
-                System.out.print("Modelo de la pelota: ");
-                extra = scanner.nextLine();
-            } else if (tipo.equalsIgnoreCase("camiseta")) {
-                System.out.print("Sponsor de la camiseta: ");
-                extra = scanner.nextLine();
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals("pelota") || input.equals("camiseta")) {
+                tipo = input;
+            } else {
+                System.out.println("Error: tipo invalido, debe ser pelota o camiseta");
             }
+        }
 
+        while (nombre == null) {
+            System.out.print("Nombre: ");
+            String input = scanner.nextLine().trim();
+            if (!input.isBlank()) {
+                nombre = input;
+            } else {
+                System.out.println("Error: nombre no puede estar vacio");
+            }
+        }
+
+        while (marca == null) {
+            System.out.print("Marca: ");
+            String input = scanner.nextLine().trim();
+            if (!input.isBlank()) {
+                marca = input;
+            } else {
+                System.out.println("Error: marca no puede estar vacia");
+            }
+        }
+        boolean cantidadValida = false;
+        while (!cantidadValida) {
+            System.out.print("Cantidad: ");
+            String input = scanner.nextLine().trim();
+            try {
+                int val = Integer.parseInt(input);
+                if (val > 0) {
+                    cantidad = val;
+                    cantidadValida = true;
+                } else {
+                    System.out.println("Error: la cantidad debe ser mayor a 0");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: cantidad invalida");
+            }
+        }
+
+        while (extra == null) {
+            if (tipo.equals("pelota")) {
+                System.out.print("Modelo de la pelota: ");
+            } else {
+                System.out.print("Sponsor de la camiseta: ");
+            }
+            String input = scanner.nextLine().trim();
+            if (!input.isBlank()) {
+                extra = input;
+            } else {
+                System.out.println("Error: este dato no puede estar vacio");
+            }
+        }
+
+        try {
             menuClub.club.getInventario().agregarProducto(tipo, nombre, marca, cantidad, extra);
-
+            System.out.println("Producto agregado correctamente");
         } catch (IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private void eliminarProducto() {
         try {

@@ -30,9 +30,6 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
                                Posicion posicion)
             throws ElementoDuplicadoEx, IngresoInvalido, FondoInsuficienteEx {
 
-        // =====================
-        // 1. VALIDACIONES PREVIAS
-        // =====================
         if (dni == null || dni.isBlank()) {
             throw new IngresoInvalido("DNI no puede ser nulo o vacío");
         }
@@ -75,9 +72,6 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new FondoInsuficienteEx("Fondos insuficientes para pagar el contrato inicial");
         }
 
-        // =====================
-        // 2. CREAR CONTRATO Y JUGADOR
-        // =====================
         gestorpresupuesto.quitarFondos(
                 salario,
                 "Contrato jugador " + nombre + " " + apellido,

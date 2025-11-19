@@ -22,6 +22,9 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         this.gestionPresupuesto = gestionPresupuesto;
     }
 
+    /**
+     * Agrega un miembro del cuerpo técnico después de validar todos los datos.
+     */
     public void agregarElemento(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
                                 String nacionalidad, double salario, LocalDate fechaInicio, LocalDate fechaFin,
                                 Puesto puesto, int aniosExp)
@@ -31,49 +34,48 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         // 1. VALIDACIONES
         // =====================
         if (dni == null || !dni.matches("\\d+"))
-            throw new IllegalArgumentException("DNI inválido, solo números");
+            throw new IngresoInvalido("DNI inválido, solo números");
 
         if (cuerpoTecnico.containsKey(dni))
             throw new ElementoDuplicadoEx("Ya existe un miembro con ese DNI");
 
         if (nombre == null || !nombre.matches("[a-zA-Z]+"))
-            throw new IllegalArgumentException("Nombre inválido, solo letras");
+            throw new IngresoInvalido("Nombre inválido, solo letras");
 
         if (apellido == null || !apellido.matches("[a-zA-Z]+"))
-            throw new IllegalArgumentException("Apellido inválido, solo letras");
+            throw new IngresoInvalido("Apellido inválido, solo letras");
 
         if (nacionalidad == null || !nacionalidad.matches("[a-zA-Z ]+"))
-            throw new IllegalArgumentException("Nacionalidad inválida, solo letras y espacios");
+            throw new IngresoInvalido("Nacionalidad inválida, solo letras y espacios");
 
         if (fechaNacimiento == null || fechaNacimiento.isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("Fecha de nacimiento inválida");
+            throw new IngresoInvalido("Fecha de nacimiento inválida");
 
         if (fechaNacimiento.plusYears(18).isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("Debe ser mayor a 18 años");
+            throw new IngresoInvalido("Debe ser mayor a 18 años");
 
         if (salario <= 0)
-            throw new IllegalArgumentException("Salario debe ser mayor que cero");
+            throw new IngresoInvalido("Salario debe ser mayor que cero");
 
         if (fechaInicio == null || fechaFin == null)
-            throw new IllegalArgumentException("Fechas de contrato inválidas");
+            throw new IngresoInvalido("Fechas de contrato inválidas");
 
         if (fechaInicio.isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("Fecha inicio no puede ser futura");
+            throw new IngresoInvalido("Fecha inicio no puede ser futura");
 
         if (fechaFin.isBefore(fechaInicio))
-            throw new IllegalArgumentException("Fecha fin no puede ser anterior a inicio");
+            throw new IngresoInvalido("Fecha fin no puede ser anterior a inicio");
 
         if (puesto == null)
-            throw new IllegalArgumentException("Puesto inválido");
+            throw new IngresoInvalido("Puesto inválido");
 
         if (aniosExp < 0)
-            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos");
+            throw new IngresoInvalido("Los años de experiencia no pueden ser negativos");
 
         // =====================
         // 2. CREAR OBJETOS
         // =====================
         Contrato contrato = new Contrato(dni, salario, fechaInicio, fechaFin, fechaNacimiento);
-
         CuerpoTecnico nuevo = new CuerpoTecnico(
                 dni, nombre, apellido, fechaNacimiento, nacionalidad,
                 contrato, puesto, aniosExp
@@ -124,34 +126,23 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         return new ArrayList<>(cuerpoTecnico.values());
     }
 
-    public void cambiarEstadoContrato(String dni, boolean nuevoEstado) throws ElementoInexistenteEx {
-        CuerpoTecnico ct = cuerpoTecnico.get(dni);
-        if (ct == null)
-            throw new ElementoInexistenteEx("No existe el cuerpo técnico");
-
-        ct.getContrato().setContratoActivo(nuevoEstado);
-        guardarJSON();
-        System.out.println("Estado contrato actualizado");
-    }
-
     public void modificarCuerpoTecnico(String dni, String nombre, String apellido,
                                        LocalDate fechaNacimiento, String nacionalidad,
                                        Puesto puesto, int aniosExp)
-            throws ElementoInexistenteEx {
+            throws ElementoInexistenteEx, IngresoInvalido {
 
         CuerpoTecnico ct = cuerpoTecnico.get(dni);
         if (ct == null)
             throw new ElementoInexistenteEx("No existe el miembro del cuerpo técnico con DNI: " + dni);
 
-        // VALIDACIONES
         if (nombre != null && !nombre.matches("[a-zA-Z]+"))
-            throw new IllegalArgumentException("Nombre inválido");
+            throw new IngresoInvalido("Nombre inválido");
         if (apellido != null && !apellido.matches("[a-zA-Z]+"))
-            throw new IllegalArgumentException("Apellido inválido");
+            throw new IngresoInvalido("Apellido inválido");
         if (nacionalidad != null && !nacionalidad.matches("[a-zA-Z ]+"))
-            throw new IllegalArgumentException("Nacionalidad inválida");
+            throw new IngresoInvalido("Nacionalidad inválida");
         if (aniosExp < 0)
-            throw new IllegalArgumentException("Años de experiencia inválidos");
+            throw new IngresoInvalido("Años de experiencia inválidos");
 
         // MODIFICAR ESTADO
         if (nombre != null) ct.setNombre(nombre);
