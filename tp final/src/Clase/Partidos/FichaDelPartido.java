@@ -25,16 +25,6 @@ public class FichaDelPartido {
         golesPorJugador.put(jugador, golesPorJugador.getOrDefault(jugador, 0) + 1);
     }
 
-    public void registrarTarjeta(Jugador jugador, String tipo) {
-        if (jugador == null) {
-            throw new IllegalArgumentException("No se puede registrar tarjeta para un jugador nulo");
-        }
-        if (tipo == null || (!tipo.equalsIgnoreCase("amarilla") && !tipo.equalsIgnoreCase("roja"))) {
-            throw new IllegalArgumentException("Tipo de tarjeta invalido " + tipo + " solo amarilla o roja");
-        }
-        tarjetas.put(jugador, tipo.toLowerCase());
-    }
-
     public void registrarLesion(Jugador jugador) {
         if (jugador == null) {
             throw new IllegalArgumentException("No se puede registrar lesion para un jugador nulo");
@@ -57,12 +47,4 @@ public class FichaDelPartido {
         return new HashSet<>(lesionados);
     }
 
-    @Override
-    public String toString() {
-        return "FichaDelPartido{" +
-                "golesPorJugador=" + golesPorJugador +
-                ", tarjetas=" + tarjetas +
-                ", lesionados=" + lesionados +
-                '}';
-    }
 }

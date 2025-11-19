@@ -1,5 +1,5 @@
 package enums;
 
 public enum Posicion {
-    ARQUERO,DEFENSOR,MEDIOCAMPISTA,DELANTERO
+    ARQUERO,DEFENSOR,MEDIO,DELANTERO
 }

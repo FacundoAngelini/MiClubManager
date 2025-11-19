@@ -57,7 +57,7 @@ public class Partido {
     public boolean empato() { return golesAFavor == golesEnContra; }
     public boolean perdio() { return golesAFavor < golesEnContra; }
 
-    double calcularRecaudacion() {
+    public double calcularRecaudacion() {
         return esLocal ? entradasVendidas * precioEntrada : 0;
     }
 

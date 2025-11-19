@@ -21,7 +21,7 @@ public class Club {
         this.gestionCuerpoTecnico = new GestionCuerpoTecnico(gestionPresupuesto);
         this.gestionSocios = new GestionSocio(gestionPresupuesto);
         this.gestionEstadios = new GestionEstadio(gestionPresupuesto);
-        this.gestorPartidos = new GestorPartido (0);
+        this.gestorPartidos = new GestorPartido (100000);
         this.inventario = new Inventario<>();
 
         this.gestionPresupuesto.guardarJSON();

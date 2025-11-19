@@ -1,5 +1,5 @@
 package enums;
 
 public enum Puesto {
-   DT, ENTRENADOR,AYUDANTES,MEDICO
+   DT,AYUDANTE,PREPARADOR,FISIOTERAPEUTA
 }

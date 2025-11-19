@@ -86,8 +86,6 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         jugadores.put(dni, jugador);
         estadisticas.put(dni, new EstadisticaJugador());
         guardarJSON();
-
-        System.out.println("Jugador agregado correctamente");
     }
 
     @Override
@@ -118,6 +116,11 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         return true;
     }
 
+    public boolean existeJugador(String dni) {
+        return jugadores.containsKey(dni);
+    }
+
+
     @Override
     public ArrayList<Jugador> listar() {
         return new ArrayList<>(jugadores.values());
@@ -134,6 +137,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         }
         return listaInfo;
     }
+
 
     @Override
     public void guardarJSON() {

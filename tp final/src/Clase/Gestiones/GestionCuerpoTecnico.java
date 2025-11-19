@@ -8,7 +8,7 @@ import exeptions.*;
 import interfaz.MetodosComunes;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import java.time.Period;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +29,6 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
                                 String nacionalidad, double salario, LocalDate fechaInicio, LocalDate fechaFin,
                                 Puesto puesto, int aniosExp)
             throws ElementoDuplicadoEx, FondoInsuficienteEx, IngresoInvalido {
-
-        // =====================
-        // 1. VALIDACIONES
-        // =====================
         if (dni == null || !dni.matches("\\d+"))
             throw new IngresoInvalido("DNI inválido, solo números");
 
@@ -72,26 +68,15 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         if (aniosExp < 0)
             throw new IngresoInvalido("Los años de experiencia no pueden ser negativos");
 
-        // =====================
-        // 2. CREAR OBJETOS
-        // =====================
         Contrato contrato = new Contrato(dni, salario, fechaInicio, fechaFin, fechaNacimiento);
         CuerpoTecnico nuevo = new CuerpoTecnico(
                 dni, nombre, apellido, fechaNacimiento, nacionalidad,
                 contrato, puesto, aniosExp
         );
 
-        // =====================
-        // 3. MODIFICAR ESTADO
-        // =====================
-        gestionPresupuesto.quitarFondos(salario,
-                "Contrato cuerpo técnico " + nombre + " " + apellido,
-                fechaInicio);
 
         cuerpoTecnico.put(dni, nuevo);
         guardarJSON();
-
-        System.out.println("Cuerpo técnico agregado correctamente");
     }
 
     @Override
@@ -133,18 +118,36 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
 
         CuerpoTecnico ct = cuerpoTecnico.get(dni);
         if (ct == null)
-            throw new ElementoInexistenteEx("No existe el miembro del cuerpo técnico con DNI: " + dni);
+            throw new ElementoInexistenteEx("No existe el miembro del cuerpo tecnico con DNI " + dni);
 
         if (nombre != null && !nombre.matches("[a-zA-Z]+"))
-            throw new IngresoInvalido("Nombre inválido");
-        if (apellido != null && !apellido.matches("[a-zA-Z]+"))
-            throw new IngresoInvalido("Apellido inválido");
-        if (nacionalidad != null && !nacionalidad.matches("[a-zA-Z ]+"))
-            throw new IngresoInvalido("Nacionalidad inválida");
-        if (aniosExp < 0)
-            throw new IngresoInvalido("Años de experiencia inválidos");
+            throw new IngresoInvalido("Nombre invalido");
 
-        // MODIFICAR ESTADO
+        if (apellido != null && !apellido.matches("[a-zA-Z]+"))
+            throw new IngresoInvalido("Apellido invalido");
+
+        if (nacionalidad != null && !nacionalidad.matches("[a-zA-Z ]+"))
+            throw new IngresoInvalido("Nacionalidad invalida");
+
+        if (fechaNacimiento != null) {
+            if (fechaNacimiento.isAfter(LocalDate.now()))
+                throw new IngresoInvalido("Fecha de nacimiento invalida");
+
+            if (fechaNacimiento.plusYears(18).isAfter(LocalDate.now()))
+                throw new IngresoInvalido("Debe tener al menos 18 anos");
+        }
+
+        if (aniosExp < -1)
+            throw new IngresoInvalido("Anios de experiencia invalidos");
+
+        if (aniosExp >= 0) {
+            LocalDate fechaBase = (fechaNacimiento != null) ? fechaNacimiento : ct.getFechaNacimiento();
+            int edadActual = Period.between(fechaBase, LocalDate.now()).getYears();
+            int maxExp = edadActual - 18;
+            if (aniosExp > maxExp)
+                throw new IngresoInvalido("La experiencia supera lo permitido segun la edad");
+        }
+
         if (nombre != null) ct.setNombre(nombre);
         if (apellido != null) ct.setApellido(apellido);
         if (fechaNacimiento != null) ct.setFechaNacimiento(fechaNacimiento);
@@ -153,8 +156,8 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         if (aniosExp >= 0) ct.setAniosExp(aniosExp);
 
         guardarJSON();
-        System.out.println("Cuerpo técnico modificado correctamente");
     }
+
 
     public double calcularGastoSalarios() {
         return cuerpoTecnico.values()
@@ -205,4 +208,9 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
 
         JSONUtiles.uploadJSON(array, "cuerpoTecnico");
     }
+    public HashMap<String, CuerpoTecnico> getCuerpoTecnico() {
+        return cuerpoTecnico;
+    }
+
+
 }
