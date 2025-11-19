@@ -155,8 +155,7 @@ public class MenuPresupuesto {
             System.out.print("Ingrese la fecha del pago (yyyy-mm-dd): ");
             LocalDate fecha = LocalDate.parse(scanner.nextLine());
 
-            menuClub.club.getGestionJugadores().pagarSalarios(fecha); // Llama al método de la clase de gestión de jugadores
-
+            menuClub.club.getGestionJugadores().pagarSalarios(fecha);
         } catch (FondoInsuficienteEx | IngresoInvalido e) {
             System.out.println("Error al pagar salarios: " + e.getMessage());
         } catch (Exception e) {

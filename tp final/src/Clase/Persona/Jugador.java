@@ -12,10 +12,7 @@ public class Jugador extends Persona {
     private double valorJugador;
     private int numeroCamiseta;
 
-    public Jugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
-                   String nacionalidad, int numeroCamiseta, Contrato contrato,
-                   Posicion posicion, double valorJugador) {
-
+    public Jugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, int numeroCamiseta, Contrato contrato, Posicion posicion, double valorJugador) {
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
 
         if (contrato == null) throw new IllegalArgumentException("El jugador debe tener un contrato asignado");

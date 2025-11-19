@@ -12,7 +12,6 @@ public class CuerpoTecnico extends Persona {
     private int aniosExp;
 
     public CuerpoTecnico(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp) {
-
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
 
         if (contrato == null) {

@@ -63,7 +63,7 @@ public class GestionPresupuesto {
             presupuestoJSON.put("transacciones", transaccionesArray);
             JSONUtiles.uploadJSON(presupuestoJSON, "presupuesto");
         } catch(Exception e) {
-            System.out.println("Error al guardar presupuesto en JSON " + e.getMessage());
+            System.out.println("Error al guardar presupuesto en JSON ");
         }
     }
 

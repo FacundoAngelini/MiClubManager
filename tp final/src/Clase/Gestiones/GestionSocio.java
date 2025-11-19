@@ -25,39 +25,36 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
     }
 
     public void agregarSocio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
+        if (dni == null || dni.isBlank())
+            throw new IngresoInvalido("DNI inválido");
 
-        if (dni == null || dni.isEmpty())
-            throw new IngresoInvalido("dni invalido");
+        boolean existe = socios.values().stream().anyMatch(s -> s.getDni().equals(dni));
+        if (existe)
+            throw new ElementoDuplicadoEx("DNI repetido");
 
-        if (nombre == null || nombre.isEmpty())
-            throw new IngresoInvalido("nombre invalido");
+        if (nombre == null || nombre.isBlank())
+            throw new IngresoInvalido("Nombre inválido");
 
-        if (apellido == null || apellido.isEmpty())
-            throw new IngresoInvalido("apellido invalido");
+        if (apellido == null || apellido.isBlank())
+            throw new IngresoInvalido("Apellido inválido");
 
         if (fechaNacimiento == null)
-            throw new IngresoInvalido("fecha nacimiento invalida");
+            throw new IngresoInvalido("Fecha de nacimiento inválida");
 
-        if (nacionalidad == null || nacionalidad.isEmpty())
-            throw new IngresoInvalido("nacionalidad invalida");
+        if (nacionalidad == null || nacionalidad.isBlank())
+            throw new IngresoInvalido("Nacionalidad inválida");
 
         if (fechaAlta == null)
-            throw new IngresoInvalido("fecha alta invalida");
+            throw new IngresoInvalido("Fecha de alta inválida");
 
         if (tipoSocio == null)
-            throw new IngresoInvalido("tipo socio invalido");
-
-        boolean existe = socios.values().stream()
-                .anyMatch(s -> s.getDni().equals(dni));
-
-        if (existe)
-            throw new ElementoDuplicadoEx("dni repetido");
+            throw new IngresoInvalido("Tipo de socio inválido");
 
         if (fechaAlta.isBefore(fechaNacimiento))
-            throw new IngresoInvalido("fecha alta anterior a nacimiento");
+            throw new IngresoInvalido("Fecha de alta anterior a fecha de nacimiento");
 
         if (fechaAlta.isAfter(LocalDate.now()))
-            throw new IngresoInvalido("fecha alta futura");
+            throw new IngresoInvalido("Fecha de alta futura");
 
         Socio nuevo = new Socio(dni, nombre, apellido, fechaNacimiento, nacionalidad, fechaAlta, tipoSocio);
         socios.put(nuevo.getNumeroSocio(), nuevo);
@@ -66,11 +63,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
 
     @Override
     public void eliminarElemento(String dni) throws AccionImposible {
-        Socio socio = socios.values().stream()
-                .filter(s -> s.getDni().equals(dni))
-                .findFirst()
-                .orElseThrow(() -> new AccionImposible("socio no encontrado"));
-
+        Socio socio = socios.values().stream().filter(s -> s.getDni().equals(dni)).findFirst().orElseThrow(() -> new AccionImposible("Socio no encontrado"));
         socios.remove(socio.getNumeroSocio());
         guardarJSON();
     }
@@ -80,17 +73,14 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         return socios.values().stream()
                 .filter(s -> s.getDni().equals(dni))
                 .findFirst()
-                .orElseThrow(() -> new AccionImposible("socio no encontrado"));
+                .orElseThrow(() -> new AccionImposible("Socio no encontrado"));
     }
 
     @Override
     public boolean existe(String dni) throws ElementoInexistenteEx {
-        boolean encontrado = socios.values().stream()
-                .anyMatch(s -> s.getDni().equals(dni));
-
+        boolean encontrado = socios.values().stream().anyMatch(s -> s.getDni().equals(dni));
         if (!encontrado)
-            throw new ElementoInexistenteEx("no existe socio");
-
+            throw new ElementoInexistenteEx("No existe socio");
         return true;
     }
 
@@ -99,8 +89,13 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         return new ArrayList<>(socios.values());
     }
 
-    public void modificarSocio(String dni, String nuevoNombre, String nuevoApellido, LocalDate nuevaFechaAlta) throws AccionImposible {
-        Socio socio = socios.values().stream().filter(s -> s.getDni().equals(dni)).findFirst().orElseThrow(() -> new AccionImposible("socio no encontrado"));
+    public void modificarSocio(String dni, String nuevoNombre, String nuevoApellido, LocalDate nuevaFechaAlta)
+            throws AccionImposible {
+
+        Socio socio = socios.values().stream()
+                .filter(s -> s.getDni().equals(dni))
+                .findFirst()
+                .orElseThrow(() -> new AccionImposible("Socio no encontrado"));
 
         if (nuevoNombre != null && !nuevoNombre.isBlank())
             socio.setNombre(nuevoNombre);
@@ -110,25 +105,24 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
 
         if (nuevaFechaAlta != null) {
             if (nuevaFechaAlta.isBefore(socio.getFechaNacimiento()))
-                throw new AccionImposible("fecha alta invalida");
+                throw new AccionImposible("Fecha de alta inválida");
             if (nuevaFechaAlta.isAfter(LocalDate.now()))
-                throw new AccionImposible("fecha alta futura");
+                throw new AccionImposible("Fecha de alta futura");
             socio.setFechaAlta(nuevaFechaAlta);
         }
 
         guardarJSON();
     }
 
-
     public void aplicarRecaudacion(LocalDate fecha) throws IngresoInvalido {
         if (gestionPresupuesto == null)
-            throw new IngresoInvalido("presupuesto no configurado");
+            throw new IngresoInvalido("Presupuesto no configurado");
 
         if (fecha == null)
             fecha = LocalDate.now();
 
         double total = obtenerRecaudacionTotal();
-        gestionPresupuesto.agregarFondos(total, "recaudacion socios", fecha);
+        gestionPresupuesto.agregarFondos(total, "Recaudación socios", fecha);
         gestionPresupuesto.guardarJSON();
     }
 
@@ -142,16 +136,15 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         Socio socio = socios.values().stream()
                 .filter(s -> s.getDni().equals(dni))
                 .findFirst()
-                .orElseThrow(() -> new AccionImposible("socio no encontrado"));
+                .orElseThrow(() -> new AccionImposible("Socio no encontrado"));
 
         Tiposocio tipo = socio.getTiposocio();
-
         if (tipo == Tiposocio.JUVENIL)
             socio.setTipoSocio(Tiposocio.ACTIVO);
         else if (tipo == Tiposocio.ACTIVO)
             socio.setTipoSocio(Tiposocio.VITALICIO);
         else if (tipo == Tiposocio.VITALICIO)
-            throw new AccionImposible("ya es vitalicio");
+            throw new AccionImposible("Ya es vitalicio");
 
         guardarJSON();
     }
@@ -159,7 +152,6 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
     @Override
     public void guardarJSON() {
         JSONArray array = new JSONArray();
-
         for (Socio s : socios.values()) {
             JSONObject obj = new JSONObject();
             obj.put("dni", s.getDni());
@@ -172,7 +164,6 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
             obj.put("tipoSocio", s.getTiposocio().toString());
             array.put(obj);
         }
-
         JSONUtiles.uploadJSON(array, "socios");
     }
 }

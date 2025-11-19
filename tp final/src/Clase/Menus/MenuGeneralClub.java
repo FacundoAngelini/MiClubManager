@@ -90,7 +90,7 @@ public class MenuGeneralClub {
             System.out.print("Nueva capacidad: ");
             int nuevaCapacidad = Integer.parseInt(scanner.nextLine());
             menuClub.club.getGestionEstadios().modificarCapacidad(nuevaCapacidad);
-        } catch (NumberFormatException e) {
+        }catch (AccionImposible e) {
             System.out.println("Error: capacidad invalida");
         }
     }
@@ -98,7 +98,11 @@ public class MenuGeneralClub {
     private void cambiarNombre() {
         System.out.print("Nuevo nombre del estadio: ");
         String nuevoNombre = scanner.nextLine();
-        menuClub.club.getGestionEstadios().cambiarNombre(nuevoNombre);
+        try {
+            menuClub.club.getGestionEstadios().cambiarNombre(nuevoNombre);
+        } catch (AccionImposible e) {
+            System.out.println("Error: capacidad invalida");
+        }
     }
 
     private void validarEstadioExistente() {
@@ -126,9 +130,6 @@ public class MenuGeneralClub {
 
             System.out.print("nacionalidad: ");
             String nacionalidad = scanner.nextLine();
-
-            System.out.print("cuota al dia (true/false): ");
-            boolean cuota = Boolean.parseBoolean(scanner.nextLine());
 
             System.out.print("fecha alta (yyyy-mm-dd): ");
             LocalDate alta = LocalDate.parse(scanner.nextLine());

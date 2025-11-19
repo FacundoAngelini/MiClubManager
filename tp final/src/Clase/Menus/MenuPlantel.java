@@ -290,7 +290,7 @@ public class MenuPlantel {
 
             System.out.println("Estadísticas actualizadas correctamente.");
 
-        } catch (ElementoInexistenteEx e) {
+        } catch (ElementoInexistenteEx | IngresoInvalido e) {
             System.out.println("Error: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Dato inválido: debe ingresar un número entero.");

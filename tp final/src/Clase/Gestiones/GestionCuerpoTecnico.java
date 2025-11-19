@@ -23,55 +23,55 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
     }
 
     public void agregarElemento(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
-                                String nacionalidad, double salario, LocalDate fechaInicio,
-                                LocalDate fechaFin, Puesto puesto, int aniosExp)
+                                String nacionalidad, double salario, LocalDate fechaInicio, LocalDate fechaFin,
+                                Puesto puesto, int aniosExp)
             throws ElementoDuplicadoEx, FondoInsuficienteEx, IngresoInvalido {
 
+        // =====================
+        // 1. VALIDACIONES
+        // =====================
         if (dni == null || !dni.matches("\\d+"))
-            throw new IllegalArgumentException("dni invalido, solo numeros");
+            throw new IllegalArgumentException("DNI inválido, solo números");
 
         if (cuerpoTecnico.containsKey(dni))
-            throw new ElementoDuplicadoEx("ya existe un miembro con ese dni");
+            throw new ElementoDuplicadoEx("Ya existe un miembro con ese DNI");
 
         if (nombre == null || !nombre.matches("[a-zA-Z]+"))
-            throw new IllegalArgumentException("nombre invalido, solo letras");
+            throw new IllegalArgumentException("Nombre inválido, solo letras");
 
         if (apellido == null || !apellido.matches("[a-zA-Z]+"))
-            throw new IllegalArgumentException("apellido invalido, solo letras");
+            throw new IllegalArgumentException("Apellido inválido, solo letras");
 
         if (nacionalidad == null || !nacionalidad.matches("[a-zA-Z ]+"))
-            throw new IllegalArgumentException("nacionalidad invalida, solo letras y espacios");
+            throw new IllegalArgumentException("Nacionalidad inválida, solo letras y espacios");
 
         if (fechaNacimiento == null || fechaNacimiento.isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("fecha de nacimiento invalida");
+            throw new IllegalArgumentException("Fecha de nacimiento inválida");
 
         if (fechaNacimiento.plusYears(18).isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("debe ser mayor a 18 anos");
+            throw new IllegalArgumentException("Debe ser mayor a 18 años");
 
         if (salario <= 0)
-            throw new IllegalArgumentException("salario debe ser mayor que cero");
+            throw new IllegalArgumentException("Salario debe ser mayor que cero");
 
         if (fechaInicio == null || fechaFin == null)
-            throw new IllegalArgumentException("fechas de contrato invalidas");
+            throw new IllegalArgumentException("Fechas de contrato inválidas");
 
         if (fechaInicio.isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("fecha inicio no puede ser futura");
+            throw new IllegalArgumentException("Fecha inicio no puede ser futura");
 
         if (fechaFin.isBefore(fechaInicio))
-            throw new IllegalArgumentException("fecha fin no puede ser anterior a inicio");
+            throw new IllegalArgumentException("Fecha fin no puede ser anterior a inicio");
 
         if (puesto == null)
-            throw new IllegalArgumentException("puesto invalido");
+            throw new IllegalArgumentException("Puesto inválido");
 
         if (aniosExp < 0)
-            throw new IllegalArgumentException("los anos de experiencia no pueden ser negativos");
+            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos");
 
-        gestionPresupuesto.quitarFondos(
-                salario,
-                "Contrato cuerpo tecnico " + nombre + " " + apellido,
-                fechaInicio
-        );
-
+        // =====================
+        // 2. CREAR OBJETOS
+        // =====================
         Contrato contrato = new Contrato(dni, salario, fechaInicio, fechaFin, fechaNacimiento);
 
         CuerpoTecnico nuevo = new CuerpoTecnico(
@@ -79,27 +79,34 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
                 contrato, puesto, aniosExp
         );
 
+        // =====================
+        // 3. MODIFICAR ESTADO
+        // =====================
+        gestionPresupuesto.quitarFondos(salario,
+                "Contrato cuerpo técnico " + nombre + " " + apellido,
+                fechaInicio);
+
         cuerpoTecnico.put(dni, nuevo);
         guardarJSON();
+
         System.out.println("Cuerpo técnico agregado correctamente");
     }
-
 
     @Override
     public void eliminarElemento(String dni) throws AccionImposible {
         if (!cuerpoTecnico.containsKey(dni))
-            throw new AccionImposible("no existe el cuerpo tecnico");
+            throw new AccionImposible("No existe el cuerpo técnico");
 
         cuerpoTecnico.remove(dni);
         guardarJSON();
-        System.out.println("cuerpo tecnico eliminado correctamente");
+        System.out.println("Cuerpo técnico eliminado correctamente");
     }
 
     @Override
     public CuerpoTecnico devuelveElemento(String dni) throws AccionImposible {
         CuerpoTecnico ct = cuerpoTecnico.get(dni);
         if (ct == null)
-            throw new AccionImposible("cuerpo tecnico no encontrado");
+            throw new AccionImposible("Cuerpo técnico no encontrado");
 
         return ct;
     }
@@ -107,7 +114,7 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
     @Override
     public boolean existe(String dni) throws ElementoInexistenteEx {
         if (!cuerpoTecnico.containsKey(dni))
-            throw new ElementoInexistenteEx("no existe el cuerpo tecnico");
+            throw new ElementoInexistenteEx("No existe el cuerpo técnico");
 
         return true;
     }
@@ -120,11 +127,11 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
     public void cambiarEstadoContrato(String dni, boolean nuevoEstado) throws ElementoInexistenteEx {
         CuerpoTecnico ct = cuerpoTecnico.get(dni);
         if (ct == null)
-            throw new ElementoInexistenteEx("no existe el cuerpo tecnico");
+            throw new ElementoInexistenteEx("No existe el cuerpo técnico");
 
         ct.getContrato().setContratoActivo(nuevoEstado);
         guardarJSON();
-        System.out.println("estado contrato actualizado");
+        System.out.println("Estado contrato actualizado");
     }
 
     public void modificarCuerpoTecnico(String dni, String nombre, String apellido,
@@ -136,6 +143,7 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         if (ct == null)
             throw new ElementoInexistenteEx("No existe el miembro del cuerpo técnico con DNI: " + dni);
 
+        // VALIDACIONES
         if (nombre != null && !nombre.matches("[a-zA-Z]+"))
             throw new IllegalArgumentException("Nombre inválido");
         if (apellido != null && !apellido.matches("[a-zA-Z]+"))
@@ -145,6 +153,7 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         if (aniosExp < 0)
             throw new IllegalArgumentException("Años de experiencia inválidos");
 
+        // MODIFICAR ESTADO
         if (nombre != null) ct.setNombre(nombre);
         if (apellido != null) ct.setApellido(apellido);
         if (fechaNacimiento != null) ct.setFechaNacimiento(fechaNacimiento);
@@ -156,8 +165,6 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
         System.out.println("Cuerpo técnico modificado correctamente");
     }
 
-
-
     public double calcularGastoSalarios() {
         return cuerpoTecnico.values()
                 .stream()
@@ -168,10 +175,10 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
     public void aplicarGastoSalarios(LocalDate fecha) {
         try {
             double gasto = calcularGastoSalarios();
-            gestionPresupuesto.quitarFondos(gasto, "salarios cuerpo tecnico", fecha);
-            System.out.println("salarios pagados correctamente");
+            gestionPresupuesto.quitarFondos(gasto, "Salarios cuerpo técnico", fecha);
+            System.out.println("Salarios pagados correctamente");
         } catch (Exception e) {
-            System.out.println("error al pagar salarios " + e.getMessage());
+            System.out.println("Error al pagar salarios: " + e.getMessage());
         }
     }
 

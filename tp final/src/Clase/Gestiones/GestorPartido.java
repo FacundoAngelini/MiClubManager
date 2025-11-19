@@ -22,37 +22,27 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
         this.capacidadEstadio = capacidadEstadio;
     }
 
-    public void agregarPartido(LocalDate fecha, boolean esLocal, String rival,
-                               int golesAFavor, int golesEnContra,
-                               int entradasVendidas, double precioEntrada,
-                               List<Jugador> goleadores,
-                               List<Jugador> asistencias,
-                               List<String[]> tarjetas,
-                               List<Jugador> lesionados) throws AccionImposible {
-
+    public void agregarPartido(LocalDate fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada, List<Jugador> goleadores, List<Jugador> asistencias, List<String[]> tarjetas, List<Jugador> lesionados) throws AccionImposible {
         if (fecha == null)
-            throw new AccionImposible("fecha invalida");
-
+            throw new AccionImposible("Fecha inválida");
         if (fecha.isAfter(LocalDate.now()))
-            throw new AccionImposible("fecha futura no permitida");
-
+            throw new AccionImposible("Fecha futura no permitida");
         if (rival == null || rival.isBlank())
-            throw new AccionImposible("rival invalido");
-
+            throw new AccionImposible("Rival inválido");
         if (golesAFavor < 0 || golesEnContra < 0)
-            throw new AccionImposible("goles negativos no permitidos");
+            throw new AccionImposible("Goles negativos no permitidos");
 
         if (esLocal) {
             if (entradasVendidas < 0)
-                throw new AccionImposible("entradas vendidas invalidas");
+                throw new AccionImposible("Entradas vendidas inválidas");
             if (entradasVendidas > capacidadEstadio)
-                throw new AccionImposible("entradas superan capacidad");
+                throw new AccionImposible("Entradas superan la capacidad del estadio");
             if (precioEntrada < 0)
-                throw new AccionImposible("precio entrada invalido");
+                throw new AccionImposible("Precio de entrada inválido");
         }
 
         if (existeInterno(fecha))
-            throw new AccionImposible("ya existe un partido en esa fecha");
+            throw new AccionImposible("Ya existe un partido en esa fecha");
 
         validarListaJugadores(goleadores, "goleadores");
         validarListaJugadores(asistencias, "asistencias");
@@ -61,13 +51,13 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
         if (tarjetas != null) {
             for (String[] t : tarjetas) {
                 if (t == null || t.length != 2)
-                    throw new AccionImposible("formato tarjeta invalido");
-                if (t[0] == null)
-                    throw new AccionImposible("dni jugador tarjeta invalido");
-                if (t[1] == null)
-                    throw new AccionImposible("tipo tarjeta invalido");
+                    throw new AccionImposible("Formato de tarjeta inválido");
+                if (t[0] == null || t[0].isBlank())
+                    throw new AccionImposible("DNI del jugador en tarjeta inválido");
+                if (t[1] == null || t[1].isBlank())
+                    throw new AccionImposible("Tipo de tarjeta inválido");
                 if (!t[1].equalsIgnoreCase("amarilla") && !t[1].equalsIgnoreCase("roja"))
-                    throw new AccionImposible("tipo tarjeta desconocido");
+                    throw new AccionImposible("Tipo de tarjeta desconocido");
             }
         }
 
@@ -123,12 +113,11 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
     @Override
     public void eliminarElemento(LocalDate fecha) throws AccionImposible {
         if (fecha == null)
-            throw new AccionImposible("fecha invalida");
+            throw new AccionImposible("Fecha inválida");
 
         boolean eliminado = partidos.removeIf(p -> p.getFecha().equals(fecha));
-
         if (!eliminado)
-            throw new AccionImposible("partido no encontrado");
+            throw new AccionImposible("Partido no encontrado");
 
         guardarJSON();
     }
@@ -136,35 +125,32 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
     @Override
     public Partido devuelveElemento(LocalDate fecha) throws AccionImposible {
         if (fecha == null)
-            throw new AccionImposible("fecha invalida");
+            throw new AccionImposible("Fecha inválida");
 
         for (Partido p : partidos) {
             if (p.getFecha().equals(fecha))
                 return p;
         }
 
-        throw new AccionImposible("partido no encontrado");
+        throw new AccionImposible("Partido no encontrado");
     }
 
     @Override
     public boolean existe(LocalDate fecha) throws ElementoInexistenteEx {
         if (!existeInterno(fecha))
-            throw new ElementoInexistenteEx("el partido no existe");
+            throw new ElementoInexistenteEx("El partido no existe");
         return true;
     }
 
     private boolean existeInterno(LocalDate fecha) {
-        for (Partido p : partidos) {
-            if (p.getFecha().equals(fecha))
-                return true;
-        }
-        return false;
+        return partidos.stream().anyMatch(p -> p.getFecha().equals(fecha));
     }
 
     @Override
     public ArrayList<Partido> listar() {
         return new ArrayList<>(partidos);
     }
+
     public ArrayList<String> listarPartidosInfo() {
         ArrayList<String> lista = new ArrayList<>();
         for (Partido p : partidos) {
@@ -176,11 +162,9 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
         return lista;
     }
 
-
     @Override
     public void guardarJSON() {
         JSONArray arr = new JSONArray();
-
         for (Partido p : partidos) {
             JSONObject obj = new JSONObject();
             obj.put("fecha", p.getFecha().toString());
@@ -192,20 +176,19 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
             obj.put("precioEntrada", p.getPrecioEntrada());
             arr.put(obj);
         }
-
-        System.out.println("json partidos guardado");
+        System.out.println("JSON partidos guardado");
     }
 
     private void validarListaJugadores(List<Jugador> lista, String campo) throws AccionImposible {
         if (lista == null) return;
         for (Jugador j : lista) {
             if (j == null)
-                throw new AccionImposible("lista " + campo + " contiene jugador nulo");
+                throw new AccionImposible("Lista " + campo + " contiene jugador nulo");
         }
     }
 
     private Jugador buscarJugadorPorDNI(String dni) throws AccionImposible {
-        throw new AccionImposible("buscar jugador por dni no implementado");
+        throw new AccionImposible("Método buscarJugadorPorDNI no implementado");
     }
 
     private List<Jugador> getPorteros() {
