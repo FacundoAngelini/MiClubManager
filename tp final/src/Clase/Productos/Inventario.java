@@ -5,6 +5,7 @@ import interfaz.MetodosComunes;
 import exeptions.AccionImposible;
 import exeptions.IngresoInvalido;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
 
     public Inventario() {
         items = new HashMap<>();
+        cargarJSON();
     }
 
     private String generarClave(String nombre, String tipo, String marca) {
@@ -66,6 +68,46 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
     public boolean existeProducto(String clave) {
         return items.containsKey(clave);
     }
+
+    public void cargarJSON() {
+        try {
+            JSONArray array = JSONUtiles.downloadJSONArray("inventario");
+            if (array == null) return;
+
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+                String tipo = obj.getString("tipo");
+                String nombre = obj.getString("nombre");
+                String marca = obj.getString("marca");
+                int cantidad = obj.getInt("cantidad");
+
+                Producto producto;
+
+                if (tipo.equalsIgnoreCase("pelota")) {
+                    String modelo = obj.getString("modelo");
+                    producto = new Pelota(nombre, marca, cantidad, modelo);
+                } else if (tipo.equalsIgnoreCase("camiseta")) {
+                    String sponsor = obj.getString("sponsor");
+                    producto = new Camiseta(nombre, marca, cantidad, sponsor);
+                } else {
+                    continue;
+                }
+                String clave = generarClave(nombre, tipo, marca);
+
+                if (items.containsKey(clave)) {
+                    T existente = items.get(clave);
+                    existente.setCantidad(existente.getCantidad() + cantidad);
+                } else {
+                    items.put(clave, (T) producto);
+                }
+            }
+            System.out.println("Inventario cargado correctamente");
+        } catch (Exception e) {
+            System.out.println("Error al cargar inventario: " + e.getMessage());
+        }
+    }
+
+
 
     @Override
     public void eliminarElemento(String clave) throws AccionImposible {
@@ -121,7 +163,7 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
             throw new AccionImposible("Producto no encontrado con los datos indicados.");
         }
 
-        return items.get(clave).muestraDatos(); // Devuelve info lista para mostrar
+        return items.get(clave).muestraDatos();
     }
     public boolean marcaExisteParaTipo(String tipo, String marca) {
         for (T item : items.values()) {

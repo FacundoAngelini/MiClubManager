@@ -131,20 +131,22 @@ public class MenuPresupuesto {
 
         while (descripcion == null) {
             System.out.print("Descripcion del retiro: ");
-            String input = scanner.nextLine();
-            if (input == null || input.isBlank()) {
+            String input = scanner.nextLine().trim();
+            if (input.isBlank()) {
                 System.out.println("Descripcion obligatoria");
             } else {
                 descripcion = input;
             }
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         while (fecha == null) {
             try {
-                System.out.print("Fecha (yyyy-mm-dd): ");
-                fecha = LocalDate.parse(scanner.nextLine());
-            } catch (Exception e) {
-                System.out.println("Fecha invalida, intente de nuevo");
+                System.out.print("Fecha (dd/MM/yyyy): ");
+                String input = scanner.nextLine().trim();
+                fecha = LocalDate.parse(input, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Fecha invalida, use formato dd/MM/yyyy");
             }
         }
 
@@ -155,6 +157,7 @@ public class MenuPresupuesto {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private void verSaldo() {
         double saldo = menuClub.club.getGestionPresupuesto().verSaldoActual();
@@ -184,16 +187,16 @@ public class MenuPresupuesto {
     private void aplicarGastoSalariosCT() {
 
         LocalDate fecha = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         while (fecha == null) {
-            System.out.print("Ingrese la fecha del pago (dd-MM-yyyy): ");
+            System.out.print("Ingrese la fecha del pago (dd/MM/yyyy): ");
             try {
                 String input = scanner.nextLine().trim();
                 fecha = LocalDate.parse(input, formatter);
 
             } catch (Exception e) {
-                System.out.println("Fecha invalida. Use formato dd-MM-yyyy");
+                System.out.println("Fecha invalida. Use formato dd/MM/yyyy");
             }
         }
 
@@ -233,10 +236,21 @@ public class MenuPresupuesto {
 
     public void pagarSalariosJugadores() {
         try {
-            System.out.print("Ingrese la fecha del pago (yyyy-mm-dd): ");
-            LocalDate fecha = LocalDate.parse(scanner.nextLine());
+            System.out.print("Ingrese la fecha del pago (dd/MM/yyyy): ");
+            String input = scanner.nextLine().trim();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            LocalDate fecha;
+            try {
+                fecha = LocalDate.parse(input, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: formato de fecha inválido. Use dd/MM/yyyy");
+                return;
+            }
 
             menuClub.club.getGestionJugadores().pagarSalarios(fecha);
+            System.out.println("Pago de salarios realizado correctamente.");
+
         } catch (FondoInsuficienteEx | IngresoInvalido e) {
             System.out.println("Error al pagar salarios: " + e.getMessage());
         } catch (Exception e) {
@@ -244,15 +258,17 @@ public class MenuPresupuesto {
         }
     }
 
+
     public void aplicarRecaudacionSocios() {
         try {
-            System.out.print("Ingrese la fecha de la recaudacion (yyyy-mm-dd) o deje vacio para hoy: ");
+            System.out.print("Ingrese la fecha de la recaudacion (dd/MM/yyyy) o deje vacio para hoy: ");
             String input = scanner.nextLine().trim();
             LocalDate fecha;
             if (input.isEmpty()) {
                 fecha = LocalDate.now();
             } else {
-                fecha = LocalDate.parse(input);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                fecha = LocalDate.parse(input, formatter);
             }
 
             menuClub.club.getGestionSocios().aplicarRecaudacion(fecha);
@@ -264,6 +280,7 @@ public class MenuPresupuesto {
             System.out.println("Error inesperado");
         }
     }
+
 
     public void mostrarRecaudacionTotalSocios() {
         try {
@@ -455,7 +472,7 @@ public class MenuPresupuesto {
         }
 
         while (posicion == null) {
-            System.out.print("Posicion (PORTERO, DEFENSOR, MEDIOCAMPISTA, DELANTERO): ");
+            System.out.print("Posicion (ARQUERO, DEFENSOR, MEDIOCAMPISTA, DELANTERO): ");
             try {
                 posicion = Posicion.valueOf(scanner.nextLine().trim().toUpperCase());
             } catch (Exception e) {

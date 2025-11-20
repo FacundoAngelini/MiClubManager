@@ -19,6 +19,7 @@ public class GestionPresupuesto {
     public GestionPresupuesto() {
         this.presupuesto = new Presupuesto(3000000);
         this.listaTransacciones = new ArrayList<>();
+        cargarJSON();
     }
 
     public void agregarFondos(double dinero, String descripcion, LocalDate fecha) throws IngresoInvalido {
@@ -79,6 +80,27 @@ public class GestionPresupuesto {
         }
         return lista;
     }
+
+    public void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("presupuesto"); // lee presupuesto.json
+        if (contenido.isBlank()) return;
+        JSONObject presupuestoJSON = new JSONObject(contenido);
+        double saldoActual = presupuestoJSON.getDouble("saldoActual");
+        presupuesto.setPresupuesto(saldoActual);
+        listaTransacciones.clear();
+        JSONArray transaccionesArray = presupuestoJSON.getJSONArray("transacciones");
+        for (int i = 0; i < transaccionesArray.length(); i++) {
+            JSONObject tJSON = transaccionesArray.getJSONObject(i);
+            String descripcion = tJSON.getString("descripcion");
+            double monto = tJSON.getDouble("monto");
+            String tipo = tJSON.getString("tipo");
+            LocalDate fecha = LocalDate.parse(tJSON.getString("fecha"));
+
+            Transaccion t = new Transaccion(descripcion, monto, tipo, fecha);
+            listaTransacciones.add(t);
+        }
+    }
+
 
 
     public Presupuesto getPresupuesto() {

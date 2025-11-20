@@ -22,6 +22,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
 
     public GestionSocio(GestionPresupuesto gestionPresupuesto) {
         this.gestionPresupuesto = gestionPresupuesto;
+        cargarJSON();
     }
 
     public void agregarSocio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
@@ -71,10 +72,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
 
     @Override
     public Socio devuelveElemento(String dni) throws AccionImposible {
-        return socios.values().stream()
-                .filter(s -> s.getDni().equals(dni))
-                .findFirst()
-                .orElseThrow(() -> new AccionImposible("Socio no encontrado"));
+        return socios.values().stream().filter(s -> s.getDni().equals(dni)).findFirst().orElseThrow(() -> new AccionImposible("Socio no encontrado"));
     }
 
     @Override
@@ -110,6 +108,26 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
         }
 
         guardarJSON();
+    }
+
+    private void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("socios");
+        if (contenido == null || contenido.isBlank()) return;
+
+        JSONArray array = new JSONArray(contenido);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            String dni = obj.getString("dni");
+            String nombre = obj.getString("nombre");
+            String apellido = obj.getString("apellido");
+            LocalDate fechaNacimiento = LocalDate.parse(obj.getString("fechaNacimiento"));
+            String nacionalidad = obj.getString("nacionalidad");
+            LocalDate fechaAlta = LocalDate.parse(obj.getString("fechaAlta"));
+            Tiposocio tipoSocio = Tiposocio.valueOf(obj.getString("tipoSocio"));
+
+            Socio s = new Socio(dni, nombre, apellido, fechaNacimiento, nacionalidad, fechaAlta, tipoSocio);
+            socios.put(s.getNumeroSocio(), s);
+        }
     }
 
     public void aplicarRecaudacion(LocalDate fecha) throws IngresoInvalido {
@@ -152,11 +170,11 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
             obj.put("apellido", s.getApellido());
             obj.put("fechaNacimiento", s.getFechaNacimiento().toString());
             obj.put("nacionalidad", s.getNacionalidad());
-            obj.put("numeroSocio", s.getNumeroSocio());
             obj.put("fechaAlta", s.getFechaAlta().toString());
             obj.put("tipoSocio", s.getTiposocio().toString());
             array.put(obj);
         }
         JSONUtiles.uploadJSON(array, "socios");
     }
+
 }

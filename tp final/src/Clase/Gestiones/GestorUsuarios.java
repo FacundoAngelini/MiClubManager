@@ -13,6 +13,10 @@ public class GestorUsuarios {
 
     private final HashMap<String, UsuarioSistema> usuarios = new HashMap<>();
 
+    public GestorUsuarios() {
+        cargarJSON();
+    }
+
     public void registrar(String dni, String nombre, Rol rol) throws IngresoInvalido {
 
         if (dni == null || dni.isBlank()) {
@@ -50,5 +54,20 @@ public class GestorUsuarios {
         }
         JSONUtiles.uploadJSON(array, "usuarios");
     }
+
+    public void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("usuarios");
+        if (contenido.isBlank()) return;
+        JSONArray array = new JSONArray(contenido);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            String dni = obj.getString("dni");
+            String nombre = obj.getString("nombre");
+            Rol rol = Rol.valueOf(obj.getString("rol"));
+
+            usuarios.put(dni, new UsuarioSistema(dni, nombre, rol));
+        }
+    }
+
 }
 

@@ -20,11 +20,12 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
 
     public GestionCuerpoTecnico(GestionPresupuesto gestionPresupuesto) {
         this.gestionPresupuesto = gestionPresupuesto;
+        cargarJSON();
     }
 
     public void agregarElemento(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, double salario, LocalDate fechaInicio, LocalDate fechaFin, Puesto puesto, int aniosExp) throws ElementoDuplicadoEx, FondoInsuficienteEx, IngresoInvalido {
         if (dni == null || !dni.matches("\\d+")) {
-            throw new IngresoInvalido("DNI inválido, solo números");
+            throw new IngresoInvalido("DNI invalido, solo numeros");
         }
 
         if (cuerpoTecnico.containsKey(dni)) {
@@ -102,6 +103,31 @@ public class GestionCuerpoTecnico implements MetodosComunes<CuerpoTecnico, Strin
 
         return ct;
     }
+    public void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("cuerpoTecnico");
+        if (contenido.isBlank()) return;
+        JSONArray array = new JSONArray(contenido);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+
+            String dni = obj.getString("dni");
+            String nombre = obj.getString("nombre");
+            String apellido = obj.getString("apellido");
+            LocalDate fechaNacimiento = LocalDate.parse(obj.getString("fechaNacimiento"));
+            String nacionalidad = obj.getString("nacionalidad");
+            Puesto puesto = Puesto.valueOf(obj.getString("puesto"));
+            int aniosExp = obj.getInt("aniosExp");
+            Contrato contrato = null;
+            if (!obj.isNull("contrato")) {
+                JSONObject cJSON = obj.getJSONObject("contrato");
+                contrato = new Contrato(cJSON.getString("dni"), cJSON.getDouble("salario"), LocalDate.parse(cJSON.getString("fechaInicio")), LocalDate.parse(cJSON.getString("fechaFin")), fechaNacimiento);
+            }
+
+            CuerpoTecnico ct = new CuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad, contrato, puesto, aniosExp);
+            cuerpoTecnico.put(dni, ct);
+        }
+    }
+
 
     @Override
     public boolean existe(String dni) throws ElementoInexistenteEx {

@@ -457,8 +457,13 @@ public class MenuGeneralClub {
         String marca = null;
 
         while (tipo == null) {
-            System.out.print("Tipo del producto (pelota/camiseta): ");
+            System.out.print("Tipo del producto (pelota/camiseta) o salir para cancelar: ");
             String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
 
             if (!input.matches("pelota|camiseta")) {
                 System.out.println("Error: tipo invalido");
@@ -468,8 +473,13 @@ public class MenuGeneralClub {
         }
 
         while (nombre == null) {
-            System.out.print("Nombre del producto: ");
+            System.out.print("Nombre del producto o salir para cancelar: ");
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
 
             if (!input.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
                 System.out.println("Error: el nombre solo puede contener letras");
@@ -479,8 +489,13 @@ public class MenuGeneralClub {
         }
 
         while (marca == null) {
-            System.out.print("Marca del producto: ");
+            System.out.print("Marca del producto o salir para cancelar: ");
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
 
             if (!input.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
                 System.out.println("Error: la marca solo puede contener letras");
@@ -504,13 +519,19 @@ public class MenuGeneralClub {
         }
     }
 
-
     private void consultarStock() {
         String tipo = null;
         String marca = null;
+
         while (tipo == null) {
-            System.out.print("Tipo (pelota/camiseta): ");
+            System.out.print("Tipo (pelota/camiseta) o salir para cancelar: ");
             String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
+
             if (input.equals("pelota") || input.equals("camiseta")) {
                 tipo = input;
             } else {
@@ -519,8 +540,14 @@ public class MenuGeneralClub {
         }
 
         while (marca == null) {
-            System.out.print("Marca: ");
+            System.out.print("Marca o salir para cancelar: ");
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
+
             if (input.isBlank()) {
                 System.out.println("Error: la marca no puede estar vacia. Intente de nuevo.");
                 continue;
@@ -534,9 +561,10 @@ public class MenuGeneralClub {
                     System.out.println("Error: marca invalida para este tipo. Intente de nuevo");
                 }
             } catch (Exception e) {
-                System.out.println("Error inesperado" );
+                System.out.println("Error inesperado");
             }
         }
+
         try {
             String info = menuClub.club.getInventario().consultarStockPorTipoMarca(tipo, marca);
             System.out.println("\n--- STOCK DISPONIBLE ---");
@@ -550,18 +578,32 @@ public class MenuGeneralClub {
         String tipo = null;
         String nombre = null;
         String marca = null;
+
         while (tipo == null) {
-            System.out.print("Tipo (pelota/camiseta): ");
+            System.out.print("Tipo (pelota/camiseta) o salir para cancelar: ");
             String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("salir")) {
+                System.out.println("Operacion cancelada.");
+                return;
+            }
+
             if (input.equals("pelota") || input.equals("camiseta")) {
                 tipo = input;
             } else {
                 System.out.println("Error: tipo invalido. Debe ser pelota o camiseta. Intente de nuevo");
             }
         }
+
         while (nombre == null) {
-            System.out.print("Nombre del producto: ");
+            System.out.print("Nombre del producto o salir para cancelar: ");
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
+
             if (!input.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
                 System.out.println("Error: el nombre solo puede contener letras. Intente de nuevo");
             } else {
@@ -570,8 +612,14 @@ public class MenuGeneralClub {
         }
 
         while (marca == null) {
-            System.out.print("Marca: ");
+            System.out.print("Marca o salir'para cancelar: ");
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) {
+                System.out.println("Operación cancelada.");
+                return;
+            }
+
             if (!input.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
                 System.out.println("Error: la marca solo puede contener letras. Intente de nuevo");
                 continue;
@@ -591,12 +639,13 @@ public class MenuGeneralClub {
 
         try {
             String info = menuClub.club.getInventario().buscarProducto(tipo, nombre, marca);
-            System.out.println("\n--- INFORMACIÓN DEL PRODUCTO ---");
+            System.out.println("\n--- INFORMACION DEL PRODUCTO ---");
             System.out.println(info);
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private String generarClave(String tipo, String nombre, String marca) {
         return tipo.toLowerCase() + nombre.toLowerCase() + marca.toLowerCase();

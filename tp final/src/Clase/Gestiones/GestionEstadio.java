@@ -16,6 +16,7 @@ public class GestionEstadio {
 
     public GestionEstadio(GestionPresupuesto presupuestoCentral) {
         this.presupuestoCentral = presupuestoCentral;
+        cargarJSON();
     }
 
     public void agregarEstadio(String nombre, int capacidad, String ubicacion, double costoMantenimiento)
@@ -102,6 +103,19 @@ public class GestionEstadio {
 
         JSONUtiles.uploadJSON(obj, "Estadio");
     }
+    public void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("Estadio");
+        if (contenido.isBlank()) return;
+        JSONObject obj = new JSONObject(contenido);
+        String nombre = obj.getString("nombre");
+        int capacidad = obj.getInt("capacidad");
+        String ubicacion = obj.getString("ubicacion");
+        double costoMantenimiento = obj.getDouble("costoMantenimiento");
+
+        estadio = new Estadio(nombre, capacidad, ubicacion, costoMantenimiento);
+    }
+
+
 
     public void validarEstadioExistente() throws AccionImposible {
         if (estadio == null) {

@@ -17,6 +17,13 @@ public class JSONUtiles {
         }
     }
 
+    public static JSONArray downloadJSONArray(String nombreArchivo) {
+        String jsonString = downloadJSON(nombreArchivo);
+        if (jsonString == null || jsonString.isBlank()) return new JSONArray();
+        return new JSONArray(jsonString);
+    }
+
+
     public static void uploadJSON(JSONObject jsonObject, String archive){
         try{
             BufferedWriter salida = new BufferedWriter(new FileWriter(archive+".json"));

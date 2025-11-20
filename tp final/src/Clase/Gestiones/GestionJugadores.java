@@ -22,6 +22,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
 
     public GestionJugadores(GestionPresupuesto gestorpresupuesto) {
         this.gestorpresupuesto = gestorpresupuesto;
+        cargarJSON();
     }
 
     public void agregarJugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, LocalDate fechaInicioContrato, LocalDate fechaFinContrato, Posicion posicion) throws ElementoDuplicadoEx, IngresoInvalido, FondoInsuficienteEx {
@@ -71,6 +72,50 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         jugadores.put(dni, jugador);
         estadisticas.put(dni, new EstadisticaJugador());
         guardarJSON();
+    }
+
+    public void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("Plantel");
+        if (contenido.isBlank()) return; // no hay datos
+
+        JSONArray array = new JSONArray(contenido);
+
+        jugadores.clear();
+        estadisticas.clear();
+
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+
+            String dni = obj.getString("dni");
+            String nombre = obj.getString("nombre");
+            String apellido = obj.getString("apellido");
+            LocalDate fechaNacimiento = LocalDate.parse(obj.getString("fechaNacimiento"));
+            String nacionalidad = obj.getString("nacionalidad");
+            int numeroCamiseta = obj.getInt("numeroCamiseta");
+            double valorJugador = obj.getDouble("valorJugador");
+            Posicion posicion = Posicion.valueOf(obj.getString("posicion"));
+            Contrato contrato = null;
+            if (obj.has("contrato")) {
+                JSONObject cJSON = obj.getJSONObject("contrato");
+                double salario = cJSON.getDouble("salario");
+                LocalDate fechaInicio = LocalDate.parse(cJSON.getString("fechaInicio"));
+                LocalDate fechaFin = LocalDate.parse(cJSON.getString("fechaFin"));
+                contrato = new Contrato(dni, salario, fechaInicio, fechaFin, fechaNacimiento);
+            }
+
+            Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad,
+                    numeroCamiseta, contrato, posicion, valorJugador);
+
+            jugadores.put(dni, jugador);
+
+            if (obj.has("estadisticas")) {
+                String statsStr = obj.getString("estadisticas");
+                EstadisticaJugador stats = new EstadisticaJugador();
+                estadisticas.put(dni, stats);
+            } else {
+                estadisticas.put(dni, new EstadisticaJugador());
+            }
+        }
     }
 
     @Override
@@ -168,6 +213,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         jugadores.remove(dni);
 
         gestionPresupuesto.agregarFondos(monto, "Venta de jugador " + jugador.getNombre() + " " + jugador.getApellido(), LocalDate.now());
+        guardarJSON();
     }
 
 

@@ -1,5 +1,6 @@
 package Clase.Gestiones;
 
+import Clase.Json.JSONUtiles;
 import Clase.Partidos.Partido;
 import exeptions.AccionImposible;
 import exeptions.ElementoInexistenteEx;
@@ -8,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
@@ -18,6 +21,7 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
     public GestorPartido(int capacidadEstadio) {
         this.partidos = new ArrayList<>();
         this.capacidadEstadio = capacidadEstadio;
+        cargarJSON();
     }
 
     public void agregarPartido(LocalDate fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada) throws AccionImposible {
@@ -102,22 +106,58 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
         return lista;
     }
 
-    @Override
     public void guardarJSON() {
-        JSONArray arr = new JSONArray();
+        try {
+            JSONArray arr = new JSONArray();
 
-        for (Partido p : partidos) {
-            JSONObject obj = new JSONObject();
-            obj.put("fecha", p.getFecha().toString());
-            obj.put("local", p.isEsLocal());
-            obj.put("rival", p.getRival());
-            obj.put("golesAFavor", p.getGolesAFavor());
-            obj.put("golesEnContra", p.getGolesEnContra());
-            obj.put("entradasVendidas", p.getEntradasVendidas());
-            obj.put("precioEntrada", p.getPrecioEntrada());
-            arr.put(obj);
+            for (Partido p : partidos) {
+                JSONObject obj = new JSONObject();
+                obj.put("fecha", p.getFecha().toString());
+                obj.put("local", p.isEsLocal());
+                obj.put("rival", p.getRival());
+                obj.put("golesAFavor", p.getGolesAFavor());
+                obj.put("golesEnContra", p.getGolesEnContra());
+                obj.put("entradasVendidas", p.getEntradasVendidas());
+                obj.put("precioEntrada", p.getPrecioEntrada());
+                arr.put(obj);
+            }
+
+            JSONUtiles.uploadJSON(arr, "partidos");
+        } catch (Exception e) {
+            System.out.println("Error al guardar partidos: " );
         }
     }
+
+
+    public void cargarJSON() {
+        String contenido = JSONUtiles.downloadJSON("partidos"); // lee partidos.json
+        if (contenido == null || contenido.isBlank()) return;
+
+        JSONArray array = new JSONArray(contenido);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            LocalDate fecha;
+
+            try {
+                fecha = LocalDate.parse(obj.getString("fecha"), formatter);
+            } catch (DateTimeParseException e) {
+                fecha = LocalDate.parse(obj.getString("fecha"));
+            }
+
+            boolean esLocal = obj.getBoolean("local");
+            String rival = obj.getString("rival");
+            int golesAFavor = obj.getInt("golesAFavor");
+            int golesEnContra = obj.getInt("golesEnContra");
+            int entradasVendidas = obj.optInt("entradasVendidas", 0);
+            double precioEntrada = obj.optDouble("precioEntrada", 0);
+            Partido partido = new Partido(fecha, esLocal, rival, golesAFavor, golesEnContra, entradasVendidas, precioEntrada, capacidadEstadio);
+            partidos.add(partido);
+        }
+    }
+
+
 
     public int getGanados() {
         int c = 0;
