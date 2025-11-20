@@ -49,37 +49,55 @@ public class MenuClub {
             }
         }
     }
-
     private void registrarUsuario() {
         try {
-            System.out.print("Ingrese DNI: ");
-            String dni = scanner.nextLine();
+            String dni;
+            while (true) {
+                System.out.print("Ingrese DNI ");
+                dni = scanner.nextLine().trim();
+                if (!dni.matches("\\d+")) {
+                    System.out.println("DNI invalido solo numeros");
+                } else if (dni.length() < 8) {
+                    System.out.println("DNI invalido minimo 8 digitos");
+                } else {
+                    break;
+                }
+            }
+            String nombre;
+            while (true) {
+                System.out.print("Ingrese nombre ");
+                nombre = scanner.nextLine().trim();
+                if (nombre.isEmpty()) {
+                    System.out.println("Nombre no puede estar vacio");
+                } else {
+                    break;
+                }
+            }
+            Rol rol = null;
+            while (rol == null) {
+                System.out.println("Seleccione rol");
+                System.out.println("1 Plantel");
+                System.out.println("2 Presupuesto");
+                System.out.println("3 General del Club");
+                System.out.print("Opcion ");
+                String r = scanner.nextLine().trim();
 
-            System.out.print("Ingrese nombre: ");
-            String nombre = scanner.nextLine();
-
-            System.out.println("Seleccione rol:");
-            System.out.println("1. Plantel");
-            System.out.println("2. Presupuesto");
-            System.out.println("3. General del Club");
-            System.out.print("Opcion: ");
-            String r = scanner.nextLine();
-
-            Rol rol;
-            switch (r) {
-                case "1" -> rol = Rol.PLANTEL;
-                case "2" -> rol = Rol.PRESUPUESTO;
-                case "3" -> rol = Rol.GENERAL_CLUB;
-                default -> throw new IngresoInvalido("rol invalido");
+                switch (r) {
+                    case "1" -> rol = Rol.PLANTEL;
+                    case "2" -> rol = Rol.PRESUPUESTO;
+                    case "3" -> rol = Rol.GENERAL_CLUB;
+                    default -> System.out.println("Rol invalido");
+                }
             }
 
             gestorUsuarios.registrar(dni, nombre, rol);
-            System.out.println("Usuario registrado correctamente.");
+            System.out.println("Usuario registrado correctamente");
 
         } catch (Exception e) {
-            System.out.println("Error ");
+            System.out.println("Error inesperado");
         }
     }
+
 
     private void loginUsuario() {
         try {

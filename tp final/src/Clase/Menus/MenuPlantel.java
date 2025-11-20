@@ -82,11 +82,15 @@ public class MenuPlantel {
         int aniosExp = -1;
 
         while (dni == null) {
-            System.out.print("DNI ");
+            System.out.print("DNI: ");
             String input = scanner.nextLine();
-            if (input.matches("\\d+")) dni = input;
-            else System.out.println("DNI invalido solo numeros");
+            if (input.matches("\\d{8,}")) {
+                dni = input;
+            } else {
+                System.out.println("DNI invalido: debe contener solo numeros y tener al menos 8 digitos");
+            }
         }
+
 
         while (nombre == null) {
             System.out.print("Nombre ");
@@ -101,16 +105,23 @@ public class MenuPlantel {
             if (input.matches("[a-zA-Z]+")) apellido = input;
             else System.out.println("Apellido invalido solo letras");
         }
-
         while (fechaNacimiento == null) {
-            System.out.print("Fecha de nacimiento dd/MM/yyyy ");
+            System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
             String input = scanner.nextLine();
             try {
-                fechaNacimiento = LocalDate.parse(input, formatter);
+                LocalDate fecha = LocalDate.parse(input, formatter);
+                LocalDate fechaMinima = LocalDate.now().minusYears(18);
+                if (fecha.isAfter(fechaMinima)) {
+                    System.out.println("Debe ser mayor de 18 años.");
+                } else {
+                    fechaNacimiento = fecha;
+                }
+
             } catch (DateTimeParseException e) {
                 System.out.println("Formato de fecha incorrecto");
             }
         }
+
 
         while (nacionalidad == null) {
             System.out.print("Nacionalidad ");
@@ -228,91 +239,148 @@ public class MenuPlantel {
     }
 
     private void modificarMiembroCT() {
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try {
-            System.out.print("DNI del miembro a modificar: ");
-            String dni = scanner.nextLine();
-            CuerpoTecnico ctActual = menuClub.club.getGestionCuerpoTecnico().getCuerpoTecnico().get(dni);
-            if (ctActual == null) {
-                System.out.println("No existe el miembro con DNI: " + dni);
-                return;
+
+            String dni;
+            CuerpoTecnico ctActual = null;
+
+            while (true) {
+                System.out.print("DNI del miembro a modificar ");
+                dni = scanner.nextLine();
+
+                if (!dni.matches("\\d{8,}")) {
+                    System.out.println("DNI invalido debe contener solo numeros y al menos 8 digitos");
+                    continue;
+                }
+
+                ctActual = menuClub.club.getGestionCuerpoTecnico()
+                        .getCuerpoTecnico().get(dni);
+
+                if (ctActual == null) {
+                    System.out.println("No existe el miembro con ese DNI");
+                    continue;
+                }
+
+                break;
             }
 
-            System.out.print("Nuevo nombre (Enter para mantener actual): ");
-            String nombre = scanner.nextLine();
-            if (nombre.isEmpty()) nombre = null;
-            else if (!nombre.matches("[a-zA-Z]+")) {
-                System.out.println("Nombre invalido");
-                return;
-            }
+            String nombre = null;
+            while (true) {
+                System.out.print("Nuevo nombre Enter para mantener actual ");
+                String input = scanner.nextLine();
 
-            System.out.print("Nuevo apellido (Enter para mantener actual): ");
-            String apellido = scanner.nextLine();
-            if (apellido.isEmpty()) apellido = null;
-            else if (!apellido.matches("[a-zA-Z]+")) {
-                System.out.println("Apellido invalido");
-                return;
-            }
+                if (input.isEmpty()) break;
 
-            System.out.print("Nueva fecha de nacimiento (dd/MM/yyyy, Enter para mantener actual): ");
-            String fechaStr = scanner.nextLine();
-            LocalDate fechaNacimiento = null;
-            if (!fechaStr.isEmpty()) {
-                try {
-                    fechaNacimiento = LocalDate.parse(fechaStr, formatter);
-                    if (fechaNacimiento.isAfter(LocalDate.now())) {
-                        System.out.println("Fecha de nacimiento invalida");
-                        return;
-                    }
-                } catch (DateTimeParseException e) {
-                    System.out.println("Formato incorrecto de fecha");
-                    return;
+                if (!input.matches("[a-zA-Z]+")) {
+                    System.out.println("Nombre invalido");
+                } else {
+                    nombre = input;
+                    break;
                 }
             }
 
-            System.out.print("Nueva nacionalidad (Enter para mantener actual): ");
-            String nacionalidad = scanner.nextLine();
-            if (nacionalidad.isEmpty()) nacionalidad = null;
-            else if (!nacionalidad.matches("[a-zA-Z ]+")) {
-                System.out.println("Nacionalidad invalida");
-                return;
+            String apellido = null;
+            while (true) {
+                System.out.print("Nuevo apellido Enter para mantener actual ");
+                String input = scanner.nextLine();
+
+                if (input.isEmpty()) break;
+
+                if (!input.matches("[a-zA-Z]+")) {
+                    System.out.println("Apellido invalido");
+                } else {
+                    apellido = input;
+                    break;
+                }
+            }
+            LocalDate fechaNacimiento = null;
+            while (true) {
+                System.out.print("Nueva fecha de nacimiento dd/MM/yyyy Enter para mantener actual ");
+                String input = scanner.nextLine();
+
+                if (input.isEmpty()) break;
+
+                try {
+                    LocalDate fecha = LocalDate.parse(input, formatter);
+
+                    if (fecha.isAfter(LocalDate.now())) {
+                        System.out.println("Fecha de nacimiento invalida no puede ser futura");
+                        continue;
+                    }
+
+                    if (fecha.isAfter(LocalDate.now().minusYears(18))) {
+                        System.out.println("Debe ser mayor de 18 anios");
+                        continue;
+                    }
+
+                    fechaNacimiento = fecha;
+                    break;
+
+                } catch (DateTimeParseException e) {
+                    System.out.println("Formato de fecha incorrecto");
+                }
             }
 
-            System.out.print("Nuevo puesto (Enter para mantener actual): ");
-            String puestoStr = scanner.nextLine();
+            String nacionalidad = null;
+            while (true) {
+                System.out.print("Nueva nacionalidad Enter para mantener actual ");
+                String input = scanner.nextLine();
+
+                if (input.isEmpty()) break;
+
+                if (!input.matches("[a-zA-Z ]+")) {
+                    System.out.println("Nacionalidad invalida");
+                } else {
+                    nacionalidad = input;
+                    break;
+                }
+            }
             Puesto puesto = null;
-            if (!puestoStr.isEmpty()) {
+            while (true) {
+                System.out.print("Nuevo puesto Enter para mantener actual ");
+                String input = scanner.nextLine();
+
+                if (input.isEmpty()) break;
+
                 try {
-                    puesto = Puesto.valueOf(puestoStr.trim().toUpperCase());
+                    puesto = Puesto.valueOf(input.trim().toUpperCase());
+                    break;
                 } catch (IllegalArgumentException e) {
                     System.out.println("Puesto invalido");
-                    return;
                 }
             }
-
-            System.out.print("Nueva experiencia años (Enter para mantener actual): ");
-            String expStr = scanner.nextLine();
             int aniosExp = -1;
-            if (!expStr.isEmpty()) {
+            while (true) {
+                System.out.print("Nueva experiencia en anios Enter para mantener actual ");
+                String input = scanner.nextLine();
+
+                if (input.isEmpty()) break;
+
                 try {
-                    aniosExp = Integer.parseInt(expStr);
-                    if (aniosExp < 0) {
+                    int exp = Integer.parseInt(input);
+
+                    if (exp < 0) {
                         System.out.println("Anios de experiencia invalidos");
-                        return;
+                        continue;
                     }
+
+                    LocalDate base = (fechaNacimiento != null) ? fechaNacimiento : ctActual.getFechaNacimiento();
+                    int edad = Period.between(base, LocalDate.now()).getYears();
+                    int maxExp = edad - 18;
+
+                    if (exp > maxExp) {
+                        System.out.println("La experiencia supera la edad permitida");
+                        continue;
+                    }
+
+                    aniosExp = exp;
+                    break;
+
                 } catch (NumberFormatException e) {
                     System.out.println("Numero invalido");
-                    return;
-                }
-            }
-            LocalDate fechaBase = (fechaNacimiento != null) ? fechaNacimiento : ctActual.getFechaNacimiento();
-            if (aniosExp >= 0) {
-                int edadActual = Period.between(fechaBase, LocalDate.now()).getYears();
-                int maxExp = edadActual - 18;
-                if (aniosExp > maxExp) {
-                    System.out.println("La experiencia supera la edad permitida");
-                    return;
                 }
             }
 
@@ -320,10 +388,12 @@ public class MenuPlantel {
 
             System.out.println("Miembro modificado correctamente");
 
-        } catch (ElementoInexistenteEx | IngresoInvalido e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado");
         }
     }
+
+
 
 
     private void agregarJugadorMenu() {
@@ -332,13 +402,15 @@ public class MenuPlantel {
         try {
             String dni;
             while (true) {
-                System.out.print("DNI: ");
+                System.out.print("DNI ");
                 dni = scanner.nextLine();
-                if (!dni.isBlank() && dni.matches("\\d+")) break;
-                System.out.println("DNI invalido. Debe contener solo numeros");
+
+                if (!dni.isBlank() && dni.matches("\\d{8,}")) break;
+
+                System.out.println("DNI invalido debe contener solo numeros y minimo 8 digitos");
             }
 
-            String nombre;
+        String nombre;
             while (true) {
                 System.out.print("Nombre: ");
                 nombre = scanner.nextLine();
@@ -357,14 +429,25 @@ public class MenuPlantel {
             LocalDate fechaNacimiento;
             while (true) {
                 try {
-                    System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
+                    System.out.print("Fecha de nacimiento dd/MM/yyyy ");
                     fechaNacimiento = LocalDate.parse(scanner.nextLine(), formatter);
-                    if (!fechaNacimiento.isAfter(LocalDate.now())) break;
-                    else System.out.println("Fecha de nacimiento invalida.");
+                    LocalDate hoy = LocalDate.now();
+                    LocalDate fechaMinima = hoy.minusYears(18);
+                    if (fechaNacimiento.isAfter(hoy)) {
+                        System.out.println("Fecha de nacimiento invalida no puede ser futura");
+                        continue;
+                    }
+                    if (fechaNacimiento.isAfter(fechaMinima)) {
+                        System.out.println("Debe ser mayor de 18 anios");
+                        continue;
+                    }
+                    break;
+
                 } catch (DateTimeParseException e) {
                     System.out.println("Formato de fecha incorrecto");
                 }
             }
+
 
             String nacionalidad;
             while (true) {

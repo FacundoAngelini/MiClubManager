@@ -162,23 +162,19 @@ public class MenuGeneralClub {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         while (dni == null) {
-            System.out.print("DNI: ");
+            System.out.print("DNI ");
             String input = scanner.nextLine().trim();
             if (input.isBlank() || !input.matches("\\d+")) {
-                System.out.println("Error: DNI no puede estar vacío ni tener letras.");
+                System.out.println("Error DNI no puede estar vacio y debe tener solo numeros");
                 continue;
             }
-
-            try {
-                if (menuClub.club.getGestionSocios().existe(input)) {
-                    System.out.println("Error: Ya existe un socio con ese DNI");
-                } else {
-                    dni = input;
-                }
-            } catch (ElementoInexistenteEx e) {
-                dni = input;
+            if (input.length() < 8) {
+                System.out.println("Error DNI debe tener minimo 8 digitos");
+                continue;
             }
+            dni = input;
         }
+
 
         while (nombre == null) {
             System.out.print("Nombre: ");

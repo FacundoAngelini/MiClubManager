@@ -306,17 +306,19 @@ public class MenuPresupuesto {
         }
 
         while (dni == null) {
-            System.out.print("Ingrese DNI (solo numeros): ");
+            System.out.print("Ingrese DNI solo numeros ");
             String input = scanner.nextLine().trim();
-
             if (!input.matches("\\d+")) {
                 System.out.println("El DNI solo debe contener numeros");
+            } else if (input.length() < 8) {
+                System.out.println("El DNI debe tener minimo 8 digitos");
             } else if (menuClub.club.getGestionJugadores().existeJugador(input)) {
                 System.out.println("Ya existe un jugador con ese DNI");
             } else {
                 dni = input;
             }
         }
+
 
         while (nombre == null) {
             System.out.print("Ingrese nombre: ");
@@ -464,19 +466,47 @@ public class MenuPresupuesto {
     }
 
     private void venderJugador() {
-        System.out.print("Ingrese DNI del jugador a vender: ");
-        String dni = scanner.nextLine().trim();
+        boolean vendido = false;
 
-        System.out.print("Ingrese monto de la venta: ");
-        double monto = Double.parseDouble(scanner.nextLine());
+        while (!vendido) {
+            String dni;
+            while (true) {
+                System.out.print("Ingrese DNI del jugador a vender ");
+                dni = scanner.nextLine().trim();
 
-        try {
-            menuClub.club.getGestionJugadores().venderJugador(dni, monto, menuClub.club.getGestionPresupuesto());
-            System.out.println("Jugador vendido correctamente");
-        } catch (IngresoInvalido | ElementoInexistenteEx e) {
-            System.out.println("Error en el ingreso, jugador no existe");
+                if (!dni.matches("\\d+")) {
+                    System.out.println("El DNI solo debe contener numeros");
+                } else if (dni.length() < 8) {
+                    System.out.println("El DNI debe tener minimo 8 digitos");
+                } else {
+                    break;
+                }
+            }
+            double monto;
+            while (true) {
+                System.out.print("Ingrese monto de la venta ");
+                try {
+                    monto = Double.parseDouble(scanner.nextLine());
+                    if (monto <= 0) {
+                        System.out.println("El monto debe ser mayor a 0");
+                        continue;
+                    }
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Monto invalido");
+                }
+            }
+
+            try {
+                menuClub.club.getGestionJugadores().venderJugador(dni, monto, menuClub.club.getGestionPresupuesto());
+                System.out.println("Jugador vendido correctamente");
+                vendido = true;
+            } catch (IngresoInvalido | ElementoInexistenteEx e) {
+                System.out.println("Error jugador no existe o ingreso invalido");
+            }
         }
     }
+
 
 
 
