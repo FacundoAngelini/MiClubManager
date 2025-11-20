@@ -208,16 +208,28 @@ public class MenuPlantel {
 
 
     private void eliminarMiembroCT() {
-        try {
-            System.out.print("DNI del miembro a eliminar: ");
-            String dni = scanner.nextLine();
+        String dni = null;
+        while (dni == null) {
+            System.out.print("DNI del miembro a eliminar o salir para volver ");
+            String input = scanner.nextLine().trim();
 
+            if (input.equalsIgnoreCase("salir")) return;
+
+            if (input.isBlank() || !input.matches("\\d+")) {
+                System.out.println("Error DNI solo numeros y no puede estar vacio");
+            } else if (input.length() < 8) {
+                System.out.println("Error DNI minimo 8 digitos");
+            } else {
+                dni = input;
+            }
+        }
+
+        try {
             menuClub.club.getGestionCuerpoTecnico().eliminarElemento(dni);
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro eliminado correctamente");
-
         } catch (AccionImposible e) {
-            System.out.println("Error al eliminar miembro: " + e.getMessage());
+            System.out.println("Error al eliminar miembro " + e.getMessage());
         }
     }
 
@@ -237,27 +249,25 @@ public class MenuPlantel {
                     " | Contrato activo: " + (ct.getContrato() != null ? ct.getContrato().isContratoActivo() : "N/A"));
         }
     }
-
     private void modificarMiembroCT() {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try {
-
             String dni;
             CuerpoTecnico ctActual = null;
 
             while (true) {
-                System.out.print("DNI del miembro a modificar ");
-                dni = scanner.nextLine();
+                System.out.print("DNI del miembro a modificar o salir para volver ");
+                dni = scanner.nextLine().trim();
+
+                if (dni.equalsIgnoreCase("salir")) return;
 
                 if (!dni.matches("\\d{8,}")) {
                     System.out.println("DNI invalido debe contener solo numeros y al menos 8 digitos");
                     continue;
                 }
 
-                ctActual = menuClub.club.getGestionCuerpoTecnico()
-                        .getCuerpoTecnico().get(dni);
+                ctActual = menuClub.club.getGestionCuerpoTecnico().getCuerpoTecnico().get(dni);
 
                 if (ctActual == null) {
                     System.out.println("No existe el miembro con ese DNI");
@@ -269,9 +279,10 @@ public class MenuPlantel {
 
             String nombre = null;
             while (true) {
-                System.out.print("Nuevo nombre Enter para mantener actual ");
-                String input = scanner.nextLine();
+                System.out.print("Nuevo nombre Enter para mantener actual o salir para volver ");
+                String input = scanner.nextLine().trim();
 
+                if (input.equalsIgnoreCase("salir")) return;
                 if (input.isEmpty()) break;
 
                 if (!input.matches("[a-zA-Z]+")) {
@@ -284,9 +295,10 @@ public class MenuPlantel {
 
             String apellido = null;
             while (true) {
-                System.out.print("Nuevo apellido Enter para mantener actual ");
-                String input = scanner.nextLine();
+                System.out.print("Nuevo apellido Enter para mantener actual o salir para volver ");
+                String input = scanner.nextLine().trim();
 
+                if (input.equalsIgnoreCase("salir")) return;
                 if (input.isEmpty()) break;
 
                 if (!input.matches("[a-zA-Z]+")) {
@@ -296,11 +308,13 @@ public class MenuPlantel {
                     break;
                 }
             }
+
             LocalDate fechaNacimiento = null;
             while (true) {
-                System.out.print("Nueva fecha de nacimiento dd/MM/yyyy Enter para mantener actual ");
-                String input = scanner.nextLine();
+                System.out.print("Nueva fecha de nacimiento dd/MM/yyyy Enter para mantener actual o salir para volver ");
+                String input = scanner.nextLine().trim();
 
+                if (input.equalsIgnoreCase("salir")) return;
                 if (input.isEmpty()) break;
 
                 try {
@@ -310,7 +324,6 @@ public class MenuPlantel {
                         System.out.println("Fecha de nacimiento invalida no puede ser futura");
                         continue;
                     }
-
                     if (fecha.isAfter(LocalDate.now().minusYears(18))) {
                         System.out.println("Debe ser mayor de 18 anios");
                         continue;
@@ -318,7 +331,6 @@ public class MenuPlantel {
 
                     fechaNacimiento = fecha;
                     break;
-
                 } catch (DateTimeParseException e) {
                     System.out.println("Formato de fecha incorrecto");
                 }
@@ -326,9 +338,10 @@ public class MenuPlantel {
 
             String nacionalidad = null;
             while (true) {
-                System.out.print("Nueva nacionalidad Enter para mantener actual ");
-                String input = scanner.nextLine();
+                System.out.print("Nueva nacionalidad Enter para mantener actual o salir para volver ");
+                String input = scanner.nextLine().trim();
 
+                if (input.equalsIgnoreCase("salir")) return;
                 if (input.isEmpty()) break;
 
                 if (!input.matches("[a-zA-Z ]+")) {
@@ -338,11 +351,13 @@ public class MenuPlantel {
                     break;
                 }
             }
+
             Puesto puesto = null;
             while (true) {
-                System.out.print("Nuevo puesto Enter para mantener actual ");
-                String input = scanner.nextLine();
+                System.out.print("Nuevo puesto Enter para mantener actual o salir para volver ");
+                String input = scanner.nextLine().trim();
 
+                if (input.equalsIgnoreCase("salir")) return;
                 if (input.isEmpty()) break;
 
                 try {
@@ -352,11 +367,13 @@ public class MenuPlantel {
                     System.out.println("Puesto invalido");
                 }
             }
+
             int aniosExp = -1;
             while (true) {
-                System.out.print("Nueva experiencia en anios Enter para mantener actual ");
-                String input = scanner.nextLine();
+                System.out.print("Nueva experiencia en anios Enter para mantener actual o salir para volver ");
+                String input = scanner.nextLine().trim();
 
+                if (input.equalsIgnoreCase("salir")) return;
                 if (input.isEmpty()) break;
 
                 try {
@@ -392,6 +409,7 @@ public class MenuPlantel {
             System.out.println("Error inesperado");
         }
     }
+
 
 
 
@@ -540,16 +558,29 @@ public class MenuPlantel {
 
 
     private void eliminarJugadorMenu() {
+        String dni = null;
+        while (dni == null) {
+            System.out.print("DNI del jugador a eliminar o salir para volver ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) return;
+
+            if (input.isBlank() || !input.matches("\\d+")) {
+                System.out.println("Error DNI solo numeros y no puede estar vacio");
+            } else if (input.length() < 8) {
+                System.out.println("Error DNI minimo 8 digitos");
+            } else {
+                dni = input;
+            }
+        }
         try {
-            System.out.print("DNI del jugador a eliminar: ");
-            String dni = scanner.nextLine();
-
             menuClub.club.getGestionJugadores().eliminarElemento(dni);
-
+            System.out.println("Jugador eliminado correctamente");
         } catch (AccionImposible e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private void mostrarJugadorMenu() {
         try {
@@ -754,24 +785,29 @@ public class MenuPlantel {
             System.out.println("Error inesperado al agregar partido: " + e.getMessage());
         }
     }
-
     public void eliminarPartido() {
         LocalDate fecha = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         while (fecha == null) {
-            System.out.print("Ingrese fecha del partido a eliminar (dd/MM/yyyy): ");
+            System.out.print("Ingrese fecha del partido a eliminar (dd/MM/yyyy)o salir para volver ");
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("salir")) return;
+
             try {
-                fecha = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                fecha = LocalDate.parse(input, formatter);
                 menuClub.club.getGestorPartidos().eliminarElemento(fecha);
                 System.out.println("Partido eliminado correctamente");
             } catch (DateTimeParseException e) {
-                System.out.println("Error: formato invalido (dd/MM/yyyy)");
+                System.out.println("Error formato invalido dd/MM/yyyy");
             } catch (AccionImposible e) {
                 System.out.println("Error: " + e.getMessage());
                 fecha = null;
             }
         }
     }
+
 
     public void listarPartidos() {
         ArrayList<String> lista = menuClub.club.getGestorPartidos().listarPartidosInfo();

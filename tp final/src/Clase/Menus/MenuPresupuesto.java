@@ -6,6 +6,7 @@ import exeptions.FondoInsuficienteEx;
 import exeptions.IngresoInvalido;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -356,9 +357,16 @@ public class MenuPresupuesto {
         while (nacionalidad == null) {
             System.out.print("Nacionalidad: ");
             String input = scanner.nextLine().trim();
-            if (input.isBlank()) System.out.println("No puede estar vacia");
-            else nacionalidad = input;
+
+            if (input.isBlank()) {
+                System.out.println("No puede estar vacia");
+            } else if (!input.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
+                System.out.println("Solo se permiten letras y espacios");
+            } else {
+                nacionalidad = input;
+            }
         }
+
 
 
         while (numeroCamiseta == null) {
@@ -415,17 +423,19 @@ public class MenuPresupuesto {
             try {
                 System.out.print("Fecha inicio contrato (dd/MM/yyyy): ");
                 String input = scanner.nextLine().trim();
+
                 LocalDate inicio = LocalDate.parse(input, formato);
 
-                if (inicio.isBefore(LocalDate.now())) {
+                if (inicio.isBefore(fechaCompra)) {
                     System.out.println("La fecha de inicio del contrato no puede ser antes de la fecha de compra");
                 } else {
                     fechaInicio = inicio;
                 }
-            } catch (Exception e) {
+            } catch (DateTimeParseException e) {
                 System.out.println("Formato invalido. Use dd/MM/yyyy");
             }
         }
+
 
         while (fechaFin == null) {
             try {
@@ -469,10 +479,13 @@ public class MenuPresupuesto {
         boolean vendido = false;
 
         while (!vendido) {
+
             String dni;
             while (true) {
-                System.out.print("Ingrese DNI del jugador a vender ");
+                System.out.print("Ingrese DNI del jugador a vender o salir para volver ");
                 dni = scanner.nextLine().trim();
+
+                if (dni.equalsIgnoreCase("salir")) return;
 
                 if (!dni.matches("\\d+")) {
                     System.out.println("El DNI solo debe contener numeros");
@@ -482,11 +495,16 @@ public class MenuPresupuesto {
                     break;
                 }
             }
+
             double monto;
             while (true) {
-                System.out.print("Ingrese monto de la venta ");
+                System.out.print("Ingrese monto de la venta o salir para volver ");
+                String input = scanner.nextLine().trim();
+
+                if (input.equalsIgnoreCase("salir")) return;
+
                 try {
-                    monto = Double.parseDouble(scanner.nextLine());
+                    monto = Double.parseDouble(input);
                     if (monto <= 0) {
                         System.out.println("El monto debe ser mayor a 0");
                         continue;
@@ -506,6 +524,7 @@ public class MenuPresupuesto {
             }
         }
     }
+
 
 
 

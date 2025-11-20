@@ -1,7 +1,6 @@
 package Clase.Menus;
 import enums.Tiposocio;
 import exeptions.ElementoDuplicadoEx;
-import exeptions.ElementoInexistenteEx;
 import exeptions.IngresoInvalido;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -67,7 +66,6 @@ public class MenuGeneralClub {
         }
     }
 
-
     private void agregarEstadio() {
         String nombre;
         int capacidad;
@@ -75,50 +73,60 @@ public class MenuGeneralClub {
         double costo;
 
         while (true) {
-            System.out.print("Nombre del estadio: ");
+            System.out.print("Nombre del estadio (o 'salir' para volver) ");
             nombre = scanner.nextLine().trim();
+            if (nombre.equalsIgnoreCase("salir")) return;
+
             if (!nombre.isEmpty() && nombre.matches("[a-zA-Z ]+")) {
                 break;
             }
-            System.out.println("Nombre invalido. Solo letras y espacios, intente de nuevo");
+            System.out.println("Nombre invalido solo letras y espacios");
         }
 
         while (true) {
+            System.out.print("Capacidad (o 'salir' para volver) ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             try {
-                System.out.print("Capacidad: ");
-                capacidad = Integer.parseInt(scanner.nextLine());
+                capacidad = Integer.parseInt(input);
                 if (capacidad > 0) break;
                 System.out.println("La capacidad debe ser mayor a 0");
             } catch (NumberFormatException e) {
-                System.out.println("Numero invalido. Ingrese un valor entero");
+                System.out.println("Numero invalido ingrese un valor entero");
             }
         }
 
         while (true) {
-            System.out.print("Ubicacion: ");
+            System.out.print("Ubicacion (o 'salir' para volver) ");
             ubicacion = scanner.nextLine().trim();
+            if (ubicacion.equalsIgnoreCase("salir")) return;
+
             if (!ubicacion.isEmpty()) break;
-            System.out.println("Ubicacion invalida. No puede estar vacia");
+            System.out.println("Ubicacion invalida no puede estar vacia");
         }
 
         while (true) {
+            System.out.print("Costo de mantenimiento (o 'salir' para volver) ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             try {
-                System.out.print("Costo de mantenimiento: ");
-                costo = Double.parseDouble(scanner.nextLine());
+                costo = Double.parseDouble(input);
                 if (costo >= 0) break;
                 System.out.println("El costo no puede ser negativo");
             } catch (NumberFormatException e) {
-                System.out.println("Numero invalido. Ingrese un valor numerico");
+                System.out.println("Numero invalido ingrese un valor numerico");
             }
         }
-
         try {
             menuClub.club.getGestionEstadios().agregarEstadio(nombre, capacidad, ubicacion, costo);
             System.out.println("Estadio agregado correctamente");
         } catch (IllegalArgumentException e) {
-            System.out.println("Error al agregar estadio: " + e.getMessage());
+            System.out.println("Error al agregar estadio " );
         }
     }
+
 
 
 
@@ -162,14 +170,16 @@ public class MenuGeneralClub {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         while (dni == null) {
-            System.out.print("DNI ");
+            System.out.print("DNI o salir para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             if (input.isBlank() || !input.matches("\\d+")) {
-                System.out.println("Error DNI no puede estar vacio y debe tener solo numeros");
+                System.out.println("Error DNI solo numeros");
                 continue;
             }
             if (input.length() < 8) {
-                System.out.println("Error DNI debe tener minimo 8 digitos");
+                System.out.println("Error DNI minimo 8 digitos");
                 continue;
             }
             dni = input;
@@ -177,59 +187,71 @@ public class MenuGeneralClub {
 
 
         while (nombre == null) {
-            System.out.print("Nombre: ");
+            System.out.print("Nombre o salir para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             if (input.isBlank() || !input.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
-                System.out.println("Error: Nombre invalido. Solo letras");
+                System.out.println("Error solo letras");
             } else {
                 nombre = input;
             }
         }
 
         while (apellido == null) {
-            System.out.print("Apellido: ");
+            System.out.print("Apellido o 'salir' para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             if (input.isBlank() || !input.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
-                System.out.println("Error: Apellido invalido. Solo letras");
+                System.out.println("Error solo letras");
             } else {
                 apellido = input;
             }
         }
 
         while (fechaNacimiento == null) {
-            System.out.print("Fecha nacimiento (dd/MM/yyyy): ");
+            System.out.print("Fecha nacimiento dd/MM/yyyy o salir0 para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             try {
-                LocalDate fecha = LocalDate.parse(input, formato);
-                fechaNacimiento = fecha;
+                fechaNacimiento = LocalDate.parse(input, formato);
             } catch (Exception e) {
-                System.out.println("Error: formato de fecha invalido");
+                System.out.println("Formato de fecha invalido");
             }
         }
 
         while (nacionalidad == null) {
-            System.out.print("Nacionalidad: ");
+            System.out.print("Nacionalidad o salir para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             if (input.isBlank() || !input.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
-                System.out.println("Error: Nacionalidad invalida. Solo letras");
+                System.out.println("Error solo letras");
             } else {
                 nacionalidad = input;
             }
         }
 
         while (fechaAlta == null) {
-            System.out.print("Fecha alta (dd/MM/yyyy): ");
+            System.out.print("Fecha alta dd/MM/yyyy o salir para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             try {
                 fechaAlta = LocalDate.parse(input, formato);
             } catch (Exception e) {
-                System.out.println("Error: formato de fecha invalido");
+                System.out.println("Formato de fecha invalido");
             }
         }
 
         while (tipoSocio == null) {
             System.out.println("Tipo socio: 1- JUVENIL | 2- ACTIVO | 3- VITALICIO | 4- INACTIVO");
+            System.out.print("O salir para volver ");
             String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("salir")) return;
+
             try {
                 int t = Integer.parseInt(input);
                 tipoSocio = switch (t) {
@@ -241,7 +263,7 @@ public class MenuGeneralClub {
                 };
                 if (tipoSocio == null) System.out.println("Tipo invalido");
             } catch (NumberFormatException e) {
-                System.out.println("Ingrese un número valido para el tipo.");
+                System.out.println("Ingrese un numero valido para el tipo");
             }
         }
 
@@ -249,7 +271,7 @@ public class MenuGeneralClub {
             menuClub.club.getGestionSocios().agregarSocio(dni, nombre, apellido, fechaNacimiento, nacionalidad, fechaAlta, tipoSocio);
             System.out.println("Socio agregado correctamente");
         } catch (ElementoDuplicadoEx | IngresoInvalido e) {
-            System.out.println("Error al agregar socio: " + e.getMessage());
+            System.out.println("Error al agregar socio " + e.getMessage());
         }
     }
 

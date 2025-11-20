@@ -67,18 +67,22 @@ public class MenuClub {
             while (true) {
                 System.out.print("Ingrese nombre ");
                 nombre = scanner.nextLine().trim();
+
                 if (nombre.isEmpty()) {
                     System.out.println("Nombre no puede estar vacio");
+                } else if (!nombre.matches("[a-zA-Z]+")) {
+                    System.out.println("Nombre invalido solo letras");
                 } else {
                     break;
                 }
             }
+
             Rol rol = null;
             while (rol == null) {
                 System.out.println("Seleccione rol");
-                System.out.println("1 Plantel");
-                System.out.println("2 Presupuesto");
-                System.out.println("3 General del Club");
+                System.out.println("1 Plantel (Gestion de jugadores, Cuerpo tecnico y partidos. No podria hacer compras ni ventas)");
+                System.out.println("2 Presupuesto (Compra y venta de jugadores, ingreso y egresos de dinero)");
+                System.out.println("3 General del Club (gestion de los socios, estadios e inventario)");
                 System.out.print("Opcion ");
                 String r = scanner.nextLine().trim();
 
