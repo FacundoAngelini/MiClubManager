@@ -22,8 +22,12 @@ public class GestionPresupuesto {
     }
 
     public void agregarFondos(double dinero, String descripcion, LocalDate fecha) throws IngresoInvalido {
-        if(dinero <= 0) throw new IngresoInvalido("El ingreso de dinero debe ser mayor que 0");
-        if(descripcion == null || descripcion.isBlank()) throw new IngresoInvalido("La descripcion es obligatoria");
+        if(dinero <= 0) {
+            throw new IngresoInvalido("El ingreso de dinero debe ser mayor que 0");
+        }
+        if(descripcion == null || descripcion.isBlank()){
+            throw new IngresoInvalido("La descripcion es obligatoria");
+        }
 
         presupuesto.aniadirMonto(dinero);
         Transaccion t = new Transaccion(descripcion, dinero, "INGRESO", fecha);
@@ -63,7 +67,7 @@ public class GestionPresupuesto {
             presupuestoJSON.put("transacciones", transaccionesArray);
             JSONUtiles.uploadJSON(presupuestoJSON, "presupuesto");
         } catch(Exception e) {
-            System.out.println("Error al guardar presupuesto en JSON ");
+            System.out.println("Error al guardar presupuesto ");
         }
     }
 
@@ -79,9 +83,5 @@ public class GestionPresupuesto {
 
     public Presupuesto getPresupuesto() {
         return presupuesto;
-    }
-
-    public ArrayList<Transaccion> getListaTransacciones() {
-        return listaTransacciones;
     }
 }

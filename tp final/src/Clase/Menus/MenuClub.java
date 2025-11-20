@@ -77,7 +77,7 @@ public class MenuClub {
             System.out.println("Usuario registrado correctamente.");
 
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error ");
         }
     }
 

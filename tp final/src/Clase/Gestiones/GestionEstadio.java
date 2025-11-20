@@ -28,15 +28,12 @@ public class GestionEstadio {
             throw new IllegalArgumentException("La capacidad debe ser mayor que cero");
         }
         if (ubicacion == null || ubicacion.isBlank()) {
-            throw new IllegalArgumentException("Ubicación inválida");
+            throw new IllegalArgumentException("Ubicacion invalida");
         }
         if (costoMantenimiento < 0) {
             throw new IllegalArgumentException("Costo de mantenimiento no puede ser negativo");
         }
 
-        // =====================
-        // 2. CREAR OBJETO
-        // =====================
         estadio = new Estadio(nombre, capacidad, ubicacion, costoMantenimiento);
         guardarJSON();
         System.out.println("Estadio agregado correctamente");

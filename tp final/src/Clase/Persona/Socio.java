@@ -1,13 +1,11 @@
 package Clase.Persona;
-
 import enums.Tiposocio;
-import exeptions.AccionImposible;
 import java.time.LocalDate;
 
 public class Socio extends Persona {
 
     private static int contador = 1;
-    private int numeroSocio;
+    private final int numeroSocio;
     private Tiposocio tiposocio;
     private LocalDate fechaAlta;
 
@@ -39,7 +37,9 @@ public class Socio extends Persona {
 
     public void setTipoSocio(Tiposocio tipoSocio) {
         if (tipoSocio == null)
+        {
             throw new IllegalArgumentException("tipo socio invalido");
+        }
         this.tiposocio = tipoSocio;
     }
 
@@ -58,22 +58,6 @@ public class Socio extends Persona {
             throw new IllegalArgumentException("fecha alta futura");
 
         this.fechaAlta = fechaAlta;
-    }
-
-    public void cambiarAActivo() throws AccionImposible {
-        if (tiposocio == Tiposocio.ACTIVO)
-            throw new AccionImposible("ya es activo");
-        this.tiposocio = Tiposocio.ACTIVO;
-    }
-
-    public void cambiarAVitalicio() throws AccionImposible {
-        if (tiposocio == Tiposocio.VITALICIO)
-            throw new AccionImposible("ya es vitalicio");
-        this.tiposocio = Tiposocio.VITALICIO;
-    }
-
-    public void inactivarSocio() {
-        this.tiposocio = Tiposocio.INACTIVO;
     }
 
     public double obtenerMontoRecaudado() {

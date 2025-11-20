@@ -44,7 +44,7 @@ public class MenuPlantel {
             try {
                 opcion = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Error: ingrese un numero valido.");
+                System.out.println("Error: ingrese un numero valido");
                 continue;
             }
 
@@ -63,7 +63,7 @@ public class MenuPlantel {
                 case 12 -> listarPartidos();
                 case 13 -> verEstadisticas();
                 case 14 -> salir = true;
-                default -> System.out.println("Opcion invalida.");
+                default -> System.out.println("Opcion invalida");
             }
         }
     }
@@ -186,11 +186,7 @@ public class MenuPlantel {
         }
 
         try {
-            menuClub.club.getGestionCuerpoTecnico().agregarElemento(
-                    dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    salario, fechaInicio, fechaFin, puesto, aniosExp
-            );
-
+            menuClub.club.getGestionCuerpoTecnico().agregarElemento(dni, nombre, apellido, fechaNacimiento, nacionalidad, salario, fechaInicio, fechaFin, puesto, aniosExp);
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
             System.out.println("Miembro agregado correctamente");
 
@@ -207,7 +203,7 @@ public class MenuPlantel {
 
             menuClub.club.getGestionCuerpoTecnico().eliminarElemento(dni);
             menuClub.club.getGestionCuerpoTecnico().guardarJSON();
-            System.out.println("Miembro eliminado correctamente.");
+            System.out.println("Miembro eliminado correctamente");
 
         } catch (AccionImposible e) {
             System.out.println("Error al eliminar miembro: " + e.getMessage());
@@ -217,7 +213,7 @@ public class MenuPlantel {
     private void listarMiembrosCT() {
         ArrayList<CuerpoTecnico> lista = menuClub.club.getGestionCuerpoTecnico().listar();
         if (lista.isEmpty()) {
-            System.out.println("No hay miembros del cuerpo técnico.");
+            System.out.println("No hay miembros del cuerpo tecnico");
             return;
         }
         for (CuerpoTecnico ct : lista) {
@@ -237,8 +233,6 @@ public class MenuPlantel {
         try {
             System.out.print("DNI del miembro a modificar: ");
             String dni = scanner.nextLine();
-
-            // Obtener el CT actual para validaciones
             CuerpoTecnico ctActual = menuClub.club.getGestionCuerpoTecnico().getCuerpoTecnico().get(dni);
             if (ctActual == null) {
                 System.out.println("No existe el miembro con DNI: " + dni);
@@ -312,8 +306,6 @@ public class MenuPlantel {
                     return;
                 }
             }
-
-            // Validar experiencia máxima según edad actual
             LocalDate fechaBase = (fechaNacimiento != null) ? fechaNacimiento : ctActual.getFechaNacimiento();
             if (aniosExp >= 0) {
                 int edadActual = Period.between(fechaBase, LocalDate.now()).getYears();
@@ -324,10 +316,7 @@ public class MenuPlantel {
                 }
             }
 
-            menuClub.club.getGestionCuerpoTecnico().modificarCuerpoTecnico(
-                    dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    puesto, aniosExp
-            );
+            menuClub.club.getGestionCuerpoTecnico().modificarCuerpoTecnico(dni, nombre, apellido, fechaNacimiento, nacionalidad, puesto, aniosExp);
 
             System.out.println("Miembro modificado correctamente");
 
@@ -341,34 +330,30 @@ public class MenuPlantel {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try {
-            // DNI
             String dni;
             while (true) {
                 System.out.print("DNI: ");
                 dni = scanner.nextLine();
                 if (!dni.isBlank() && dni.matches("\\d+")) break;
-                System.out.println("DNI invalido. Debe contener solo numeros.");
+                System.out.println("DNI invalido. Debe contener solo numeros");
             }
 
-            // Nombre
             String nombre;
             while (true) {
                 System.out.print("Nombre: ");
                 nombre = scanner.nextLine();
                 if (!nombre.isBlank() && nombre.matches("[a-zA-Z]+")) break;
-                System.out.println("Nombre invalido. Solo letras permitidas.");
+                System.out.println("Nombre invalido. Solo letras permitidas");
             }
 
-            // Apellido
             String apellido;
             while (true) {
                 System.out.print("Apellido: ");
                 apellido = scanner.nextLine();
                 if (!apellido.isBlank() && apellido.matches("[a-zA-Z]+")) break;
-                System.out.println("Apellido invalido. Solo letras permitidas.");
+                System.out.println("Apellido invalido. Solo letras permitidas");
             }
 
-            // Fecha de nacimiento
             LocalDate fechaNacimiento;
             while (true) {
                 try {
@@ -377,59 +362,54 @@ public class MenuPlantel {
                     if (!fechaNacimiento.isAfter(LocalDate.now())) break;
                     else System.out.println("Fecha de nacimiento invalida.");
                 } catch (DateTimeParseException e) {
-                    System.out.println("Formato de fecha incorrecto.");
+                    System.out.println("Formato de fecha incorrecto");
                 }
             }
 
-            // Nacionalidad
             String nacionalidad;
             while (true) {
                 System.out.print("Nacionalidad: ");
                 nacionalidad = scanner.nextLine();
                 if (!nacionalidad.isBlank() && nacionalidad.matches("[a-zA-Z ]+")) break;
-                System.out.println("Nacionalidad invalida.");
+                System.out.println("Nacionalidad invalida");
             }
 
-            // Número de camiseta
             int numeroCamiseta;
             while (true) {
                 try {
                     System.out.print("Numero de camiseta (1-99): ");
                     numeroCamiseta = Integer.parseInt(scanner.nextLine());
                     if (numeroCamiseta >= 1 && numeroCamiseta <= 99) break;
-                    System.out.println("Debe ser un numero entre 1 y 99.");
+                    System.out.println("Debe ser un numero entre 1 y 99");
                 } catch (NumberFormatException e) {
-                    System.out.println("Numero invalido.");
+                    System.out.println("Numero invalido");
                 }
             }
 
-            // Valor jugador
             double valorJugador;
             while (true) {
                 try {
                     System.out.print("Valor del jugador: ");
                     valorJugador = Double.parseDouble(scanner.nextLine());
                     if (valorJugador > 0) break;
-                    System.out.println("Debe ser mayor a 0.");
+                    System.out.println("Debe ser mayor a 0");
                 } catch (NumberFormatException e) {
-                    System.out.println("Numero invalido.");
+                    System.out.println("Numero invalido");
                 }
             }
 
-            // Salario
             double salario;
             while (true) {
                 try {
                     System.out.print("Salario: ");
                     salario = Double.parseDouble(scanner.nextLine());
                     if (salario > 0) break;
-                    System.out.println("Debe ser mayor a 0.");
+                    System.out.println("Debe ser mayor a 0");
                 } catch (NumberFormatException e) {
-                    System.out.println("Numero invalido.");
+                    System.out.println("Numero invalido");
                 }
             }
 
-            // Fecha inicio contrato
             LocalDate fechaInicioContrato;
             while (true) {
                 try {
@@ -437,26 +417,24 @@ public class MenuPlantel {
                     fechaInicioContrato = LocalDate.parse(scanner.nextLine(), formatter);
                     int edadEnContrato = Period.between(fechaNacimiento, fechaInicioContrato).getYears();
                     if (edadEnContrato >= 18) break;
-                    System.out.println("El jugador debe tener al menos 18 anos al iniciar el contrato.");
+                    System.out.println("El jugador debe tener al menos 18 anos al iniciar el contrato");
                 } catch (DateTimeParseException e) {
-                    System.out.println("Formato de fecha incorrecto.");
+                    System.out.println("Formato de fecha incorrecto");
                 }
             }
 
-            // Fecha fin contrato
             LocalDate fechaFinContrato;
             while (true) {
                 try {
                     System.out.print("Fecha fin contrato (dd/MM/yyyy): ");
                     fechaFinContrato = LocalDate.parse(scanner.nextLine(), formatter);
                     if (!fechaFinContrato.isBefore(fechaInicioContrato)) break;
-                    System.out.println("Fecha fin no puede ser antes de inicio.");
+                    System.out.println("Fecha fin no puede ser antes de inicio");
                 } catch (DateTimeParseException e) {
-                    System.out.println("Formato de fecha incorrecto.");
+                    System.out.println("Formato de fecha incorrecto");
                 }
             }
 
-            // Posicion
             Posicion posicion;
             while (true) {
                 try {
@@ -464,16 +442,11 @@ public class MenuPlantel {
                     posicion = Posicion.valueOf(scanner.nextLine().toUpperCase());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Posicion invalida.");
+                    System.out.println("Posicion invalida");
                 }
             }
 
-            // Intento de agregar jugador (lanzando excepcion inmediatamente si falla)
-            menuClub.club.getGestionJugadores().agregarJugador(
-                    dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                    numeroCamiseta, valorJugador, salario,
-                    fechaInicioContrato, fechaFinContrato, posicion
-            );
+            menuClub.club.getGestionJugadores().agregarJugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, valorJugador, salario, fechaInicioContrato, fechaFinContrato, posicion);
 
             System.out.println("Jugador agregado correctamente.");
 
@@ -511,17 +484,15 @@ public class MenuPlantel {
     private void actualizarEstadisticasMenu() {
         String dni;
         int goles = -1, asistencias = -1, vallas = -1;
-
-        // Validar DNI
         while (true) {
             System.out.print("DNI del jugador: ");
             dni = scanner.nextLine();
             if (dni.isBlank()) {
-                System.out.println("DNI no puede estar vacío.");
+                System.out.println("DNI no puede estar vacio");
                 continue;
             }
             if (!dni.matches("\\d+")) {
-                System.out.println("DNI inválido, solo números permitidos.");
+                System.out.println("DNI invalido, solo numeros permitidos.");
                 continue;
             }
 
@@ -531,31 +502,28 @@ public class MenuPlantel {
             }
 
 
-            break; // DNI válido y existe
+            break;
         }
 
-        // Goles
         while (true) {
             try {
                 System.out.print("Goles: ");
                 goles = Integer.parseInt(scanner.nextLine());
                 if (goles < 0) {
-                    System.out.println("Goles no puede ser negativo.");
+                    System.out.println("Goles no puede ser negativo");
                     continue;
                 }
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("Dato inválido: debe ingresar un número entero.");
+                System.out.println("Dato invalido: debe ingresar un numero entero");
             }
         }
-
-        // Asistencias
         while (true) {
             try {
                 System.out.print("Asistencias: ");
                 asistencias = Integer.parseInt(scanner.nextLine());
                 if (asistencias < 0) {
-                    System.out.println("Asistencias no puede ser negativo.");
+                    System.out.println("Asistencias no puede ser negativo");
                     continue;
                 }
                 break;
@@ -578,7 +546,6 @@ public class MenuPlantel {
             }
         }
 
-        // Intento de actualizar estadísticas
         try {
             menuClub.club.getGestionJugadores().actualizarEstadisticas(dni, goles, asistencias, vallas);
             System.out.println("Estadisticas actualizadas correctamente");
@@ -591,7 +558,7 @@ public class MenuPlantel {
     private void listarJugadoresMenu() {
         ArrayList<String> infoJugadores = menuClub.club.getGestionJugadores().listarJugadoresInfo();
         if (infoJugadores.isEmpty()) {
-            System.out.println("No hay jugadores registrados.");
+            System.out.println("No hay jugadores registrados");
             return;
         }
         for (String info : infoJugadores) {
@@ -607,7 +574,6 @@ public class MenuPlantel {
         int entradasVendidas = 0;
         double precioEntrada = 0;
 
-        // FECHA
         while (fecha == null) {
             try {
                 System.out.print("Ingrese fecha del partido (dd/MM/yyyy): ");
@@ -627,7 +593,6 @@ public class MenuPlantel {
             }
         }
 
-        // LOCAL / VISITANTE
         while (true) {
             System.out.print("Es local? (si/no): ");
             String input = scanner.nextLine().trim().toLowerCase();
@@ -636,7 +601,6 @@ public class MenuPlantel {
             System.out.println("Error: responda si o no");
         }
 
-        // RIVAL
         while (rival == null) {
             System.out.print("Nombre del rival: ");
             String input = scanner.nextLine().trim();
@@ -644,7 +608,6 @@ public class MenuPlantel {
             else System.out.println("Error: valor no puede estar vacio");
         }
 
-        // GOLES A FAVOR
         while (true) {
             try {
                 System.out.print("Goles a favor: ");
@@ -657,7 +620,6 @@ public class MenuPlantel {
             }
         }
 
-        // GOLES EN CONTRA
         while (true) {
             try {
                 System.out.print("Goles en contra: ");
@@ -670,7 +632,6 @@ public class MenuPlantel {
             }
         }
 
-        // ENTRADAS Y PRECIO SI ES LOCAL
         if (esLocal) {
             int capacidad = menuClub.club.getGestionEstadios().getEstadio().getCapacidad();
 
@@ -699,8 +660,6 @@ public class MenuPlantel {
                 }
             }
         }
-
-        // AGREGAR PARTIDO
         try {
             menuClub.club.getGestorPartidos().agregarPartido(
                     fecha, esLocal, rival,
@@ -709,11 +668,10 @@ public class MenuPlantel {
             );
             System.out.println("Partido agregado correctamente");
         } catch (AccionImposible e) {
-            // Esto solo debería ocurrir por un error interno de la gestora
             System.out.println("Error inesperado al agregar partido: " + e.getMessage());
         }
     }
-    // ===================== ELIMINAR PARTIDO =====================
+
     public void eliminarPartido() {
         LocalDate fecha = null;
         while (fecha == null) {
@@ -732,7 +690,6 @@ public class MenuPlantel {
         }
     }
 
-    // ===================== LISTAR PARTIDOS =====================
     public void listarPartidos() {
         ArrayList<String> lista = menuClub.club.getGestorPartidos().listarPartidosInfo();
         if (lista.isEmpty()) {
@@ -743,60 +700,12 @@ public class MenuPlantel {
         for (String info : lista) System.out.println("- " + info);
     }
 
-    // ===================== ESTADISTICAS =====================
+
     public void verEstadisticas() {
         System.out.println("Estadisticas del club:");
         System.out.println("Ganados: " + menuClub.club.getGestorPartidos().getGanados() + " (" + menuClub.club.getGestorPartidos().getPorcentajeGanados() + "%)");
         System.out.println("Empatados: " + menuClub.club.getGestorPartidos().getEmpatados() + " (" + menuClub.club.getGestorPartidos().getPorcentajeEmpatados() + "%)");
         System.out.println("Perdidos: " + menuClub.club.getGestorPartidos().getPerdidos() + " (" + menuClub.club.getGestorPartidos().getPorcentajePerdidos() + "%)");
     }
-    // ===================== METODOS DE INGRESO =====================
-    private LocalDate pedirFecha(String mensaje) throws AccionImposible {
-        System.out.print(mensaje);
-        String input = scanner.nextLine().trim();
-        try {
-            LocalDate fecha = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            if (fecha.isAfter(LocalDate.now())) throw new AccionImposible("La fecha no puede ser futura");
-            return fecha;
-        } catch (DateTimeParseException e) {
-            throw new AccionImposible("Formato de fecha invalido (dd/MM/yyyy)");
-        }
-    }
 
-    private boolean pedirBoolean(String mensaje) throws AccionImposible {
-        System.out.print(mensaje);
-        String input = scanner.nextLine().trim().toLowerCase();
-        if (input.equals("si")) return true;
-        if (input.equals("no")) return false;
-        throw new AccionImposible("Respuesta invalida, solo si o no");
-    }
-
-    private String pedirString(String mensaje) throws AccionImposible {
-        System.out.print(mensaje);
-        String input = scanner.nextLine().trim();
-        if (input.isBlank()) throw new AccionImposible("El valor no puede estar vacio");
-        return input;
-    }
-
-    private int pedirEntero(String mensaje, int min, int max) throws AccionImposible {
-        System.out.print(mensaje);
-        try {
-            int valor = Integer.parseInt(scanner.nextLine().trim());
-            if (valor < min || valor > max) throw new AccionImposible("Valor fuera de rango");
-            return valor;
-        } catch (NumberFormatException e) {
-            throw new AccionImposible("Numero invalido");
-        }
-    }
-
-    private double pedirDouble(String mensaje, double min, double max) throws AccionImposible {
-        System.out.print(mensaje);
-        try {
-            double valor = Double.parseDouble(scanner.nextLine().trim());
-            if (valor < min || valor > max) throw new AccionImposible("Valor fuera de rango");
-            return valor;
-        } catch (NumberFormatException e) {
-            throw new AccionImposible("Numero invalido");
-        }
-    }
 }

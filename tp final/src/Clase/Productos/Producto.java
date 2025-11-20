@@ -13,6 +13,12 @@ public abstract class Producto{
         this.cantidad = cantidad;
     }
 
+    protected String tipo;
+
+    public String getTipo() {
+        return tipo;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -31,4 +37,8 @@ public abstract class Producto{
 
     public abstract String muestraDatos();
     public abstract JSONObject toJSON();
+
+    public String getMarca() {
+        return marca;
+    }
 }

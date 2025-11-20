@@ -1,48 +1,31 @@
 package Clase.Productos;
-
-import exeptions.AccionImposible;
 import org.json.JSONObject;
 
 public class Camiseta extends Producto {
-    private String sponsor;
-    private int camisetasVendidas;
+    private final String sponsor;
 
     public Camiseta(String nombre, String marca, int cantidad,  String sponsor) {
         super(nombre, marca, cantidad);
-        this.camisetasVendidas = camisetasVendidas;
-        this.sponsor = sponsor;
-    }
-
-    public void cambiarSponsor(String sponsor) throws AccionImposible {
-        if(this.sponsor.equals(sponsor)){
-            throw new AccionImposible("El sponsor es el mismo");
-        }
-        this.sponsor = sponsor;
-    }
-
-    public void setSponsor(String sponsor) {
+        this.tipo = "Camiseta";
         this.sponsor = sponsor;
     }
 
     @Override
     public String muestraDatos() {
-        return "Camiseta{" +
+        return "Camiseta" +
                 "sponsor='" + sponsor + '\'' +
-                ", camisetasVendidas=" + camisetasVendidas +
                 ", nombre='" + nombre + '\'' +
                 ", marca='" + marca + '\'' +
-                ", cantidad=" + cantidad +
-                '}';
+                ", cantidad=" + cantidad;
     }
 
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
-        obj.put("tipo", "Clases_Manu.Camiseta");
+        obj.put("tipo", "Camiseta");
         obj.put("nombre", nombre);
         obj.put("marca", marca);
         obj.put("cantidad", cantidad);
         obj.put("sponsor", sponsor);
-        obj.put("camisetasVendidas", camisetasVendidas);
         return obj;
     }
 

@@ -1,19 +1,17 @@
 package Clase.Persona;
-
 import Clase.Presupuesto.Contrato;
 import enums.Puesto;
 import java.time.LocalDate;
-import java.util.Objects;
+
 
 public class CuerpoTecnico extends Persona {
 
-    private Contrato contrato;
+    private final Contrato contrato;
     private Puesto puesto;
     private int aniosExp;
 
     public CuerpoTecnico(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, Contrato contrato, Puesto puesto, int aniosExp) {
         super(dni, nombre, apellido, fechaNacimiento, nacionalidad);
-
         if (contrato == null) {
             throw new IllegalArgumentException("contrato no puede ser nulo");
         }
@@ -29,13 +27,6 @@ public class CuerpoTecnico extends Persona {
 
     public Contrato getContrato() {
         return contrato;
-    }
-
-    public void setContrato(Contrato contrato) {
-        if (contrato == null) {
-            throw new IllegalArgumentException("contrato no puede ser nulo");
-        }
-        this.contrato = contrato;
     }
 
     public Puesto getPuesto() {

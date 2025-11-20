@@ -24,14 +24,9 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         this.gestorpresupuesto = gestorpresupuesto;
     }
 
-    public void agregarJugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento,
-                               String nacionalidad, int numeroCamiseta, double valorJugador,
-                               double salario, LocalDate fechaInicioContrato, LocalDate fechaFinContrato,
-                               Posicion posicion)
-            throws ElementoDuplicadoEx, IngresoInvalido, FondoInsuficienteEx {
-
+    public void agregarJugador(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, int numeroCamiseta, double valorJugador, double salario, LocalDate fechaInicioContrato, LocalDate fechaFinContrato, Posicion posicion) throws ElementoDuplicadoEx, IngresoInvalido, FondoInsuficienteEx {
         if (dni == null || dni.isBlank()) {
-            throw new IngresoInvalido("DNI no puede ser nulo o vacío");
+            throw new IngresoInvalido("DNI no puede ser nulo o vacio");
         }
 
         if (jugadores.containsKey(dni)) {
@@ -43,13 +38,13 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         }
 
         if (numeroCamiseta < 1 || numeroCamiseta > 99) {
-            throw new IngresoInvalido("Número de camiseta debe estar entre 1 y 99");
+            throw new IngresoInvalido("Numero de camiseta debe estar entre 1 y 99");
         }
 
         boolean camisetaOcupada = jugadores.values().stream()
                 .anyMatch(j -> j.getNumeroCamiseta() == numeroCamiseta);
         if (camisetaOcupada) {
-            throw new ElementoDuplicadoEx("El número de camiseta ya está en uso");
+            throw new ElementoDuplicadoEx("El numero de camiseta ya esta en uso");
         }
 
         if (valorJugador <= 0) {
@@ -68,20 +63,10 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
             throw new IngresoInvalido("Fecha de fin de contrato no puede ser anterior a la fecha de inicio");
         }
 
-        if (gestorpresupuesto.verSaldoActual() < salario) {
-            throw new FondoInsuficienteEx("Fondos insuficientes para pagar el contrato inicial");
-        }
-
-        gestorpresupuesto.quitarFondos(
-                salario,
-                "Contrato jugador " + nombre + " " + apellido,
-                fechaInicioContrato
-        );
 
         Contrato contrato = new Contrato(dni, salario, fechaInicioContrato, fechaFinContrato, fechaNacimiento);
 
-        Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad,
-                numeroCamiseta, contrato, posicion, valorJugador);
+        Jugador jugador = new Jugador(dni, nombre, apellido, fechaNacimiento, nacionalidad, numeroCamiseta, contrato, posicion, valorJugador);
 
         jugadores.put(dni, jugador);
         estadisticas.put(dni, new EstadisticaJugador());
@@ -130,10 +115,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         ArrayList<String> listaInfo = new ArrayList<>();
         for (Jugador j : jugadores.values()) {
             listaInfo.add(
-                    j.getDni() + " - " + j.getNombre() + " " + j.getApellido() +
-                            " | " + j.getPosicion() +
-                            " | Nº " + j.getNumeroCamiseta()
-            );
+                    j.getDni() + " - " + j.getNombre() + " " + j.getApellido() + " | " + j.getPosicion() + " | Nº " + j.getNumeroCamiseta());
         }
         return listaInfo;
     }
@@ -174,14 +156,27 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         JSONUtiles.uploadJSON(array, "Plantel");
     }
 
-    public void actualizarEstadisticas(String dni, int goles, int asistencias, int vallasInvictas)
-            throws ElementoInexistenteEx, IngresoInvalido {
 
+    public boolean numeroCamisetaOcupado(int numero) {
+        return jugadores.values().stream().anyMatch(j -> j.getNumeroCamiseta() == numero);
+    }
+    public void venderJugador(String dni, double monto, GestionPresupuesto gestionPresupuesto) throws ElementoInexistenteEx, IngresoInvalido {
+        if (!jugadores.containsKey(dni)) {
+            throw new ElementoInexistenteEx("El jugador con DNI " + dni + " no existe.");
+        }
+        Jugador jugador = jugadores.get(dni);
+        jugadores.remove(dni);
+
+        gestionPresupuesto.agregarFondos(monto, "Venta de jugador " + jugador.getNombre() + " " + jugador.getApellido(), LocalDate.now());
+    }
+
+
+    public void actualizarEstadisticas(String dni, int goles, int asistencias, int vallasInvictas) throws ElementoInexistenteEx, IngresoInvalido {
         EstadisticaJugador stats = estadisticas.get(dni);
-        if (stats == null) throw new ElementoInexistenteEx("Estadísticas no encontradas para ese jugador");
+        if (stats == null) throw new ElementoInexistenteEx("Estadisticas no encontradas para ese jugador");
 
         if (goles < 0 || asistencias < 0 || vallasInvictas < 0) {
-            throw new IngresoInvalido("Las estadísticas no pueden ser negativas");
+            throw new IngresoInvalido("Las estadisticas no pueden ser negativas");
         }
 
         stats.agregarGoles(goles);
@@ -196,9 +191,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
     }
 
     public double calcularGastoSalarios() {
-        return jugadores.values().stream()
-                .mapToDouble(j -> j.getContrato().getSalario())
-                .sum();
+        return jugadores.values().stream().mapToDouble(j -> j.getContrato().getSalario()).sum();
     }
 
     public void pagarSalarios(LocalDate fecha) throws FondoInsuficienteEx, IngresoInvalido {
@@ -220,11 +213,7 @@ public class GestionJugadores implements MetodosComunes<Jugador, String> {
         Jugador j = jugadores.get(dni);
         if (j == null) throw new AccionImposible("Jugador no encontrado");
 
-        return j.getDni() + " - " + j.getNombre() + " " + j.getApellido()
-                + " | " + j.getPosicion() + " | Nº " + j.getNumeroCamiseta()
-                + " | Valor: " + j.getValorJugador()
-                + " | Salario: " + j.getContrato().getSalario()
-                + " | Contrato: " + j.getContrato().getFechaInicio() + " a " + j.getContrato().getFechaFin();
+        return j.getDni() + " - " + j.getNombre() + " " + j.getApellido() + " | " + j.getPosicion() + " | Nº " + j.getNumeroCamiseta() + " | Valor: " + j.getValorJugador() + " | Salario: " + j.getContrato().getSalario() + " | Contrato: " + j.getContrato().getFechaInicio() + " a " + j.getContrato().getFechaFin();
     }
 
 }

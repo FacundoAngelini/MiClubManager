@@ -16,7 +16,6 @@ public class Contrato {
         if (dni == null || !dni.matches("\\d+")) {
             throw new IllegalArgumentException("dni invalido debe contener solo numeros");
         }
-
         if (salario <= 0) {
             throw new IllegalArgumentException("salario debe ser mayor a 0");
         }
@@ -24,16 +23,12 @@ public class Contrato {
         if (fechaInicio == null || fechaInicio.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("fecha de inicio invalida");
         }
-
         if (fechaFin == null || fechaFin.isBefore(fechaInicio)) {
             throw new IllegalArgumentException("fecha fin debe ser posterior a inicio");
         }
-
-        // Verificar edad minima 18 años
-        if (fechaNacimiento != null && fechaInicio.isBefore(fechaNacimiento.plusYears(18))) {
-            throw new IllegalArgumentException("no se puede contratar antes de los 18 anos");
+        if (fechaNacimiento != null && fechaInicio.isBefore(fechaNacimiento.plusYears(14))) {
+            throw new IllegalArgumentException("no se puede contratar antes de los 14 anos");
         }
-
         this.dni = dni;
         this.salario = salario;
         this.fechaInicio = fechaInicio;
@@ -68,12 +63,11 @@ public class Contrato {
     @Override
     public String toString() {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "Contrato{" +
+        return "Contrato" +
                 "dni='" + dni + '\'' +
                 ", salario=" + salario +
                 ", fechaInicio=" + fechaInicio.format(formato) +
                 ", fechaFin=" + fechaFin.format(formato) +
-                ", contratoActivo=" + isContratoActivo() +
-                '}';
+                ", contratoActivo=" + isContratoActivo();
     }
 }

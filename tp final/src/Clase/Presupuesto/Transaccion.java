@@ -10,7 +10,7 @@ public class Transaccion {
 
     public Transaccion(String descripcion, double monto, String tipo, LocalDate fecha) {
         if (descripcion == null || descripcion.isBlank()) {
-            throw new IllegalArgumentException("La descripción no puede ser nula ni vacia");
+            throw new IllegalArgumentException("La descripcion no puede ser nula ni vacia");
         }
 
         if (monto <= 0) {
@@ -53,11 +53,10 @@ public class Transaccion {
 
     @Override
     public String toString() {
-        return "Transaccion{" +
+        return "Transaccion" +
                 "descripcion='" + descripcion + '\'' +
                 ", monto=" + monto +
                 ", tipo='" + tipo + '\'' +
-                ", fecha=" + fecha +
-                '}';
+                ", fecha=" + fecha;
     }
 }

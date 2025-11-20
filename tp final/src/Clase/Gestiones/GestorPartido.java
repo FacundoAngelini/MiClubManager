@@ -20,12 +20,7 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
         this.capacidadEstadio = capacidadEstadio;
     }
 
-    public void agregarPartido(
-            LocalDate fecha, boolean esLocal, String rival,
-            int golesAFavor, int golesEnContra,
-            int entradasVendidas, double precioEntrada
-    ) throws AccionImposible {
-
+    public void agregarPartido(LocalDate fecha, boolean esLocal, String rival, int golesAFavor, int golesEnContra, int entradasVendidas, double precioEntrada) throws AccionImposible {
         if (fecha == null || fecha.isAfter(LocalDate.now()))
             throw new AccionImposible("Fecha invalida o futura");
 
@@ -100,16 +95,7 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
         ArrayList<String> lista = new ArrayList<>();
 
         for (Partido p : partidos) {
-            String info = p.getFecha()
-                    + " | "
-                    + (p.isEsLocal() ? "Local" : "Visitante")
-                    + " vs "
-                    + p.getRival()
-                    + " | "
-                    + p.getGolesAFavor()
-                    + "-"
-                    + p.getGolesEnContra();
-
+            String info = p.getFecha() + " | " + (p.isEsLocal() ? "Local" : "Visitante") + " vs " + p.getRival() + " | " + p.getGolesAFavor() + "-" + p.getGolesEnContra();
             lista.add(info);
         }
 
@@ -132,8 +118,6 @@ public class GestorPartido implements MetodosComunes<Partido, LocalDate> {
             arr.put(obj);
         }
     }
-
-    // Metodos de estadisticas
 
     public int getGanados() {
         int c = 0;

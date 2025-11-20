@@ -26,29 +26,30 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
 
     public void agregarSocio(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, LocalDate fechaAlta, Tiposocio tipoSocio) throws IngresoInvalido, ElementoDuplicadoEx {
         if (dni == null || dni.isBlank())
-            throw new IngresoInvalido("DNI inválido");
+            throw new IngresoInvalido("DNI invalido");
 
         boolean existe = socios.values().stream().anyMatch(s -> s.getDni().equals(dni));
+
         if (existe)
             throw new ElementoDuplicadoEx("DNI repetido");
 
         if (nombre == null || nombre.isBlank())
-            throw new IngresoInvalido("Nombre inválido");
+            throw new IngresoInvalido("Nombre invalido");
 
         if (apellido == null || apellido.isBlank())
-            throw new IngresoInvalido("Apellido inválido");
+            throw new IngresoInvalido("Apellido invalido");
 
         if (fechaNacimiento == null)
-            throw new IngresoInvalido("Fecha de nacimiento inválida");
+            throw new IngresoInvalido("Fecha de nacimiento invalida");
 
         if (nacionalidad == null || nacionalidad.isBlank())
-            throw new IngresoInvalido("Nacionalidad inválida");
+            throw new IngresoInvalido("Nacionalidad invalida");
 
         if (fechaAlta == null)
-            throw new IngresoInvalido("Fecha de alta inválida");
+            throw new IngresoInvalido("Fecha de alta invalida");
 
         if (tipoSocio == null)
-            throw new IngresoInvalido("Tipo de socio inválido");
+            throw new IngresoInvalido("Tipo de socio invalido");
 
         if (fechaAlta.isBefore(fechaNacimiento))
             throw new IngresoInvalido("Fecha de alta anterior a fecha de nacimiento");
@@ -92,10 +93,7 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
     public void modificarSocio(String dni, String nuevoNombre, String nuevoApellido, LocalDate nuevaFechaAlta)
             throws AccionImposible {
 
-        Socio socio = socios.values().stream()
-                .filter(s -> s.getDni().equals(dni))
-                .findFirst()
-                .orElseThrow(() -> new AccionImposible("Socio no encontrado"));
+        Socio socio = socios.values().stream().filter(s -> s.getDni().equals(dni)).findFirst().orElseThrow(() -> new AccionImposible("Socio no encontrado"));
 
         if (nuevoNombre != null && !nuevoNombre.isBlank())
             socio.setNombre(nuevoNombre);
@@ -127,16 +125,11 @@ public class GestionSocio implements MetodosComunes<Socio, String> {
     }
 
     public double obtenerRecaudacionTotal() {
-        return socios.values().stream()
-                .mapToDouble(Socio::obtenerMontoRecaudado)
-                .sum();
+        return socios.values().stream().mapToDouble(Socio::obtenerMontoRecaudado).sum();
     }
 
     public void cambiarTipoSocio(String dni) throws AccionImposible {
-        Socio socio = socios.values().stream()
-                .filter(s -> s.getDni().equals(dni))
-                .findFirst()
-                .orElseThrow(() -> new AccionImposible("Socio no encontrado"));
+        Socio socio = socios.values().stream().filter(s -> s.getDni().equals(dni)).findFirst().orElseThrow(() -> new AccionImposible("Socio no encontrado"));
 
         Tiposocio tipo = socio.getTiposocio();
         if (tipo == Tiposocio.JUVENIL)

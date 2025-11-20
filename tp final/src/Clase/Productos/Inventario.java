@@ -59,10 +59,12 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
             System.out.println("Se ha actualizado la cantidad del producto existente: " + nombre);
         } else {
             items.put(clave, prod);
-            System.out.println("Producto agregado exitosamente: " + nombre);
         }
 
         guardarJSON();
+    }
+    public boolean existeProducto(String clave) {
+        return items.containsKey(clave);
     }
 
     @Override
@@ -83,6 +85,7 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
         return items.get(clave);
     }
 
+
     @Override
     public boolean existe(String clave) {
         return items.containsKey(clave);
@@ -93,21 +96,6 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
         return new ArrayList<>(items.values());
     }
 
-    public int consultarStock(String clave) throws AccionImposible {
-        T producto = devuelveElemento(clave);
-        return producto.getCantidad();
-    }
-
-    public void mostrarInventario() {
-        if (items.isEmpty()) {
-            System.out.println("Inventario vacio");
-            return;
-        }
-        for (T item : items.values()) {
-            System.out.println(item.muestraDatos());
-        }
-    }
-
     public void guardarJSON() {
         try {
             JSONArray array = new JSONArray();
@@ -116,7 +104,56 @@ public class Inventario<T extends Producto> implements MetodosComunes<T, String>
             }
             JSONUtiles.uploadJSON(array, "inventario");
         } catch (Exception e) {
-            System.out.println("Error al guardar inventario: " + e.getMessage());
+            System.out.println("Error al guardar inventario: " );
         }
     }
+
+
+
+    public String buscarProducto(String tipo, String nombre, String marca) throws AccionImposible {
+        if (!tipo.equalsIgnoreCase("pelota") && !tipo.equalsIgnoreCase("camiseta")) {
+            throw new AccionImposible("Tipo inválido. Debe ser 'pelota' o 'camiseta'.");
+        }
+
+        String clave = generarClave(nombre, tipo, marca);
+
+        if (!items.containsKey(clave)) {
+            throw new AccionImposible("Producto no encontrado con los datos indicados.");
+        }
+
+        return items.get(clave).muestraDatos(); // Devuelve info lista para mostrar
+    }
+    public boolean marcaExisteParaTipo(String tipo, String marca) {
+        for (T item : items.values()) {
+            if (item.getTipo().equalsIgnoreCase(tipo) && item.getMarca().equalsIgnoreCase(marca)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public String consultarStockPorTipoMarca(String tipo, String marca) throws AccionImposible {
+        if (!tipo.equalsIgnoreCase("pelota") && !tipo.equalsIgnoreCase("camiseta")) {
+            throw new AccionImposible("Tipo inválido. Debe ser 'pelota' o 'camiseta'.");
+        }
+
+        boolean encontrado = false;
+        StringBuilder sb = new StringBuilder();
+
+        for (T item : items.values()) {
+            if (item.getTipo().equalsIgnoreCase(tipo) && item.getMarca().equalsIgnoreCase(marca)) {
+                sb.append(item.muestraDatos()).append("\n");
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            throw new AccionImposible("No hay productos de tipo '" + tipo + "' y marca '" + marca + "'.");
+        }
+
+        return sb.toString();
+    }
+
 }

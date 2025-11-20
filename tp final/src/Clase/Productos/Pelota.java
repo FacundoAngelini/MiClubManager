@@ -7,6 +7,7 @@ public class Pelota extends Producto {
 
     public Pelota(String nombre, String marca, int cantidad, String modelo) {
         super(nombre, marca, cantidad);
+        this.tipo = "Pelota";
         this.modelo = modelo;
     }
 
@@ -16,17 +17,16 @@ public class Pelota extends Producto {
     }
 
     public String muestraDatos() {
-        return "Clases_Manu.Pelota{" +
+        return "Pelota" +
                 "modelo='" + modelo + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", marca='" + marca + '\'' +
-                ", cantidad=" + cantidad +
-                '}';
+                ", cantidad=" + cantidad;
     }
 
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
-        obj.put("tipo", "Clases_Manu.Pelota");
+        obj.put("tipo", "Pelota");
         obj.put("nombre", nombre);
         obj.put("marca", marca);
         obj.put("cantidad", cantidad);
